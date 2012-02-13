@@ -1,6 +1,7 @@
 package com.cs310.ubc.meetupcheduler.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -89,7 +90,7 @@ public class MeetUpScheduler implements EntryPoint {
 	private void createFileUploadForm() {
 	    // Create a FormPanel and point it at a service.
 	    form = new FormPanel();
-	    form.setAction("/csvParser");
+	    form.setAction(GWT.getModuleBaseURL()+"filereader");
 
 	    form.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    form.setMethod(FormPanel.METHOD_POST);

@@ -7,12 +7,12 @@
 
   <!-- Servlets -->
   <servlet>
-    <servlet-name>CSVParser</servlet-name>
-    <servlet-class>com.cs310.ubc.meetupcheduler.server.CSVParser</servlet-class>
+    <servlet-name>FileReader</servlet-name>
+    <servlet-class>com.cs310.ubc.meetupcheduler.server.FileReader</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>CSVParser</servlet-name>
-    <url-pattern>/csvparser</url-pattern>
+    <servlet-name>FileReader</servlet-name>
+    <url-pattern>/meetupscheduler/filereader</url-pattern>
   </servlet-mapping>
 
   
