@@ -1,6 +1,7 @@
 package com.cs310.ubc.meetupcheduler.server;
 
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -49,21 +50,12 @@ public class Park {
 	   * This needs to take a list of objects in the same
 	   * order as the parameters/CSV columns.
 	   */
-	  public Park(List<? extends Object> myFields) {
-		  this.id = (Long) myFields.get(0);
-		  this.name = (String) myFields.get(1);
-		  this.street_number = (String) myFields.get(2);
-		  this.street_name = (String) myFields.get(3);
-		  this.ew_street = (String) myFields.get(4);
-		  this.ns_street= (String) myFields.get(5);
-		  this.google_map_dest = (String) myFields.get(6);
-		  this.hectares = (Float) myFields.get(7);
-		  this.neighbourhood_name = (String) myFields.get(8);
-		  this.neighbourhood_url = (String) myFields.get(9);
-		  this.advisories = (String) myFields.get(10);
-		  this.facilities = (String) myFields.get(11);
-		  this.special_features = (String) myFields.get(12);
-		  this.washrooms = (String) myFields.get(13);
+	  public Park(Map<String, ? extends Object> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		  Class<?> parkClass = this.getClass();
+		  for (String key : myFields.keySet()) {
+			  Field f = parkClass.getDeclaredField(key);
+			  f.set(this, myFields.get(key));
+		  }
 	  }
 	  
 	  public Long getID() {
