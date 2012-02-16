@@ -12,13 +12,15 @@ Caroline McQuatt, 36959104, p1t7
 David Slater, 40534026, d8p7
 
 Submitted files are:
+ass5.txt					- The file you are reading
 sequence_ass5_rough.jpg 	- A rough version of our sequence diagram
 sequence_ass5_final.png		- The final version of our sequence diagram
 sequence_ass5_final.zargo	- The ArgoUML file for our final sequence diagram
 310_UML_ass5_v1.jpg			- A first rough version of our UML diagram
 310_UML_ass5_v2.jpg			- A second rough version of our UML diagram
 310_UML_ass5_final.jpg		- The final version of our sequence diagram
-AdminViewDrawing.jpg		- Sketch of our admin view with widget names.
+310_UML_ass5_final.uxf		- The UMLet file for our final UML diagram
+AdminViewDrawing.jpg		- Sketch of our admin view with widget names
 CreateEventViewDrawing.jpg	- Sketch of our event creation view with widget names
 EventViewDrawing.jpg		- Sketch of our event view with widget names
 GlobalViewDrawing.jpg		- Sketch of our global view with widget names
