@@ -1,0 +1,28 @@
+***********************************
+CPSC 310 Assignment 5 Documentation
+***********************************
+
+Team: Group;
+
+Members:
+Ben Jeffery, 28438109, y8r7
+Adrian Lyndsay, 
+Connor Mayer, 77819068, x4a7
+Caroline McQuatt, 36959104, p1t7
+David Slater, 40534026, d8p7
+
+Submitted files are:
+sequence_ass5_rough.jpg 	- A rough version of our sequence diagram
+sequence_ass5_final.png		- The final version of our sequence diagram
+sequence_ass5_final.zargo	- The ArgoUML file for our final sequence diagram
+310_UML_ass5_v1.jpg			- A first rough version of our UML diagram
+310_UML_ass5_v2.jpg			- A second rough version of our UML diagram
+310_UML_ass5_final.jpg		- The final version of our sequence diagram
+AdminViewDrawing.jpg		- Sketch of our admin view with widget names.
+CreateEventViewDrawing.jpg	- Sketch of our event creation view with widget names
+EventViewDrawing.jpg		- Sketch of our event view with widget names
+GlobalViewDrawing.jpg		- Sketch of our global view with widget names
+
+
+Brief description of project:
+Our project is an application that allows people to organize impromptu events at parks in Vancouver. Park and facility data is uploaded by the administrator. Events can be created at parks with appropriate facilities. Users can create events and declare that they are attending events. The abstract View class and its subclasses represent 'pages' in the application. These classes contain the logic to create the UI. The Database class acts as an intermediary between the JDO objects and the application class. The application class MeetupScheduler contains the surface logic of the GWT app and is an intermediary between the database and UI, forwarding required data to the UI and rendering the UI on the page.
