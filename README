@@ -1,3 +1,15 @@
+
+
+Also All of your userstories should have more than one acceptance criteria. 
+
+Title your userstory and task as follows (please)
+Userstory 4 consistent UI
+Task 4.1 Integrate backend components
+Task 4.2 General UI
+etc..
+This will allow me to better comment and look through your tasks relating to a user story.
+If you can create a milestone for each user story and then put tasks for userstories in the milestone.
+
 Please put assignment 5 into your repository as a zip file.
 Sincerely,
 C. Albert Thompson
