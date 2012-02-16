@@ -4,11 +4,15 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.cs310.ubc.meetupcheduler.server.Park.ParkFields;
+import com.cs310.ubc.meetupcheduler.server.Advisory.AdvisoryField;
+import com.cs310.ubc.meetupcheduler.server.Facility.FacilityField;
+import com.cs310.ubc.meetupcheduler.server.Park.ParkField;
+import com.cs310.ubc.meetupcheduler.server.Washroom.WashroomField;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -55,12 +59,13 @@ public class ParkDataParser {
 	private void createPark(Element element) {
 		Map<String, Object> parkDataMap = new HashMap<String, Object>();
 		
-		String ID  = element.getAttribute("ID");
-		if (ID == null || ID.isEmpty()) {
+		String tempID  = element.getAttribute("ID");
+		if (tempID == null || tempID.isEmpty()) {
 			//TODO: CAROLINE error handling
 			return;
 		}
-		parkDataMap.put(ParkFields.ID.toString(), new Long(ID));
+		Long ID = new Long(tempID);
+		parkDataMap.put(ParkField.ID.toString(), ID);
 		
 		NodeList parkElements = element.getElementsByTagName("*");
 		
@@ -73,44 +78,51 @@ public class ParkDataParser {
 					//TODO: Caroline error handling
 				}
 				else if (elementName.equals("Name")) {
-					parkDataMap.put(ParkFields.NAME.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.NAME.toString(), parkElement.getTextContent());
 				}
 				/** Do nothing?
 				else if (elementName.equals("Official")) {
 					parkDataMap.put("Official", new Integer(parkElement.getTextContent()));
 				}**/
 				else if (elementName.equals("StreetNumber")) {
-					parkDataMap.put(ParkFields.STRTNUM.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.STRTNUM.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("StreetName")) {
-					parkDataMap.put(ParkFields.STRTNUM.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.STRTNUM.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("EWStreet")) {
-					parkDataMap.put(ParkFields.EWST.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.EWST.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("NSStreet")) {
-					parkDataMap.put(ParkFields.NSST.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.NSST.toString(), parkElement.getTextContent());
 				}
 				//LatLng object from the maps API can be created directly from this string
 				else if (elementName.equals("GoogleMapDest")) {
-					parkDataMap.put(ParkFields.MAPSTR.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.MAPSTR.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("Hectare")) {
-					parkDataMap.put(ParkFields.HECT.toString(), new Float(parkElement.getTextContent()));
+					parkDataMap.put(ParkField.HECT.toString(), new Float(parkElement.getTextContent()));
 				}
 				else if (elementName.equals("NeighbourhoodName")) {
-					parkDataMap.put(ParkFields.NNAME.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.NNAME.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("NeighbourhoodURL")) {
-					parkDataMap.put(ParkFields.NURL.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.NURL.toString(), parkElement.getTextContent());
+				}
+				else if (elementName.equals("Advisories")) {
+					parkDataMap.put(ParkField.HASADVS.toString(), "Y");
 				}
 				else if (elementName.equals("Advisory")) {
-					parkDataMap.put(ParkFields.HASADVS.toString(), "Y");
 					createAdvisory(parkElement, ID);
 				}
 				else if (elementName.equals("Facilities")) {
-					parkDataMap.put(ParkFields.HASFAC.toString(), "Y");
+					parkDataMap.put(ParkField.HASFAC.toString(), "Y");
+				}
+				else if (elementName.equals("Facility")) {
 					createFacility(parkElement, ID);
+				}
+				else if (elementName.equals("Washroom")) {
+					createWashroom(parkElement, ID);
 				}
 			}
 			try {
@@ -133,8 +145,57 @@ public class ParkDataParser {
 		}		
 	}
 
-	private void createAdvisory(Element advisoryElement, String pID) {
+	private void createWashroom(Element washroomElement, Long pID) {
+		Map<String, Object> washroomDataMap = new HashMap<String, Object>();
+		washroomDataMap.put(AdvisoryField.PID.toString(), pID);
+		
+		NodeList children = washroomElement.getElementsByTagName("*");
+		if (children != null) {
+			for (int i = 0; i < children.getLength(); i++) {
+				Element wshElement = (Element) children.item(i);
+				String elementName = wshElement.getNodeName();
+				
+				if (elementName == null) {
+					//TODO: Caroline error handling
+				}
+				else if (elementName.equals("Location")) {
+					//TODO need to make this a date?
+					washroomDataMap.put(WashroomField.LOC.toString(), wshElement.getTextContent());
+				}
+				else if (elementName.equals("Notes")) {
+					washroomDataMap.put(WashroomField.NOTES.toString(), wshElement.getTextContent());
+				}
+				else if (elementName.equals("SummerHours")) {
+					washroomDataMap.put(WashroomField.SUMHR.toString(), wshElement.getTextContent());
+				}
+				else if (elementName.equals("WinterHours")) {
+					washroomDataMap.put(WashroomField.WINHR.toString(), wshElement.getTextContent());
+				}
+			}
+			try {
+				new Washroom(washroomDataMap);
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("new washroom created PID:" + pID.toString());
+			
+		}
+		
+	}
+
+	private void createAdvisory(Element advisoryElement, Long pID) {
 		Map<String, Object> advisoryDataMap = new HashMap<String, Object>();
+		advisoryDataMap.put(AdvisoryField.PID.toString(), pID);
 		
 		NodeList children = advisoryElement.getElementsByTagName("*");
 		if (children != null) {
@@ -145,14 +206,42 @@ public class ParkDataParser {
 				if (elementName == null) {
 					//TODO: Caroline error handling
 				}
-				
+				else if (elementName.equals("DateLast")) {
+					//TODO need to make this a date?
+					advisoryDataMap.put(AdvisoryField.DATE.toString(), advElement.getTextContent());
+				}
+				else if (elementName.equals("AdvisoryText")) {
+					advisoryDataMap.put(AdvisoryField.TEXT.toString(), advElement.getTextContent());
+				}
+				else if (elementName.equals("URL")) {
+					advisoryDataMap.put(AdvisoryField.URL.toString(), advElement.getTextContent());
+				}
 			}
+			try {
+				new Advisory(advisoryDataMap);
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("new advisory created PID:" + pID.toString());
+			
 		}
 		
 	}
 
-	private void createFacility(Element facilityElement, String pID) {
+	private void createFacility(Element facilityElement, Long pID) {
 		Map<String, Object> facilityDataMap = new HashMap<String, Object>();
+		facilityDataMap.put(FacilityField.PID.toString(), pID);
+		String specialFeatures = "";
 		
 		NodeList children = facilityElement.getElementsByTagName("*");
 		if (children != null) {
@@ -163,8 +252,42 @@ public class ParkDataParser {
 				if (elementName == null) {
 					//TODO: Caroline error handling
 				}
-				
+				else if (elementName.equals("FacilityCount")) {
+					facilityDataMap.put(FacilityField.COUNT.toString(), facElement.getTextContent());
+				}
+				else if (elementName.equals("FacilityType")) {
+					facilityDataMap.put(FacilityField.TYPE.toString(), facElement.getTextContent());
+				}
+				else if (elementName.equals("FacilityURL")) {
+					facilityDataMap.put(FacilityField.URL.toString(), facElement.getTextContent());
+				}
+				else if (elementName.equals("SpecialFeature")) {
+					if (specialFeatures.isEmpty())
+						specialFeatures = facElement.getTextContent();
+					else
+						specialFeatures += (", " + facElement.getTextContent());
+				}
 			}
+			if (!specialFeatures.isEmpty()) {
+				facilityDataMap.put(FacilityField.SPECIALFEAT.toString(), specialFeatures);
+			}
+			
+			try {
+				new Facility(facilityDataMap);
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("new facility created PID:" + pID.toString());
 			
 		}
 		

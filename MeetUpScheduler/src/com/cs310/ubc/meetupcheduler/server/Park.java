@@ -12,7 +12,7 @@ import javax.jdo.annotations.PrimaryKey;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Park {
 	
-	public enum ParkFields {
+	public enum ParkField {
 		ID {
 		    public String toString() {
 		        return "id";
