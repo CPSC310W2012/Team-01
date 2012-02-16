@@ -84,7 +84,7 @@ public class MeetUpScheduler implements EntryPoint {
 	    tabPanel.setSize("85%", "100%");
 	    //set pages here
 	    createFileUploadForm();
-	    tabPanel.add(form, "Upload CSV file");
+	    tabPanel.add(form, "Upload XML file");
 	}
 	//TODO: CAROLINE refactor this into Admin Page class
 	private void createFileUploadForm() {
@@ -116,12 +116,12 @@ public class MeetUpScheduler implements EntryPoint {
 	    form.addSubmitHandler(new FormPanel.SubmitHandler() {
 	      public void onSubmit(SubmitEvent event) {
 	        if (upload.getFilename() == null || upload.getFilename().isEmpty()) {
-	        	  Window.alert("You must select a CSV file to continue");
+	        	  Window.alert("You must select a XML file to continue");
 	        	  event.cancel();
 	        }
 	        //TODO: CAROLINE can set the filetype in the file chooser?
-	        else if (!isCSV(upload.getFilename())) {
-	        	  Window.alert("Only CSV files are supported at this time.");
+	        else if (!isXML(upload.getFilename())) {
+	        	  Window.alert("Only XML files are supported at this time.");
 	        	  event.cancel();
 	        }
 	      }
@@ -136,14 +136,24 @@ public class MeetUpScheduler implements EntryPoint {
 		
 	}
 	//TODO: CAROLINE refactor this into Admin Page class
-	private boolean isCSV(String filename) {
-		System.out.println(filename);
+	private boolean isXML(String filename) {
 		int dot = filename.indexOf(".");
-		String type = filename.trim().substring(dot + 1).toLowerCase();
-		if (type.equals("csv")) {
-			return true;
+		
+		String pastDotStr = filename.substring(dot + 1);
+		
+		int lastdot = pastDotStr.indexOf(".");
+		
+		if (lastdot != -1) {
+			return isXML(pastDotStr.substring(lastdot + 1));
 		}
+		
+		else {
+
+			if (pastDotStr.trim().toLowerCase().equals("xml")) {
+				return true;
+			}
 		return false;
+		}
 	}
 
 	

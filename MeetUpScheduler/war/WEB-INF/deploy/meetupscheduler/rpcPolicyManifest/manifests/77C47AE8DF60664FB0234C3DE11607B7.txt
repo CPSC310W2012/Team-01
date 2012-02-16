@@ -1,2 +1,0 @@
-serviceClass: com.cs310.ubc.meetupcheduler.client.GreetingService
-path: A1988FBEFF15BB8CD00D96029E8BA6DC.gwt.rpc

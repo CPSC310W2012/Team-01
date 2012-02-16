@@ -12,7 +12,72 @@ import javax.jdo.annotations.PrimaryKey;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Park {
 	
-	  @PrimaryKey
+	public enum ParkFields {
+		ID {
+		    public String toString() {
+		        return "id";
+		    }
+		},
+		 
+		NAME {
+		    public String toString() {
+		        return "name";
+		    }
+		},
+		STRTNUM {
+		    public String toString() {
+		        return "street_number";
+		    }
+		},
+		STRTNAME {
+		    public String toString() {
+		        return "street_name";
+		    }
+		},
+		EWST {
+		    public String toString() {
+		        return "ew_street";
+		    }
+		},
+		NSST {
+		    public String toString() {
+		        return "ns_street";
+		    }
+		},
+		MAPSTR {
+		    public String toString() {
+		        return "google_map_dest";
+		    }
+		},
+		HECT {
+		    public String toString() {
+		        return "hectares";
+		    }
+		},
+		NNAME {
+		    public String toString() {
+		        return "neighbourhood_name";
+		    }
+		},
+		NURL {
+		    public String toString() {
+		        return "neighbourhood_url";
+		    }
+		},
+		HASADVS {
+		    public String toString() {
+		        return "advisories";
+		    }
+		},
+		HASFAC {
+		    public String toString() {
+		        return "facilities";
+		    }
+		}
+
+		}
+	
+	  @PrimaryKey 
 	  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	  private Long id;
 	  @Persistent
@@ -37,10 +102,10 @@ public class Park {
 	  private String advisories;
 	  @Persistent
 	  private String facilities;
-	  @Persistent
-	  private String special_features;
-	  @Persistent
-	  private String washrooms;
+	  //@Persistent
+	 // private String special_features;
+	 // @Persistent
+	 // private String washrooms;
 	  
 	  private Park() {
 		  //jdoNewInstrance needs a no-arg constructor.
@@ -105,12 +170,12 @@ public class Park {
 	  public boolean hasFacilities() {
 		  return this.facilities == "Y" ? true: false;
 	  }
-	  
+	  /**
 	  public boolean hasSpecialFeatures() {
 		  return this.special_features == "Y" ? true: false;
 	  }
 	  
 	  public boolean hasWashrooms() {
 		  return this.washrooms == "Y" ? true: false;
-	  }
+	  }**/
 }

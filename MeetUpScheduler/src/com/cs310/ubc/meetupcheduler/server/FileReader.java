@@ -19,11 +19,13 @@ public class FileReader extends HttpServlet {
 
   public void doPost(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
+
     try {
       ServletFileUpload upload = new ServletFileUpload();
-      res.setContentType("text/plain");
+      res.setContentType("text/html; charset=UTF-8");
 
       FileItemIterator iterator = upload.getItemIterator(req);
+
       while (iterator.hasNext()) {
         FileItemStream item = iterator.next();
         InputStream stream = item.openStream();
@@ -32,19 +34,13 @@ public class FileReader extends HttpServlet {
           log.warning("Got a form field: " + item.getFieldName());
         } else {
           log.warning("Got an uploaded file: " + item.getFieldName() +
-                      ", name = " + item.getName());
-
-          // You now have the filename (item.getName() and the
-          // contents (which you can read from stream). Here we just
-          // print them back out to the servlet output stream, but you
-          // will probably want to do something more interesting (for
-          // example, wrap them in a Blob and commit them to the
-          // datastore).
-          int len;
-          byte[] buffer = new byte[8192];
-          while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-            res.getOutputStream().write(buffer, 0, len);
-          }
+                      ", name = " + item.getName());   
+         
+          ParkDataParser xmlParser = new ParkDataParser();
+          xmlParser.parseXML(stream);
+          
+          //TODO: Caroline better msg
+          res.getOutputStream().print("DONE");
         }
       }
     } catch (Exception ex) {
