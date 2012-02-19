@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.cs310.ubc.meetupcheduler.server.Park;
+import com.cs310.ubc.meetupscheduler.server.Park;
 
 public class JDOTests {
 	Park myPark;
@@ -37,9 +37,9 @@ public class JDOTests {
 	}
 	
 	@Test
-	public void testCreatePark() {
-		assert(myPark.getID() == 1);
-		assert(myPark.getHectares() == 17.5f);
+	public void testCreatePark() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+		assert((Long) myPark.getField("id") == 1);
+		assert((Float) myPark.getField("hectares") == 17.5f);
 		assert(myPark.hasFacilities());
 	}
 }

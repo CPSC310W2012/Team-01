@@ -4,17 +4,52 @@
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
-
+         
   <!-- Servlets -->
   <servlet>
     <servlet-name>FileReader</servlet-name>
-    <servlet-class>com.cs310.ubc.meetupcheduler.server.FileReader</servlet-class>
+    <servlet-class>com.cs310.ubc.meetupscheduler.server.FileReader</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>FileReader</servlet-name>
     <url-pattern>/meetupscheduler/filereader</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>ParkService</servlet-name>
+    <servlet-class>com.cs310.ubc.meetupscheduler.server.ParkServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ParkService</servlet-name>
+    <url-pattern>/meetupscheduler/park</url-pattern>
+  </servlet-mapping>  
+
+  <servlet>
+    <servlet-name>facilityService</servlet-name>
+    <servlet-class>com.cs310.ubc.meetupscheduler.server.FacilityServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>facilityService</servlet-name>
+    <url-pattern>/meetupscheduler/facility</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>advisoryService</servlet-name>
+    <servlet-class>com.cs310.ubc.meetupscheduler.server.AdvisoryServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>advisoryService</servlet-name>
+    <url-pattern>/meetupscheduler/advisory</url-pattern>
+  </servlet-mapping>
+    
+  <servlet>
+    <servlet-name>washroomService</servlet-name>
+    <servlet-class>com.cs310.ubc.meetupscheduler.server.WashroomServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>washroomService</servlet-name>
+    <url-pattern>/meetupscheduler/washroom</url-pattern>
+  </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
