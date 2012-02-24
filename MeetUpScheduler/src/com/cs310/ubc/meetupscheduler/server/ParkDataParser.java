@@ -1,7 +1,9 @@
 package com.cs310.ubc.meetupscheduler.server;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -17,6 +19,7 @@ import com.cs310.ubc.meetupscheduler.server.Washroom.WashroomField;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -40,6 +43,20 @@ public class ParkDataParser {
 				return;
 			}
 			
+			//Remove all advisory, washroom, and facility data.
+			ArrayList<Class<? extends DataObject>> delClasses = getClassesToDelete();
+			PersistenceManager pm = getPersistenceManager();
+			try {
+				for (Class<? extends DataObject> delClass: delClasses) {
+					Query q = pm.newQuery(delClass);
+					@SuppressWarnings("unchecked")
+					List<DataObject> objects = (List<DataObject>) q.execute();
+					pm.deletePersistentAll(objects);
+				}
+			} finally {
+				pm.close();
+			}
+
 			boolean areNoParks = true;
 			for (int i = 0; i < elementList.getLength(); i++) {
 				Element element = (Element) elementList.item(i);
@@ -310,5 +327,13 @@ public class ParkDataParser {
 
 	private PersistenceManager getPersistenceManager() {
 		return PersistenceManagerSingleton.getInstance();
+	}
+	
+	private ArrayList<Class<? extends DataObject>> getClassesToDelete() {
+		ArrayList<Class<? extends DataObject>> delClasses = new ArrayList<Class<? extends DataObject>>();
+		delClasses.add(Facility.class);
+		delClasses.add(Washroom.class);
+		delClasses.add(Advisory.class);
+		return delClasses;
 	}
 }
