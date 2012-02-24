@@ -26,7 +26,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class DataObjectServiceImpl extends RemoteServiceServlet implements DataObjectService {
 
 	private static final Logger LOG = Logger.getLogger(DataObjectServiceImpl.class.getName());
-	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	private static final Map<String, Class<? extends DataObject>> tableMap = getTables();
 	
 	/**
@@ -151,7 +150,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	 * @return A persistence manager.
 	 */
 	private PersistenceManager getPersistenceManager() {
-		return PMF.getPersistenceManager();
+		return PersistenceManagerSingleton.getInstance();
 	}
 	
 	/**

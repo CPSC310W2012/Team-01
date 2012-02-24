@@ -23,7 +23,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class ParkDataParser {
 	
 	private Document doc;
-	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	
 	public void parseXML(InputStream xmlFile) {
 		try {
@@ -308,6 +307,6 @@ public class ParkDataParser {
 	}
 
 	private PersistenceManager getPersistenceManager() {
-		return PMF.getPersistenceManager();
+		return PersistenceManagerSingleton.getInstance();
 	}
 }
