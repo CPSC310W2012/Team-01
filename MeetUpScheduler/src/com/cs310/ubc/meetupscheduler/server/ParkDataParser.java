@@ -90,7 +90,7 @@ public class ParkDataParser {
 					parkDataMap.put(ParkField.STRTNUM.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("StreetName")) {
-					parkDataMap.put(ParkField.STRTNUM.toString(), parkElement.getTextContent());
+					parkDataMap.put(ParkField.STRTNAME.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("EWStreet")) {
 					parkDataMap.put(ParkField.EWST.toString(), parkElement.getTextContent());
@@ -123,7 +123,7 @@ public class ParkDataParser {
 				else if (elementName.equals("Facility")) {
 					createFacility(parkElement, ID);
 				}
-				else if (elementName.equals("Washroom")) {
+				else if (elementName.equals("Washroom") && parkElement.hasChildNodes()) {
 					createWashroom(parkElement, ID);
 				}
 			}
@@ -152,7 +152,7 @@ public class ParkDataParser {
 
 	private void createWashroom(Element washroomElement, String pID) {
 		Map<String, String> washroomDataMap = new HashMap<String, String>();
-		washroomDataMap.put(AdvisoryField.PID.toString(), pID);
+		washroomDataMap.put(WashroomField.PID.toString(), pID);
 		
 		NodeList children = washroomElement.getElementsByTagName("*");
 		if (children != null) {
@@ -201,6 +201,7 @@ public class ParkDataParser {
 		
 	}
 
+	//TODO: a couple of bugs with advisory
 	private void createAdvisory(Element advisoryElement, String iD) {
 		Map<String, String> advisoryDataMap = new HashMap<String, String>();
 		advisoryDataMap.put(AdvisoryField.PID.toString(), iD);
@@ -272,6 +273,7 @@ public class ParkDataParser {
 				else if (elementName.equals("FacilityURL")) {
 					facilityDataMap.put(FacilityField.URL.toString(), facElement.getTextContent());
 				}
+				//TODO: specialfeature is not a child of facility is under facilities 
 				else if (elementName.equals("SpecialFeature")) {
 					if (specialFeatures.isEmpty())
 						specialFeatures = facElement.getTextContent();
