@@ -35,13 +35,13 @@ public class MeetUpScheduler implements EntryPoint {
 	
 	  private TabPanel tabPanel;
 	  private FormPanel form;
+	  private DataObjectServiceAsync dataObjectService = GWT.create(DataObjectService.class);
 
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
 	    tabPanel = new TabPanel();
 	    initTabPanel();
 	    RootPanel.get().add(tabPanel);

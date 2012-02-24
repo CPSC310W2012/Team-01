@@ -3,14 +3,17 @@ package com.cs310.ubc.meetupscheduler.server;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Advisory extends DataObject {
 	public enum AdvisoryField {
 		PID {
 		    public String toString() {
-		        return "pid";
+		        return "park_id";
 		    }
 		},
 		
@@ -22,7 +25,7 @@ public class Advisory extends DataObject {
 		 
 		TEXT {
 		    public String toString() {
-		        return "advisory_text";
+		        return "text";
 		    }
 		},
 		URL {
@@ -35,15 +38,17 @@ public class Advisory extends DataObject {
 	
 	  @PrimaryKey 
 	  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	  private Long pid;
+	  protected Long id; //Automatically generated PK
 	  @Persistent
-	  private String date_last;
+	  protected String park_id;
 	  @Persistent
-	  private String text;
+	  protected String date_last;
 	  @Persistent
-	  private String url;
+	  protected String text;
+	  @Persistent
+	  protected String url;
 	  
-	  public Advisory(Map<String, ? extends Object> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	  public Advisory(Map<String, String> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		  super(myFields);
 	  }
 

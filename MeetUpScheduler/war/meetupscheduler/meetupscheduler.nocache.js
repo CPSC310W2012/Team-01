@@ -311,12 +311,12 @@ function meetupscheduler(){
   $stats && $stats({moduleName:'meetupscheduler', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'selectingPermutation'});
   if (!isHostedMode()) {
     try {
-      unflattenKeylistIntoAnswers(['safari'], '251EE888621C9DBDCC01E3626C10EDD3');
-      unflattenKeylistIntoAnswers(['gecko1_8'], '4CF9C99A6DD3B21DE0E7ED2BD5A725F1');
-      unflattenKeylistIntoAnswers(['opera'], '5E0732E1CC31DFB5AC535B5F51FDD8FE');
-      unflattenKeylistIntoAnswers(['ie6'], '7109C6E68FD461E4B988968AD97B04BC');
-      unflattenKeylistIntoAnswers(['ie9'], 'EDA0CF2EF8201CBFF05F18CD8C23A4B0');
-      unflattenKeylistIntoAnswers(['ie8'], 'F627ADC254840197972CC73DC9A35A40');
+      unflattenKeylistIntoAnswers(['safari'], '27BED94D4C8B44C2C332331161AFB1BA');
+      unflattenKeylistIntoAnswers(['ie8'], '4BEFEF1370369BD7C4B18D6AA25B8947');
+      unflattenKeylistIntoAnswers(['ie9'], '80D18F0599AF4827F3C5C68A70BB4330');
+      unflattenKeylistIntoAnswers(['opera'], '82D3908D87E0BD6DB86DD231DC404FD9');
+      unflattenKeylistIntoAnswers(['ie6'], '87A04F1CB48702628F4501AEFD4D3BE0');
+      unflattenKeylistIntoAnswers(['gecko1_8'], '97CD6BAF3436D7F17976B4BED3D64792');
       strongName = answers[computePropValue('user.agent')];
       var idx = strongName.indexOf(':');
       if (idx != -1) {

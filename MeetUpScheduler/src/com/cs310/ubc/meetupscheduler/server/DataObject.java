@@ -4,41 +4,86 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * DataObject is a parent class for all the JDO objects in our application. This parent class allows for use of only a single Service
+ * to do asynchronous retrieval, as well as some nifty inherited methods.
+ * @author Connor
+ *
+ */
 public class DataObject {
-	  private DataObject() {
+	  public DataObject() {
 		  //jdoNewInstrance needs a no-arg constructor.
 	  }
 	  
-	  /*
-	   * This takes a Map of objects where the keys are the column names defined in the object's enum.
+	  /**
+	   * This creates a data object. There is a fairly good chance this will never be called since GWT seems to have a bug 
+	   * re: getting access rights to parent classes on the server side.
+	   * @param myFields A Map of Strings where the key is the column name as defined in the object's fields enum and the value
+	   * 				 is the value to be used in the created object.
+	   * @throws IllegalArgumentException
+	   * @throws IllegalAccessException
+	   * @throws SecurityException
+	   * @throws NoSuchFieldException
 	   */
-	  public DataObject(Map<String, ? extends Object> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	  public DataObject(Map<String, String> myFields) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		  Class<?> myClass = this.getClass();
 		  for (String key : myFields.keySet()) {
 			  Field f = myClass.getDeclaredField(key);
-			  f.set(this, myFields.get(key));
+			  if (f.getType() == Long.class)
+				  f.set(this, new Long(myFields.get(key)));
+			  else
+				  f.set(this, myFields.get(key));
 		  }
 	  }
 	  
-	  public void setField(String field, Object newValue) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	  /**
+	   * This method sets the value of a field in an existing DataObject to a new value.
+	   * @param field The field name you want to change.
+	   * @param newValue The value to which the column name will be changed.
+	   * @throws IllegalArgumentException
+	   * @throws IllegalAccessException
+	   * @throws SecurityException
+	   * @throws NoSuchFieldException
+	   */
+	  public void setField(String field, String newValue) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		  Class<?> myClass = this.getClass();
 		  Field f = myClass.getDeclaredField(field);
-		  f.set(this, newValue);
+		  if (f.getType() == Long.class)
+			  f.set(this, new Long(newValue));
+		  else
+			  f.set(this, newValue);
 	  }
 	  
-	  public Map<String, Object> formatForTable() throws IllegalArgumentException, IllegalAccessException {
-		  Map<String, Object> myValues = new HashMap<String, Object>();
+	  /**
+	   * This method returns the fields of an object as a HashMap of Strings for use in tables.
+	   * @return A HashMap of Strings where the key is the field name and the value is the value. Remember to cast the value if you want to do something fancy.
+	   * @throws IllegalArgumentException
+	   * @throws IllegalAccessException
+	   */
+	  public HashMap<String, String> formatForTable() throws IllegalArgumentException, IllegalAccessException {
+		  HashMap<String, String> myValues = new HashMap<String, String>();
 		  Class<?> myClass = this.getClass();
 		  Field[] f = myClass.getDeclaredFields();
-		  for (Field field: f) {
-			  myValues.put(field.getName(), field.get(this));
-		  }
+		  for (Field field: f) 
+			  if (field.getType() == String.class)
+				  myValues.put(field.getName(), (String) field.get(this));
+			  else if (field.getType() == Long.class)
+				  myValues.put(field.getName(), field.get(this).toString());
 		  return myValues;
 	  }
 	  
-	  public Object getField(String field) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	  /**
+	   * Gets the value of a field of a DataObject
+	   * @param field The field whose value you want to get.
+	   * @return The value of the specified field in String form.
+	   * @throws IllegalArgumentException
+	   * @throws IllegalAccessException
+	   * @throws SecurityException
+	   * @throws NoSuchFieldException
+	   */
+	  public String getField(String field) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		  Class<?> myClass = this.getClass();
 		  Field f = myClass.getDeclaredField(field);
-		  return f.get(this);
+		  return f.get(this).toString();
 	  }
 }

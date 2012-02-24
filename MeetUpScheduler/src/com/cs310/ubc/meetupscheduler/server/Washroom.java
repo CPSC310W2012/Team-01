@@ -3,14 +3,17 @@ package com.cs310.ubc.meetupscheduler.server;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Washroom extends DataObject {
 	public enum WashroomField {
 		PID {
 		    public String toString() {
-		        return "pid";
+		        return "park_id";
 		    }
 		},
 		
@@ -40,17 +43,19 @@ public class Washroom extends DataObject {
 	
 	  @PrimaryKey 
 	  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	  private Long pid;
+	  protected Long id; //Automatically generated pk
 	  @Persistent
-	  private String location;
+	  protected String park_id;
 	  @Persistent
-	  private String notes;
+	  protected String location;
 	  @Persistent
-	  private String summer_hours;
+	  protected String notes;
 	  @Persistent
-	  private String winter_hours;
+	  protected String summer_hours;
+	  @Persistent
+	  protected String winter_hours;
 	
-	  public Washroom(Map<String, ? extends Object> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	  public Washroom(Map<String, String> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		  super(myFields);
 	  }
 

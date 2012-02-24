@@ -9,18 +9,21 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.cs310.ubc.meetupscheduler.client.Database;
 import com.cs310.ubc.meetupscheduler.server.Advisory.AdvisoryField;
 import com.cs310.ubc.meetupscheduler.server.Facility.FacilityField;
 import com.cs310.ubc.meetupscheduler.server.Park.ParkField;
 import com.cs310.ubc.meetupscheduler.server.Washroom.WashroomField;
 
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 public class ParkDataParser {
 	
 	private Document doc;
+	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	
 	public void parseXML(InputStream xmlFile) {
 		try {
@@ -58,14 +61,13 @@ public class ParkDataParser {
 	
 	//Creates a Park Object. Only Park ID is guaranteed to exist.
 	private void createPark(Element element) {
-		Map<String, Object> parkDataMap = new HashMap<String, Object>();
+		Map<String, String> parkDataMap = new HashMap<String, String>();
 		
-		String tempID  = element.getAttribute("ID");
-		if (tempID == null || tempID.isEmpty()) {
+		String ID  = element.getAttribute("ID");
+		if (ID == null || ID.isEmpty()) {
 			//TODO: CAROLINE error handling
 			return;
 		}
-		Long ID = new Long(tempID);
 		parkDataMap.put(ParkField.ID.toString(), ID);
 		
 		NodeList parkElements = element.getElementsByTagName("*");
@@ -102,7 +104,7 @@ public class ParkDataParser {
 					parkDataMap.put(ParkField.MAPSTR.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("Hectare")) {
-					parkDataMap.put(ParkField.HECT.toString(), new Float(parkElement.getTextContent()));
+					parkDataMap.put(ParkField.HECT.toString(), parkElement.getTextContent());
 				}
 				else if (elementName.equals("NeighbourhoodName")) {
 					parkDataMap.put(ParkField.NNAME.toString(), parkElement.getTextContent());
@@ -126,9 +128,9 @@ public class ParkDataParser {
 					createWashroom(parkElement, ID);
 				}
 			}
+			PersistenceManager pm = getPersistenceManager();
 			try {
-				
-				new Park(parkDataMap);
+				pm.makePersistent(new Park(parkDataMap));
 				System.out.println("new park created ID:" + ID.toString());
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
@@ -142,13 +144,15 @@ public class ParkDataParser {
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				pm.close();
 			}
 			
 		}		
 	}
 
-	private void createWashroom(Element washroomElement, Long pID) {
-		Map<String, Object> washroomDataMap = new HashMap<String, Object>();
+	private void createWashroom(Element washroomElement, String pID) {
+		Map<String, String> washroomDataMap = new HashMap<String, String>();
 		washroomDataMap.put(AdvisoryField.PID.toString(), pID);
 		
 		NodeList children = washroomElement.getElementsByTagName("*");
@@ -174,8 +178,9 @@ public class ParkDataParser {
 					washroomDataMap.put(WashroomField.WINHR.toString(), wshElement.getTextContent());
 				}
 			}
+			PersistenceManager pm = getPersistenceManager();
 			try {
-				new Washroom(washroomDataMap);
+				pm.makePersistent(new Washroom(washroomDataMap));
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -188,6 +193,8 @@ public class ParkDataParser {
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				pm.close();
 			}
 			System.out.println("new washroom created PID:" + pID.toString());
 			
@@ -195,9 +202,9 @@ public class ParkDataParser {
 		
 	}
 
-	private void createAdvisory(Element advisoryElement, Long pID) {
-		Map<String, Object> advisoryDataMap = new HashMap<String, Object>();
-		advisoryDataMap.put(AdvisoryField.PID.toString(), pID);
+	private void createAdvisory(Element advisoryElement, String iD) {
+		Map<String, String> advisoryDataMap = new HashMap<String, String>();
+		advisoryDataMap.put(AdvisoryField.PID.toString(), iD);
 		
 		NodeList children = advisoryElement.getElementsByTagName("*");
 		if (children != null) {
@@ -219,8 +226,9 @@ public class ParkDataParser {
 					advisoryDataMap.put(AdvisoryField.URL.toString(), advElement.getTextContent());
 				}
 			}
+			PersistenceManager pm = getPersistenceManager();
 			try {
-				new Advisory(advisoryDataMap);
+				pm.makePersistent(new Advisory(advisoryDataMap));
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -233,16 +241,18 @@ public class ParkDataParser {
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				pm.close();
 			}
-			System.out.println("new advisory created PID:" + pID.toString());
+			System.out.println("new advisory created PID:" + iD.toString());
 			
 		}
 		
 	}
 
-	private void createFacility(Element facilityElement, Long pID) {
-		Map<String, Object> facilityDataMap = new HashMap<String, Object>();
-		facilityDataMap.put(FacilityField.PID.toString(), pID);
+	private void createFacility(Element facilityElement, String iD) {
+		Map<String, String> facilityDataMap = new HashMap<String, String>();
+		facilityDataMap.put(FacilityField.PID.toString(), iD);
 		String specialFeatures = "";
 		
 		NodeList children = facilityElement.getElementsByTagName("*");
@@ -273,9 +283,9 @@ public class ParkDataParser {
 			if (!specialFeatures.isEmpty()) {
 				facilityDataMap.put(FacilityField.SPECIALFEAT.toString(), specialFeatures);
 			}
-			
+			PersistenceManager pm = getPersistenceManager();
 			try {
-				new Facility(facilityDataMap);
+				pm.makePersistent(new Facility(facilityDataMap));
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -288,12 +298,16 @@ public class ParkDataParser {
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				pm.close();
 			}
-			System.out.println("new facility created PID:" + pID.toString());
+			System.out.println("new facility created PID:" + iD.toString());
 			
 		}
 		
 	}
 
-
+	private PersistenceManager getPersistenceManager() {
+		return PMF.getPersistenceManager();
+	}
 }

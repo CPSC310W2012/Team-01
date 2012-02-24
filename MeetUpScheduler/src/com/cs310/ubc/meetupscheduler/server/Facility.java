@@ -1,14 +1,14 @@
 package com.cs310.ubc.meetupscheduler.server;
 
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Facility extends DataObject {
 	
 	public enum FacilityField{
@@ -19,7 +19,7 @@ public class Facility extends DataObject {
 		},
 		PID {
 		    public String toString() {
-		        return "pid";
+		        return "park_id";
 		    }
 		},
 		
@@ -49,23 +49,23 @@ public class Facility extends DataObject {
 	
 	  @PrimaryKey 
 	  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	  private Long id;
+	  protected Long id; 
 	  @Persistent
-	  private Long park_id;
+	  protected String park_id;
 	  @Persistent
-	  private String count;
+	  protected String count;
 	  @Persistent
-	  private String type;
+	  protected String type;
 	  @Persistent
-	  private String url;
+	  protected String url;
 	  @Persistent
-	  private String special_features;
+	  protected String special_features;
 	  
 	  /*
 	   * This needs to take a list of objects in the same
 	   * order as the parameters/CSV columns.
 	   */
-	  public Facility(Map<String, ? extends Object> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	  public Facility(Map<String, String> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		  super(myFields);
 	  }
 }

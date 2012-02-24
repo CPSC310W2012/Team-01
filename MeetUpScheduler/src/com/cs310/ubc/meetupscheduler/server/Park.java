@@ -1,7 +1,5 @@
 package com.cs310.ubc.meetupscheduler.server;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -12,6 +10,10 @@ import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Park extends DataObject {
+
+	public Park(Map<String, String> myFields) throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException  {
+		super(myFields);
+	}
 
 	public enum ParkField {
 		ID {
@@ -78,35 +80,31 @@ public class Park extends DataObject {
 
 		}
 	
-	  @PrimaryKey 
+	  @PrimaryKey
 	  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	  private Long id;
+	  protected String id;
 	  @Persistent
-	  private String name;
+	  protected String name;
 	  @Persistent
-	  private String street_number;
+	  protected String street_number;
 	  @Persistent
-	  private String street_name;
+	  protected String street_name;
 	  @Persistent
-	  private String ew_street;
+	  protected String ew_street;
 	  @Persistent
-	  private String ns_street;
+	  protected String ns_street;
 	  @Persistent
-	  private String google_map_dest;
+	  protected String google_map_dest;
 	  @Persistent
-	  private Float hectares;
+	  protected String hectares;
 	  @Persistent
-	  private String neighbourhood_name;
+	  protected String neighbourhood_name;
 	  @Persistent
-	  private String neighbourhood_url;
+	  protected String neighbourhood_url;
 	  @Persistent
-	  private String advisories;
+	  protected String advisories;
 	  @Persistent
-	  private String facilities;
-	  
-	  public Park(Map<String, ? extends Object> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		  super(myFields);
-	  }
+	  protected String facilities;
 	  
 	  public boolean hasAdvisories() {
 		  return this.advisories == "Y" ? true: false;
