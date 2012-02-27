@@ -73,6 +73,9 @@ public class JDOTests {
 		eventRow.put("num_attending", "1");
 		eventRow.put("creator", "xxxTHA_BUMPAxxx");
 		eventRow.put("category", "MMA");
+		eventRow.put("date", "12-12-2012");
+		eventRow.put("start_time", "9:00");
+		eventRow.put("end_time", "23:59");
 		myEvent = new Event(eventRow);
 		
 		HashMap<String, String> myEventFields = myEvent.formatForTable();

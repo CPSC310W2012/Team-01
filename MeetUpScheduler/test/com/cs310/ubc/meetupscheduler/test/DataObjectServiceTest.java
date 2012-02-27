@@ -68,7 +68,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 				System.out.println(results);
 			}
 		};
-		dataObjectService.get("Park", "*", callback);
+		dataObjectService.get("Park", callback);
 	}
 	
 	@Test
