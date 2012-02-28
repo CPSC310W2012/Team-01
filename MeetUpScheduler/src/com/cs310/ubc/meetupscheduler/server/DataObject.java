@@ -16,8 +16,7 @@ public class DataObject {
 	  }
 	  
 	  /**
-	   * This creates a data object. There is a fairly good chance this will never be called since GWT seems to have a bug 
-	   * re: getting access rights to parent classes on the server side.
+	   * This creates a data object.
 	   * @param myFields A Map of Strings where the key is the column name as defined in the object's fields enum and the value
 	   * 				 is the value to be used in the created object.
 	   * @throws IllegalArgumentException
