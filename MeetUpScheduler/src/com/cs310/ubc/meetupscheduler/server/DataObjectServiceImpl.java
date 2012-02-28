@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//TODO: Add some sweet logging.
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
 import com.cs310.ubc.meetupscheduler.client.DataObjectService;
@@ -25,6 +23,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 public class DataObjectServiceImpl extends RemoteServiceServlet implements DataObjectService {
 
+	//TODO: Add some logging for errors and such.
 	private static final Logger LOG = Logger.getLogger(DataObjectServiceImpl.class.getName());
 	private static final Map<String, Class<? extends DataObject>> tableMap = getTables();
 	

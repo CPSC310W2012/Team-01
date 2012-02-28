@@ -89,9 +89,4 @@ public class MeetUpScheduler implements EntryPoint {
 	public void createTab(Widget w, String name) {
 	    tabPanel.add(w, name);
 	}
-	
-
-	
-
-	
-	}
+}

@@ -34,13 +34,11 @@ public class ParkDataParser {
 			doc = builder.parse(xmlFile);
 			
 			if (doc == null) {
-				//TODO: CAROLINE error handling
-				return;
+				throw new ServerException("Invalid XML file");
 			}
 			NodeList elementList = doc.getElementsByTagName("Park");
 			if (elementList == null) {
-				//TODO: CAROLINE error handling
-				return;
+				throw new ServerException("Invalid XML file");
 			}
 			
 			//Remove all advisory, washroom, and facility data.
@@ -64,13 +62,12 @@ public class ParkDataParser {
 				areNoParks = false;
 			}
 			if (areNoParks) {
-				//TODO: CAROLINE error handling
+				throw new ServerException("XML file contains no park data");
 			}
 
-	} catch (Exception e) {
-		System.err.println(e);	
-		throw new ServerException(e.getMessage(), e.getStackTrace());
-	}
+		} catch (Exception e) {
+			throw new ServerException(e.getMessage(), e.getStackTrace());
+		}
 	}
 	
 	//Creates a Park Object. Only Park ID is guaranteed to exist.
@@ -79,8 +76,7 @@ public class ParkDataParser {
 		
 		String ID  = element.getAttribute("ID");
 		if (ID == null || ID.isEmpty()) {
-			//TODO: CAROLINE error handling
-			return;
+			throw new ServerException("Invalid XML: null ID");
 		}
 		parkDataMap.put(ParkField.ID.toString(), ID);
 		
@@ -93,7 +89,7 @@ public class ParkDataParser {
 				String elementName = parkElement.getNodeName();
 				
 				if (elementName == null) {
-					//TODO: Caroline error handling
+					throw new ServerException("Invalid XML: null element name");
 				}
 				else if (elementName.equals("Name")) {
 					parkDataMap.put(ParkField.NAME.toString(), parkElement.getTextContent());
@@ -147,7 +143,6 @@ public class ParkDataParser {
 						specialFeatures = parkElement.getTextContent();
 					else
 						specialFeatures += (", " + parkElement.getTextContent());
-					System.out.println(specialFeatures);
 				}
 				else if (elementName.equals("Facility")) {
 					createFacility(parkElement, ID);
@@ -158,11 +153,9 @@ public class ParkDataParser {
 			}
 			parkDataMap.put(ParkField.SPECIALFEAT.toString(), specialFeatures);
 
-
 			PersistenceManager pm = getPersistenceManager();
 			try {
 				pm.makePersistent(new Park(parkDataMap));
-				System.out.println("new park created ID:" + ID.toString());
 			} catch (Exception e) {
 				throw new ServerException(e.getMessage(), e.getStackTrace());
 			} finally {
@@ -183,10 +176,9 @@ public class ParkDataParser {
 				String elementName = wshElement.getNodeName();
 				
 				if (elementName == null) {
-					//TODO: Caroline error handling
+					throw new ServerException("Invalid XML: null washroom field for park " + pID);
 				}
 				else if (elementName.equals("Location")) {
-					//TODO need to make this a date?
 					washroomDataMap.put(WashroomField.LOC.toString(), wshElement.getTextContent());
 				}
 				else if (elementName.equals("Notes")) {
@@ -207,18 +199,10 @@ public class ParkDataParser {
 			} finally {
 				pm.close();
 			}
-			System.out.println("new washroom created PID:" + pID.toString());
-			
 		}
-		
 	}
 
-<<<<<<< HEAD
-	//TODO: a couple of bugs with advisory
 	private void createAdvisory(Element advisoryElement, String iD) throws ServerException {
-=======
-	private void createAdvisory(Element advisoryElement, String iD) {
->>>>>>> 68ffb60c4fb1fbd3d26a5dcc89ae5c537f186109
 		Map<String, String> advisoryDataMap = new HashMap<String, String>();
 		advisoryDataMap.put(AdvisoryField.PID.toString(), iD);
 		
@@ -229,15 +213,13 @@ public class ParkDataParser {
 				String elementName = advElement.getNodeName();
 				
 				if (elementName == null) {
-					//TODO: Caroline error handling
+					throw new ServerException("Invalid XML: null advisory field for park " + iD);
 				}
 				else if (elementName.equals("DateLast")) {
-					//TODO need to make this a date?
 					advisoryDataMap.put(AdvisoryField.DATE.toString(), advElement.getTextContent());
 				}
 				else if (elementName.equals("AdvisoryText")) {
 					advisoryDataMap.put(AdvisoryField.TEXT.toString(), advElement.getTextContent());
-					System.out.println(advElement.getTextContent());
 				}
 				else if (elementName.equals("URL")) {
 					advisoryDataMap.put(AdvisoryField.URL.toString(), advElement.getTextContent());
@@ -250,9 +232,7 @@ public class ParkDataParser {
 				throw new ServerException(e.getMessage(), e.getStackTrace());
 			} finally {
 				pm.close();
-			}
-			System.out.println("new advisory created PID:" + iD.toString());
-			
+			}		
 		}
 		
 	}
@@ -268,7 +248,7 @@ public class ParkDataParser {
 				String elementName = facElement.getNodeName();
 				
 				if (elementName == null) {
-					//TODO: Caroline error handling
+					throw new ServerException("Invalid XML: null facility field for park " + iD);
 				}
 				else if (elementName.equals("FacilityCount")) {
 					facilityDataMap.put(FacilityField.COUNT.toString(), facElement.getTextContent());
@@ -288,16 +268,21 @@ public class ParkDataParser {
 			} finally {
 				pm.close();
 			}
-			System.out.println("new facility created PID:" + iD.toString());
-			
 		}
-		
 	}
 
+	/**
+	 * Helper method to get a persistence manager.
+	 * @return A persistence manager.
+	 */
 	private PersistenceManager getPersistenceManager() {
 		return PersistenceManagerSingleton.getInstance();
 	}
 	
+	/**
+	 * Helper method that returns a list of classes that should be wiped on file upload.
+	 * @return A list of classes that should be wiped.
+	 */
 	private ArrayList<Class<? extends DataObject>> getClassesToDelete() {
 		ArrayList<Class<? extends DataObject>> delClasses = new ArrayList<Class<? extends DataObject>>();
 		delClasses.add(Facility.class);
