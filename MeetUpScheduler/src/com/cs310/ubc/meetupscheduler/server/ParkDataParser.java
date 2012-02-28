@@ -37,7 +37,7 @@ public class ParkDataParser {
 				//TODO: CAROLINE error handling
 				return;
 			}
-			NodeList elementList = doc.getElementsByTagName("*");
+			NodeList elementList = doc.getElementsByTagName("Park");
 			if (elementList == null) {
 				//TODO: CAROLINE error handling
 				return;
@@ -60,10 +60,8 @@ public class ParkDataParser {
 			boolean areNoParks = true;
 			for (int i = 0; i < elementList.getLength(); i++) {
 				Element element = (Element) elementList.item(i);
-				if (element.getNodeName().equals("Park")) {
-					createPark(element);
-					areNoParks = false;
-				}
+				createPark(element);
+				areNoParks = false;
 			}
 			if (areNoParks) {
 				//TODO: CAROLINE error handling
@@ -87,6 +85,7 @@ public class ParkDataParser {
 		parkDataMap.put(ParkField.ID.toString(), ID);
 		
 		NodeList parkElements = element.getElementsByTagName("*");
+		String specialFeatures = "";
 		
 		if (parkElements != null ) {
 			for (int i = 0; i < parkElements.getLength(); i++) {
@@ -128,14 +127,27 @@ public class ParkDataParser {
 				else if (elementName.equals("NeighbourhoodURL")) {
 					parkDataMap.put(ParkField.NURL.toString(), parkElement.getTextContent());
 				}
-				else if (elementName.equals("Advisories")) {
+				else if (elementName.equals("Advisories") && parkElement.hasChildNodes()) {
 					parkDataMap.put(ParkField.HASADVS.toString(), "Y");
+				}
+				else if (elementName.equals("Advisories") && !parkElement.hasChildNodes()) {
+					parkDataMap.put(ParkField.HASADVS.toString(), "N");
 				}
 				else if (elementName.equals("Advisory")) {
 					createAdvisory(parkElement, ID);
 				}
-				else if (elementName.equals("Facilities")) {
+				else if (elementName.equals("Facilities") && parkElement.hasChildNodes()) {
 					parkDataMap.put(ParkField.HASFAC.toString(), "Y");
+				}
+				else if (elementName.equals("Facilities") && !parkElement.hasChildNodes()) {
+					parkDataMap.put(ParkField.HASFAC.toString(), "N");
+				}
+				else if (elementName.equals("SpecialFeature")) {
+					if (specialFeatures.isEmpty())
+						specialFeatures = parkElement.getTextContent();
+					else
+						specialFeatures += (", " + parkElement.getTextContent());
+					System.out.println(specialFeatures);
 				}
 				else if (elementName.equals("Facility")) {
 					createFacility(parkElement, ID);
@@ -144,6 +156,9 @@ public class ParkDataParser {
 					createWashroom(parkElement, ID);
 				}
 			}
+			parkDataMap.put(ParkField.SPECIALFEAT.toString(), specialFeatures);
+
+
 			PersistenceManager pm = getPersistenceManager();
 			try {
 				pm.makePersistent(new Park(parkDataMap));
@@ -198,8 +213,12 @@ public class ParkDataParser {
 		
 	}
 
+<<<<<<< HEAD
 	//TODO: a couple of bugs with advisory
 	private void createAdvisory(Element advisoryElement, String iD) throws ServerException {
+=======
+	private void createAdvisory(Element advisoryElement, String iD) {
+>>>>>>> 68ffb60c4fb1fbd3d26a5dcc89ae5c537f186109
 		Map<String, String> advisoryDataMap = new HashMap<String, String>();
 		advisoryDataMap.put(AdvisoryField.PID.toString(), iD);
 		
@@ -218,6 +237,7 @@ public class ParkDataParser {
 				}
 				else if (elementName.equals("AdvisoryText")) {
 					advisoryDataMap.put(AdvisoryField.TEXT.toString(), advElement.getTextContent());
+					System.out.println(advElement.getTextContent());
 				}
 				else if (elementName.equals("URL")) {
 					advisoryDataMap.put(AdvisoryField.URL.toString(), advElement.getTextContent());
@@ -240,7 +260,6 @@ public class ParkDataParser {
 	private void createFacility(Element facilityElement, String iD) throws ServerException {
 		Map<String, String> facilityDataMap = new HashMap<String, String>();
 		facilityDataMap.put(FacilityField.PID.toString(), iD);
-		String specialFeatures = "";
 		
 		NodeList children = facilityElement.getElementsByTagName("*");
 		if (children != null) {
@@ -260,16 +279,6 @@ public class ParkDataParser {
 				else if (elementName.equals("FacilityURL")) {
 					facilityDataMap.put(FacilityField.URL.toString(), facElement.getTextContent());
 				}
-				//TODO: specialfeature is not a child of facility is under facilities 
-				else if (elementName.equals("SpecialFeature")) {
-					if (specialFeatures.isEmpty())
-						specialFeatures = facElement.getTextContent();
-					else
-						specialFeatures += (", " + facElement.getTextContent());
-				}
-			}
-			if (!specialFeatures.isEmpty()) {
-				facilityDataMap.put(FacilityField.SPECIALFEAT.toString(), specialFeatures);
 			}
 			PersistenceManager pm = getPersistenceManager();
 			try {
