@@ -16,9 +16,9 @@ import com.cs310.ubc.meetupscheduler.server.Facility.FacilityField;
 import com.cs310.ubc.meetupscheduler.server.Park.ParkField;
 import com.cs310.ubc.meetupscheduler.server.Washroom.WashroomField;
 
-import javax.jdo.JDOHelper;
+import com.cs310.ubc.meetupscheduler.client.ServerException;
+
 import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +27,7 @@ public class ParkDataParser {
 	
 	private Document doc;
 	
-	public void parseXML(InputStream xmlFile) {
+	public void parseXML(InputStream xmlFile) throws ServerException {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -70,13 +70,13 @@ public class ParkDataParser {
 			}
 
 	} catch (Exception e) {
-		//TODO: CAROLINE error handling
 		System.err.println(e);	
+		throw new ServerException(e.getMessage(), e.getStackTrace());
 	}
 	}
 	
 	//Creates a Park Object. Only Park ID is guaranteed to exist.
-	private void createPark(Element element) {
+	private void createPark(Element element) throws ServerException {
 		Map<String, String> parkDataMap = new HashMap<String, String>();
 		
 		String ID  = element.getAttribute("ID");
@@ -148,18 +148,8 @@ public class ParkDataParser {
 			try {
 				pm.makePersistent(new Park(parkDataMap));
 				System.out.println("new park created ID:" + ID.toString());
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				throw new ServerException(e.getMessage(), e.getStackTrace());
 			} finally {
 				pm.close();
 			}
@@ -167,7 +157,7 @@ public class ParkDataParser {
 		}		
 	}
 
-	private void createWashroom(Element washroomElement, String pID) {
+	private void createWashroom(Element washroomElement, String pID) throws ServerException {
 		Map<String, String> washroomDataMap = new HashMap<String, String>();
 		washroomDataMap.put(WashroomField.PID.toString(), pID);
 		
@@ -197,18 +187,8 @@ public class ParkDataParser {
 			PersistenceManager pm = getPersistenceManager();
 			try {
 				pm.makePersistent(new Washroom(washroomDataMap));
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				throw new ServerException(e.getMessage(), e.getStackTrace());
 			} finally {
 				pm.close();
 			}
@@ -219,7 +199,7 @@ public class ParkDataParser {
 	}
 
 	//TODO: a couple of bugs with advisory
-	private void createAdvisory(Element advisoryElement, String iD) {
+	private void createAdvisory(Element advisoryElement, String iD) throws ServerException {
 		Map<String, String> advisoryDataMap = new HashMap<String, String>();
 		advisoryDataMap.put(AdvisoryField.PID.toString(), iD);
 		
@@ -246,18 +226,8 @@ public class ParkDataParser {
 			PersistenceManager pm = getPersistenceManager();
 			try {
 				pm.makePersistent(new Advisory(advisoryDataMap));
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				throw new ServerException(e.getMessage(), e.getStackTrace());
 			} finally {
 				pm.close();
 			}
@@ -267,7 +237,7 @@ public class ParkDataParser {
 		
 	}
 
-	private void createFacility(Element facilityElement, String iD) {
+	private void createFacility(Element facilityElement, String iD) throws ServerException {
 		Map<String, String> facilityDataMap = new HashMap<String, String>();
 		facilityDataMap.put(FacilityField.PID.toString(), iD);
 		String specialFeatures = "";
@@ -304,18 +274,8 @@ public class ParkDataParser {
 			PersistenceManager pm = getPersistenceManager();
 			try {
 				pm.makePersistent(new Facility(facilityDataMap));
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				throw new ServerException(e.getMessage(), e.getStackTrace());
 			} finally {
 				pm.close();
 			}
