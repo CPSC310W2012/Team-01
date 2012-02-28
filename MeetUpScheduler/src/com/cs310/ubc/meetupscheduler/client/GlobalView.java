@@ -41,7 +41,7 @@ public class GlobalView extends View {
 	}
 
 
-	public void buildUi(){
+	private void buildUi(){
 
 		//Map
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
@@ -126,7 +126,7 @@ public class GlobalView extends View {
 	}
 	
 	private void addParkMarkers(ArrayList<HashMap<String, String>> parks, MapWidget map){
-		for(int i = 0; i<50; i++){
+		for(int i = 0; i<parks.size(); i++){
 
 			String latLong = parks.get(i).get("google_map_dest");
 			
