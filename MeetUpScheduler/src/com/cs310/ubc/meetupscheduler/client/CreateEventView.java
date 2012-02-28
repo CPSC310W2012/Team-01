@@ -1,13 +1,18 @@
 package com.cs310.ubc.meetupscheduler.client;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -15,8 +20,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
-public class CreateEventView {
+public class CreateEventView extends View {
 
+	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);	
 	private String eventName;
 	private String userName;
 	private String park;
@@ -76,10 +82,11 @@ public class CreateEventView {
 		ListBox facilitiesListBox = new ListBox();
 		facilitiesListBox.addItem("Default Facility");
 		facilitiesListBox.setVisibleItemCount(1);
-		ListBox parksListBox = new ListBox();		
-		parksListBox.addItem("Default Park");
+		ListBox parksListBox = new ListBox();
+		//get parks for parks list
+		getParks(parksListBox);
 		parksListBox.setVisibleItemCount(1);
-		//TODO: parksList.add array of parks names as strings
+		
 		
 		Button submitButton = new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -100,5 +107,34 @@ public class CreateEventView {
 		createEventPanel.add(facilitiesListBox);
 		createEventPanel.add(submitButton);
 		return createEventPanel;
+	}
+	
+	private void getParks(final ListBox parksList) {
+		
+		objectService.get("Park", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>() {
+			@Override
+			public void onFailure(Throwable error) {
+				//TODO: replace with actual table flip
+				System.out.println("Table Flip!");
+			}
+			
+			public void onSuccess(ArrayList<HashMap<String, String>> parks) {
+				addParksToParksListBox(parks, parksList);
+			}
+		});
+	}
+	
+	private void addParksToParksListBox(ArrayList<HashMap<String, String>> parks, ListBox parksList){
+		ArrayList<String> parkNames = new ArrayList<String>();
+
+		for(int i = 0; i<parks.size(); i++){
+			parkNames.add(parks.get(i).get("name"));
+		}
+		
+		Collections.sort(parkNames);
+		
+		for(int i = 0; i<parks.size(); i++){
+			parksList.addItem(parkNames.get(i));
+		}
 	}
 }
