@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//TODO: Add some sweet logging.
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
 import com.cs310.ubc.meetupscheduler.client.DataObjectService;
@@ -25,6 +23,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 public class DataObjectServiceImpl extends RemoteServiceServlet implements DataObjectService {
 
+	//TODO: Add some logging for errors and such.
 	private static final Logger LOG = Logger.getLogger(DataObjectServiceImpl.class.getName());
 	private static final Map<String, Class<? extends DataObject>> tableMap = getTables();
 	
@@ -81,6 +80,14 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	}
 	
 	/**
+	 * Method to remove all persistent objects of a type.
+	 * @param table The type of object to remove.
+	 */
+	public void remove(String table) {
+		remove(table, "*");
+	}
+	
+	/**
 	 * Updates the value a field of one or more objects.
 	 * @param table The type of object to update.
 	 * @param query A filter to find the appropriate object(s)
@@ -114,7 +121,21 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 		}
 		return changedObjs;
 	}
-
+	
+	/**
+	 * Updates the value a field of all objects.
+	 * @param table The type of object to update.
+	 * @param column The field to update.
+	 * @param newValue The new value to use.
+	 * @returns A list of Maps of the fields of the object(s) that have been updated. Can be used to quickly refresh tables after a change.
+	 * @throws ServerException
+	 * 
+	 */
+	public ArrayList<HashMap<String, String>> update(String table, String column, String newValue) throws ServerException {
+		return update(table, "*", column, newValue);
+	}
+	
+	
 	/**
 	 * A method to get the fields of one or more objects specified by a query.
 	 * @param table The type of object to get.
@@ -145,6 +166,18 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 		}
 		return retObjs;
 	}
+	
+	/**
+	 * A method to get the fields of one or more objects specified by a query.
+	 * @param table The type of object to get.
+	 * @param query A query to filter which objects are retrieved.
+	 * @return A list of object Maps containing their fields
+	 * @throws ServerException
+	 */
+	public ArrayList<HashMap<String, String>> get(String table) throws ServerException {
+		return get(table, "*");
+	}
+	
 	/**
 	 * Helper method to get a persistence manager.
 	 * @return A persistence manager.

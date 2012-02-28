@@ -1,0 +1,2 @@
+serviceClass: com.cs310.ubc.meetupscheduler.client.DataObjectService
+path: 579D7C650EBB807F45761E5C8CFB26AA.gwt.rpc

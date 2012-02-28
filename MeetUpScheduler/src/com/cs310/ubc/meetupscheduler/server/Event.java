@@ -46,6 +46,22 @@ public class Event extends DataObject {
 		    public String toString() {
 		        return "category";
 		    }
+		},
+		DATE {
+			public String toString() {
+				return "date";
+			}
+		},
+		
+		START {
+			public String toString() {
+				return "start_time";
+			}
+		},
+		END {
+			public String toString() {
+				return "end_time";
+			}
 		}
 
 		}
@@ -63,4 +79,10 @@ public class Event extends DataObject {
 	protected String creator;
 	@Persistent
 	protected String category;
+	@Persistent
+	protected String date;
+	@Persistent
+	protected String start_time;
+	@Persistent
+	protected String end_time;
 }
