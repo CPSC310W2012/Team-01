@@ -38,11 +38,6 @@ public class Facility extends DataObject {
 		    public String toString() {
 		        return "url";
 		    }
-		},
-		SPECIALFEAT {
-		    public String toString() {
-		        return "special_features";
-		    }
 		}
 
 		}
@@ -58,8 +53,7 @@ public class Facility extends DataObject {
 	  protected String type;
 	  @Persistent
 	  protected String url;
-	  @Persistent
-	  protected String special_features;
+
 	  
 	  /*
 	   * This needs to take a list of objects in the same
