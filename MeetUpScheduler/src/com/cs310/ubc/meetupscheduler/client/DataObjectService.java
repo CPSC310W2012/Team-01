@@ -15,6 +15,9 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface DataObjectService extends RemoteService {
 	public HashMap<String, String> add(String table, HashMap<String, String> fields) throws ServerException;
 	public void remove(String table, String query);
+	public void remove(String table);
 	public ArrayList<HashMap<String, String>> update(String table, String query, String column, String newValue) throws ServerException;
+	public ArrayList<HashMap<String, String>> update(String table, String column, String newValue) throws ServerException;
 	public ArrayList<HashMap<String, String>> get(String table, String query) throws ServerException;
+	public ArrayList<HashMap<String, String>> get(String table) throws ServerException;
 }

@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -34,7 +35,6 @@ public class MeetUpScheduler implements EntryPoint {
 			+ "connection and try again.";
 	
 	  private TabPanel tabPanel;
-	  private FormPanel form;
 	  private DataObjectServiceAsync dataObjectService = GWT.create(DataObjectService.class);
 	  private GlobalView globalView = new GlobalView();
 
@@ -45,6 +45,9 @@ public class MeetUpScheduler implements EntryPoint {
 	public void onModuleLoad() {
 	    tabPanel = new TabPanel();
 	    initTabPanel();
+	    //set pages here
+	    AdminView admin = new AdminView();
+	    tabPanel.add(admin.createPage(), "Upload XML file");
 	    RootPanel.get().add(tabPanel);
 	  }
 
@@ -83,79 +86,8 @@ public class MeetUpScheduler implements EntryPoint {
 
 	    tabPanel.selectTab(0);
 	    tabPanel.setSize("85%", "100%");
-	    //set pages here
-	    createFileUploadForm();
-	    tabPanel.add(form, "Upload XML file");
 	}
-	//TODO: CAROLINE refactor this into Admin Page class
-	private void createFileUploadForm() {
-	    // Create a FormPanel and point it at a service.
-	    form = new FormPanel();
-	    form.setAction(GWT.getModuleBaseURL()+"filereader");
-
-	    form.setEncoding(FormPanel.ENCODING_MULTIPART);
-	    form.setMethod(FormPanel.METHOD_POST);
-
-	    // Create a panel to hold all of the form widgets.
-	    VerticalPanel panel = new VerticalPanel();
-	    form.setWidget(panel);
-
-	    // Create a FileUpload widget.
-	    final FileUpload upload = new FileUpload();
-	    upload.setName("uploadFormElement");
-	   
-	    panel.add(upload);
-
-	    // 'submit' button.
-	    panel.add(new Button("Submit", new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	        form.submit();
-	      }
-	    }));
-
-	    // Form event handlers
-	    form.addSubmitHandler(new FormPanel.SubmitHandler() {
-	      public void onSubmit(SubmitEvent event) {
-	        if (upload.getFilename() == null || upload.getFilename().isEmpty()) {
-	        	  Window.alert("You must select a XML file to continue");
-	        	  event.cancel();
-	        }
-	        //TODO: CAROLINE can set the filetype in the file chooser?
-	        else if (!isXML(upload.getFilename())) {
-	        	  Window.alert("Only XML files are supported at this time.");
-	        	  event.cancel();
-	        }
-	      }
-
-	    });
-	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-	      public void onSubmitComplete(SubmitCompleteEvent event) {
-	        // complete event
-	        Window.alert(event.getResults());
-	      }
-	    });
-		
+	public void createTab(Widget w, String name) {
+	    tabPanel.add(w, name);
 	}
-	//TODO: CAROLINE refactor this into Admin Page class
-	private boolean isXML(String filename) {
-		int dot = filename.indexOf(".");
-		
-		String pastDotStr = filename.substring(dot + 1);
-		
-		int lastdot = pastDotStr.indexOf(".");
-		
-		if (lastdot != -1) {
-			return isXML(pastDotStr.substring(lastdot + 1));
-		}
-		
-		else {
-
-			if (pastDotStr.trim().toLowerCase().equals("xml")) {
-				return true;
-			}
-		return false;
-		}
-	}
-
-	
-	}
+}

@@ -39,8 +39,7 @@ public class FileReader extends HttpServlet {
           ParkDataParser xmlParser = new ParkDataParser();
           xmlParser.parseXML(stream);
           
-          //TODO: Caroline better msg
-          res.getOutputStream().print("DONE");
+          res.getOutputStream().print("XML file successfully uploaded.");
         }
       }
     } catch (Exception ex) {

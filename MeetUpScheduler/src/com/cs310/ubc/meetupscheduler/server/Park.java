@@ -76,6 +76,11 @@ public class Park extends DataObject {
 		    public String toString() {
 		        return "facilities";
 		    }
+		},
+		SPECIALFEAT {
+		    public String toString() {
+		        return "special_features";
+		    }
 		}
 
 		}
@@ -105,6 +110,8 @@ public class Park extends DataObject {
 	  protected String advisories;
 	  @Persistent
 	  protected String facilities;
+	  @Persistent
+	  protected String special_features;
 	  
 	  public boolean hasAdvisories() {
 		  return this.advisories == "Y" ? true: false;
