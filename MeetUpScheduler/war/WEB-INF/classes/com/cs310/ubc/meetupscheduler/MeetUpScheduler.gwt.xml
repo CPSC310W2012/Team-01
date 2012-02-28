@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='meetupscheduler'>
-  <!-- Inherit the core Web Toolkit stuff.                        -->
-  <inherits name='com.google.gwt.user.User'/>
 
+
+  <!-- Inherit the core Web Toolkit stuff.-->
+  <inherits name='com.google.gwt.user.User'/>
+  
+  <!-- Inherit Google Maps Toolkit -->
+  <inherits name='com.google.gwt.maps.GoogleMaps'/>
+  
   <!-- Inherit the default GWT style sheet.  You can change       -->
   <!-- the theme of your GWT application by uncommenting          -->
   <!-- any one of the following lines.                            -->
@@ -15,9 +20,12 @@
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.cs310.ubc.meetupscheduler.client.MeetUpScheduler'/>
+  
+ 
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
   <source path='shared'/>
-
+  
+   
 </module>
