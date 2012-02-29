@@ -23,6 +23,7 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 public class CreateEventView extends View {
 
 	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);	
+	//event fields
 	private String eventName;
 	private String userName;
 	private String park;
@@ -30,7 +31,24 @@ public class CreateEventView extends View {
 	private String date;
 	private String startTime;
 	private String endTime;
-	//TODO: fields
+	
+	//Panel to hold Create Event Components
+	private VerticalPanel createEventPanel = new VerticalPanel();
+	//Name boxes
+	//TODO: Add labels for these boxes
+	private TextBox eventNameBox = new TextBox();
+	private TextBox userNameBox = new TextBox();
+	//Date Selector for Event
+	private DatePicker eventDatePicker = new DatePicker();
+	private Label eventDatePickerLabel = new Label();
+	//Time selectors
+	private ListBox startTimeList = new ListBox();
+	private ListBox endTimeList = new ListBox();
+	//Category selector
+	private ListBox categoriesListBox = new ListBox();
+	//Park Selector
+	private ListBox parksListBox = new ListBox();
+	
 	
 	public CreateEventView() {
 		//TODO: Default Constructor
@@ -40,58 +58,46 @@ public class CreateEventView extends View {
 		park = parkID;
 	}
 	
-	public VerticalPanel createPage() {
-		//TODO: call data service for park data
+	public VerticalPanel createPage() {				
 		
-		//Panel to hold Create Event Components
-		VerticalPanel createEventPanel = new VerticalPanel();
-		//Name boxes
-		//TODO: Add change handlers to take values
-		TextBox eventNameBox = new TextBox();
-		TextBox userNameBox = new TextBox();
+		//TODO: Add change handlers to take values			
 		
-		//Date Selector for Event
-		DatePicker eventDatePicker = new DatePicker();
-		final Label eventDatePickerLabel = new Label();
-		//Sets the label when a date is selected
-		//TODO: set the field when a date is selected
+		//Sets the label when a date is selected		
 		eventDatePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			public void onValueChange(ValueChangeEvent<Date> event) {
 				Date eventDate = event.getValue();
 				String eventDateString = DateTimeFormat.getMediumDateFormat().format(eventDate);
 				eventDatePickerLabel.setText(eventDateString);
 			}
-		});
+		}); 
 		//Default Value for date
 		eventDatePicker.setValue(new Date(), true);
 		
-		//Selectors for event time
-		//TODO: add change handlers, extract loop into generic time list helper
-		ListBox startTimeList = new ListBox();
-		for (int i=0; i<=23; i++ ) {
-			startTimeList.addItem(i+":00");
-		}
-		startTimeList.setVisibleItemCount(1);
+		//populate time lists
+		//TODO: add change handlers		
+		setHoursList(startTimeList);
+		setHoursList(endTimeList);		
 		
-		ListBox endTimeList = new ListBox();
-		for (int i=0; i<=23; i++ ) {
-			endTimeList.addItem(i+":00");
-		}
-		endTimeList.setVisibleItemCount(1);
+		//categories set-up
+		categoriesListBox.addItem("Default Category");
+		categoriesListBox.setVisibleItemCount(1);
 		
-		ListBox facilitiesListBox = new ListBox();
-		facilitiesListBox.addItem("Default Facility");
-		facilitiesListBox.setVisibleItemCount(1);
-		ListBox parksListBox = new ListBox();
 		//get parks for parks list
 		getParks(parksListBox);
-		parksListBox.setVisibleItemCount(1);
-		
+		parksListBox.addItem("1");
+		parksListBox.setVisibleItemCount(1);		
 		
 		Button submitButton = new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
+							
 				//TODO: Implement verifier call, submit call, and route to event view tab
-				Window.alert("Submitted!");
+				setEventFields();				
+				
+				if (verifyFields()) {
+					createEvent();
+					Window.alert("Event Created!");
+				}
+				Window.alert("Something went wrong!");
 			}
 		});
 		
@@ -104,7 +110,7 @@ public class CreateEventView extends View {
 		createEventPanel.add(startTimeList);
 		createEventPanel.add(endTimeList);
 		createEventPanel.add(parksListBox);
-		createEventPanel.add(facilitiesListBox);
+		createEventPanel.add(categoriesListBox);
 		createEventPanel.add(submitButton);
 		return createEventPanel;
 	}
@@ -136,5 +142,43 @@ public class CreateEventView extends View {
 		for(int i = 0; i<parks.size(); i++){
 			parksList.addItem(parkNames.get(i));
 		}
+	}
+	
+	private void setEventFields() {
+		
+		eventName = eventNameBox.getValue();
+		userName = userNameBox.getValue();
+		//TODO: Fix this so that it actually gets the park_id and not the name
+		park = parksListBox.getValue(parksListBox.getSelectedIndex());
+		eventType = categoriesListBox.getValue(categoriesListBox.getSelectedIndex());
+		date = DateTimeFormat.getMediumDateFormat().format(eventDatePicker.getValue());
+		startTime = startTimeList.getValue(startTimeList.getSelectedIndex());
+		endTime = endTimeList.getValue(endTimeList.getSelectedIndex());		
+	}
+	
+	private boolean verifyFields() {
+		//TODO: specify conditions for field verification, add field specific errors
+		if (eventName == null || userName == null || park == null || date == null || startTime == null || endTime == null) return false;
+		return true;
+	}
+	
+	private void createEvent() {
+		HashMap<String, String> event = new HashMap<String, String>();
+		event.put("name", eventName);
+		event.put("park_id", park);
+		event.put("creator", userName);
+		event.put("category", eventType);
+		event.put("date", date);
+		event.put("start_time", startTime);
+		event.put("end_time", endTime);
+		//TODO: Make data object service call to create event		
+		System.out.println(event);
+	}
+	
+	private void setHoursList(ListBox list) {
+		for (int i=0; i<=23; i++ ) {
+			list.addItem(i+":00");
+		}
+		list.setVisibleItemCount(1);
 	}
 }
