@@ -193,7 +193,7 @@ public class GlobalView extends View {
 
 
 	private void addEventMarkers(ArrayList<HashMap<String, String>> events, MapWidget map){
-		//TODO: Add event markers to map widet
+		//TODO: Add event markers to map widget
 	}
 
 	/**
