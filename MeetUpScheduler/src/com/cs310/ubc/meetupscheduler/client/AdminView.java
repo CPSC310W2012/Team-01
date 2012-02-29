@@ -19,7 +19,7 @@ public class AdminView extends View {
 		createFileUploadForm();
 	}
 	
-	public Widget createPage() {
+	public FormPanel createPage() {
 		return form;
 	}
 
