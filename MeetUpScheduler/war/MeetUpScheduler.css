@@ -39,9 +39,9 @@ h1 {
 
 /* Recent Events Table Headers in Global View*/
 .recentEventHeaders {
-	border: 1px solid #599114;
-	background-color: #599114;
-	color: white;
+	border: 1px solid #F4F3F0;
+	background-color: #F4F3F0;
+	color: #307BC1;
 	padding: 4px
 	}
 
@@ -54,5 +54,5 @@ h1 {
   	padding: 5px;
   	font-weight:600;
   	font-size:13px;
-  	color: #599114;
+  	color: #4C674C;
 	}
