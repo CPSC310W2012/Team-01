@@ -133,7 +133,6 @@ public class GlobalView extends View {
 						eventTable.setText(row, 2, allParks.get(n).get("name"));
 					}
 				}
-
 			}
 		}
 	}
