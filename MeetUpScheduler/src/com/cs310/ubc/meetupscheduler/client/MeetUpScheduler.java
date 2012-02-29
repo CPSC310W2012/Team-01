@@ -41,7 +41,7 @@ public class MeetUpScheduler implements EntryPoint {
 	    tabPanel = new TabPanel();
 	    initTabPanel();
 	    admin = new AdminView();
-	    tabPanel.add(admin.createPage(), "Upload XML file");
+	    tabPanel.add(admin.createPage(), "Administrator");
 	    RootPanel.get().add(tabPanel);
 	  }
 

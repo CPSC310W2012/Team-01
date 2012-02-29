@@ -3,11 +3,14 @@ package com.cs310.ubc.meetupscheduler.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.layout.client.Layout;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
@@ -18,8 +21,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AdminView extends View {
 	  private FormPanel form;
-	  private TextArea ta;
-	  private ScrollPanel sp;
+	  private TextArea ta  = new TextArea();
+	  private ScrollPanel scrollPan = new ScrollPanel(ta);;
 	  
 	public AdminView() {
 		createFileUploadForm();
@@ -35,25 +38,37 @@ public class AdminView extends View {
 	    form.setAction(GWT.getModuleBaseURL()+"filereader");
 	    form.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    form.setMethod(FormPanel.METHOD_POST);
+	    
 
+	    
 	    // Create a panel to hold all of the form widgets.
-	    final VerticalPanel panel = new VerticalPanel();
-	    form.setWidget(panel);
+	    VerticalPanel vPanel = new VerticalPanel();
+	    vPanel.getElement().setId("adminVertPan");
+	    vPanel.add(new HTML("<h1>Administrator View: Data Upload</h1>"));
+	    HorizontalPanel hPanel = new HorizontalPanel();
+	    hPanel.getElement().setId("adminHorPan");
 
+
+	    form.setWidget(vPanel);
+	    vPanel.add(hPanel);
+        
 	    // Create a FileUpload widget.
 	    final FileUpload upload = new FileUpload();
+	    upload.getElement().setId("adminFileUp");
 	    upload.setName("uploadFormElement");
 	   
-	    panel.add(upload);
+	    hPanel.add(upload);
 
 	    // 'submit' button.
-	    panel.add(new Button("Submit", new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	        form.submit();
-	      }
-	    }));
+		   Button subBut = new Button("Submit", new ClickHandler() {
+			      public void onClick(ClickEvent event) {
+			        form.submit();
+			      }
+			    });
+		subBut.getElement().setId("adminSubBut");
+		hPanel.add(subBut);
 	    initTextArea();
-	    panel.add(sp);
+	    vPanel.add(scrollPan);
 
 	    // Form event handlers
 	    form.addSubmitHandler(new FormPanel.SubmitHandler() {
@@ -80,15 +95,12 @@ public class AdminView extends View {
 	}
 
 	private void initTextArea() {
-		ta = new TextArea();
         ta.setVisible(false);
 	    ta.setCharacterWidth(150);
 	    ta.setHeight("20 px");
-	    ta.setVisibleLines(50);
+	    ta.setVisibleLines(20);
 	    ta.setReadOnly(true);
 	    ta.setAlignment(TextAlignment.JUSTIFY);
-	    
-	    sp = new ScrollPanel(ta);
 	}
 
 	private boolean isXML(String filename) {
