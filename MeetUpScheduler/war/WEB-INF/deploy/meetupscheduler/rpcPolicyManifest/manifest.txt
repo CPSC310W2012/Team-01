@@ -1,2 +1,3 @@
 # Module meetupscheduler
 # RPC service class, partial path of RPC policy file
+com.cs310.ubc.meetupscheduler.client.DataObjectService, 579D7C650EBB807F45761E5C8CFB26AA.gwt.rpc

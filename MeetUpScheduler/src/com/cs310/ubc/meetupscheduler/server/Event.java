@@ -11,8 +11,6 @@ import javax.jdo.annotations.PrimaryKey;
 
 /**
  * Persistent class to hold data about events.
- * @author connor
- *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Event extends DataObject {

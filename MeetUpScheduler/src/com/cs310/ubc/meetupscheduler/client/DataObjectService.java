@@ -7,9 +7,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
- * Interface for ASync calls to get DataObjects. See DataObject and DataObjectServiceImpl for more details on DataObjects and the following methods.
- * @author Connor
- *
+ * Interface for ASync calls to get DataObjects. See DataObject and DataObjectServiceImpl for more details on 
+ * DataObjects and the following methods.
  */
 @RemoteServiceRelativePath("dataobject")
 public interface DataObjectService extends RemoteService {
