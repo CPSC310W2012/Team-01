@@ -57,7 +57,7 @@ public class GlobalView extends View {
 	 * Builds the parks and events summary page ui and places it 
 	 * in the rootPanel field
 	 */
-	private void buildUi(){
+	public void buildUi() {
 
 		//Map
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
@@ -203,7 +203,7 @@ public class GlobalView extends View {
 	 * @param map Map widget receiving marker overlays
 	 */
 	private void addParkMarkers(ArrayList<HashMap<String, String>> parks, MapWidget map){
-		for(int i = 0; i<parks.size(); i++){
+		for(int i = 0; i<50; i++){
 
 			String latLong = parks.get(i).get("google_map_dest");
 

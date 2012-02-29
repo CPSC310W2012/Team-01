@@ -27,5 +27,6 @@
   <source path='client'/>
   <source path='shared'/>
   
+  <servlet path='/dataobject' class='com.cs310.ubc.meetupscheduler.server.DataObjectServiceImpl'></servlet>
    
 </module>

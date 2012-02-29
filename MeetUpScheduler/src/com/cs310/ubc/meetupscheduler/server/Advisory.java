@@ -10,8 +10,6 @@ import javax.jdo.annotations.PrimaryKey;
 
 /**
  * Persistent class to hold advisory data.
- * @author connor
- *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Advisory extends DataObject {

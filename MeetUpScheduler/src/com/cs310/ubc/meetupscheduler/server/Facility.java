@@ -10,8 +10,6 @@ import javax.jdo.annotations.PrimaryKey;
 
 /**
  * Persistent class to hold facility data.
- * @author connor
- *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Facility extends DataObject {

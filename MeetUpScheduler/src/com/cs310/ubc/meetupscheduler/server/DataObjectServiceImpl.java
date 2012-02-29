@@ -17,13 +17,12 @@ import com.cs310.ubc.meetupscheduler.client.ServerException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
- * This is the server side bit of our DataObject service that creates/stores/retrieves/modifies JDOs.
- * @author Connor
- *
+ * This is the server side bit of our DataObject service that 
+ * creates/stores/retrieves/modifies JDOs.
  */
 public class DataObjectServiceImpl extends RemoteServiceServlet implements DataObjectService {
 
-	//TODO: Add some logging for errors and such.
+	private static final long serialVersionUID = 4058514716973575670L;
 	private static final Logger LOG = Logger.getLogger(DataObjectServiceImpl.class.getName());
 	private static final Map<String, Class<? extends DataObject>> tableMap = getTables();
 	
@@ -37,6 +36,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	public HashMap<String, String> add(String table, HashMap<String, String> fields) throws ServerException {
 		PersistenceManager pm = getPersistenceManager();
 		Class<? extends DataObject> tableClass = tableMap.get(table);
+		@SuppressWarnings("rawtypes")
 		Class<Map>[] conArgs = new Class[1];
 		conArgs[0] = Map.class;
 		Constructor<? extends DataObject> tableConstructor;
@@ -47,6 +47,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 			pm.makePersistent(newObj);
 			newObjMap = newObj.formatForTable();
 		} catch (Exception e) {
+			LOG.log(Level.SEVERE, e.getMessage());
 			throw new ServerException(e.getMessage(), e.getStackTrace());
 		} finally {
 			pm.close();
@@ -71,9 +72,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 			else
 				q = pm.newQuery(tableClass, query);
 			List<DataObject> objects = (List<DataObject>) q.execute();
-			for (DataObject object: objects) {
-				pm.deletePersistent(object);
-			}
+			pm.deletePersistentAll(objects);
 		} finally {
 			pm.close();
 		}
@@ -115,6 +114,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 				changedObjs.add(object.formatForTable());
 			}
 		} catch (Exception e) {
+			LOG.log(Level.SEVERE, e.getMessage());
 			throw new ServerException(e.getMessage(), e.getStackTrace());
 		}  finally {
 			pm.close();
@@ -134,7 +134,6 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	public ArrayList<HashMap<String, String>> update(String table, String column, String newValue) throws ServerException {
 		return update(table, "*", column, newValue);
 	}
-	
 	
 	/**
 	 * A method to get the fields of one or more objects specified by a query.
@@ -160,6 +159,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 				retObjs.add(object.formatForTable());
 			}
 		} catch (Exception e) { 
+			LOG.log(Level.SEVERE, e.getMessage());
 			throw new ServerException(e.getMessage(), e.getStackTrace());
 		} finally {
 			pm.close();
@@ -199,5 +199,4 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 		myMap.put("Facility", Facility.class);
 		return myMap;
 	}
-
 }

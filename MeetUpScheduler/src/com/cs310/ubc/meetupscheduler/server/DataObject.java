@@ -7,8 +7,6 @@ import java.util.Map;
 /**
  * DataObject is a parent class for all the JDO objects in our application. This parent class allows for use of only a single Service
  * to do asynchronous retrieval, as well as some nifty inherited methods.
- * @author Connor
- *
  */
 public class DataObject {
 	  public DataObject() {

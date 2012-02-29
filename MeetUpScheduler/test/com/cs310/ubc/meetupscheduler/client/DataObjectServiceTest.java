@@ -1,4 +1,4 @@
-package com.cs310.ubc.meetupscheduler.test;
+package com.cs310.ubc.meetupscheduler.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -16,6 +16,7 @@ import com.cs310.ubc.meetupscheduler.client.DataObjectService;
 import com.cs310.ubc.meetupscheduler.client.DataObjectServiceAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
@@ -24,7 +25,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 	private HashMap<String, String> parkRow;
 	
 	@Before
-	public void gwtSetUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void gwtSetUp() {
 		dataObjectService = GWT.create(DataObjectService.class);
 		parkRow = new HashMap<String, String>();
 		parkRow.put("id", "1"); 
@@ -45,16 +46,24 @@ public class DataObjectServiceTest extends GWTTestCase {
 	
 	@Test
 	public void testAddPark() {
-		AsyncCallback<HashMap<String, String>> callback = new AsyncCallback<HashMap<String, String>>() {
-			public void onFailure(Throwable caught) {
-				//Oh no!
-			}
-			
-			public void onSuccess(HashMap<String, String> results) {
-				System.out.println(results);
+		Timer timer = new Timer() {
+			public void run() {
+				AsyncCallback<HashMap<String, String>> callback = new AsyncCallback<HashMap<String, String>>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						finishTest();
+					}
+					
+					public void onSuccess(HashMap<String, String> results) {
+						assert(results.equals(parkRow));
+						finishTest();
+					}
+				};
+				dataObjectService.add("Park", parkRow, callback);
 			}
 		};
-		dataObjectService.add("Park", parkRow, callback);		
+		delayTestFinish(5000);
+		timer.schedule(100);
 	}
 	
 	@Test
