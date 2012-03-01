@@ -37,11 +37,9 @@ public class MeetUpScheduler implements EntryPoint {
 	  private TabPanel tabPanel;
 	  private DataObjectServiceAsync dataObjectService = GWT.create(DataObjectService.class);
 	  private GlobalView globalView = new GlobalView();
-<<<<<<< HEAD
 	  private CreateEventView createEventView = new CreateEventView();
-=======
 	  private EventView eventView = new EventView();
->>>>>>> branch 'master' of https://Loken85@github.com/CPSC310W2012/Team-01.git
+
 
 
 	/**
@@ -58,15 +56,10 @@ public class MeetUpScheduler implements EntryPoint {
 
 
 	private void initTabPanel() {
+		
 		tabPanel.add(globalView.createPage(), "Vancouver Parks and Events");
-<<<<<<< HEAD
-	    tabPanel.add(createEventView.createPage(), "Create an Event");
-	    tabPanel.add(new HTML("<h1>Page 2 Content: Page 2</h1>"), " Page 2 ");
-=======
-	    tabPanel.add(new HTML("<h1>Page 1 Content: Page 1</h1>"), " Page 1 ");
+	    tabPanel.add(createEventView.createPage(), "Create an Event");	   
 	    tabPanel.add(eventView.createPage(), "Event Information Page");
->>>>>>> branch 'master' of https://Loken85@github.com/CPSC310W2012/Team-01.git
-
 	    tabPanel.addSelectionHandler(new SelectionHandler<Integer>(){
 	      public void onSelection(SelectionEvent<Integer> event) {
 	        // TODO Auto-generated method stub
