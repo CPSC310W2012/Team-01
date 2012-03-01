@@ -3,6 +3,7 @@ package com.cs310.ubc.meetupscheduler.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.cs310.ubc.meetupscheduler.server.Event;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -10,6 +11,8 @@ import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -17,49 +20,58 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 
 
 public class EventView extends View{
 	/**
-	 * These are the UI components of the View
+	 * EventView for looking at the details of a specific event
+	 * 
+	 * @author Ben
 	 */
 	private final int MAP_HEIGHT = 400;
 	private final int MAP_WIDTH = 500;
-	
+	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);	
+
+
+	private TextBox loadText = new TextBox();
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private Label eventName = new Label();
 	private Button joinButton = new Button();
 	private DialogBox joinBox = new DialogBox();
 	private TextBox joinName = new TextBox();
+	private Button loadButton = new Button();
 	private VerticalPanel parkPanel = new VerticalPanel();
 	private ListBox attendees = new ListBox();
 	private VerticalPanel attendeePanel = new VerticalPanel();
 	private VerticalPanel infoPanel = new VerticalPanel();
+	private Label eventCreator = new Label();
 	private Label eventLoc = new Label();
 	private Label eventTime = new Label();
 	private Label eventNotes = new Label();
+	private Label eventCategory = new Label();
+	private MapWidget eventMap;
 	private ArrayList<String> members;
 	private Integer attendeeCount = 0;
-	Label attCountLabel = new Label();
-	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
+	private Label attCountLabel = new Label();
 	private ArrayList<HashMap<String, String>> allEvents;
-	
 
 
 
 
-//	public Widget createPage (Event event) {
-//		currentEvent = event;
-//		//Initialize Map, needs a key before it can be deployed
-//		Maps.loadMapsApi("", "2", false, new Runnable() {
-//			public void run() {
-//				buildUI();
-//			}
-//		});
-//		return panel;
-//	}
-	
+	// TODO: Make this into a working constructor that takes an eventID string
+	//	public Widget createPage (String eventID) {
+	//		currentEvent = event;
+	//		//Initialize Map, needs a key before it can be deployed
+	//		Maps.loadMapsApi("", "2", false, new Runnable() {
+	//			public void run() {
+	//				buildUI();
+	//			}
+	//		});
+	//		return panel;
+	//	}
+
 	public HorizontalPanel createPage() {
 		//Initialize Map, needs a key before it can be deployed
 		Maps.loadMapsApi("", "2", false, new Runnable() {
@@ -69,38 +81,51 @@ public class EventView extends View{
 		});
 		return rootPanel;
 	}
-	
+
+	/**
+	 * Constructs the UI elements of EventView
+	 */
 	public void buildUI(){
+		//Persistent data should mean that this call isn't needed.
+//		buildSampleEvent();
+		
+		loadEvents();
+
 		// set up the Map
+		// TODO: Make the map relevant. Load markers of the location, etc.
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
-		final MapWidget eventMap = new MapWidget(vancouver, 11);
+		eventMap = new MapWidget(vancouver, 11);
 
 		eventMap.setPixelSize(MAP_WIDTH, MAP_HEIGHT);
 		eventMap.setScrollWheelZoomEnabled(true);
 		eventMap.addControl(new LargeMapControl3D());
+		eventMap.checkResizeAndCenter();
+
+		// Sets the eventLoad button to load the events
+
+		loadText.setText("Enter the number of the event to load");
+		loadButton.setText("Click to load an event");
+		loadButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				loadEvent(Integer.parseInt(loadText.getText()));
+			}
+		});
 		
-		//set up the eventName label
-		eventName.setText("This is the event name"); // TODO: get proper enum settings
-		eventTime.setText("3:00pm");
-		eventLoc.setText("Jericho Park");
-		eventNotes.setText("This is the information for the event. People should bring their own soccer ball to the game. Shinpads mandatory. \n Make sure to bring water!");
-
-
+		
 		//set up the joinButton
-		
 		joinButton.setText("Join event!");
 		joinButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				joinBox.show();
 			}
 		});
-	
-		
-		//Add the joinBox
-		setJoinBox();
-		
-		
 
+
+		
+		setJoinBox();
+
+
+		// Sets up a temporary attendee list.
 		members = new ArrayList<String>();
 		members.add("Adrian");
 		members.add("Ben");
@@ -108,110 +133,184 @@ public class EventView extends View{
 		members.add("Connor");
 		members.add("Dave");
 		setUpAttendees();
-		
-		//Put the UI together
-		
+
+
 		setUpInfoPanel();
-		eventMap.setSize("500px", "400px");
-		eventMap.checkResizeAndCenter();
+
+		
+		// Add items to panels
 		parkPanel.add(eventMap);
 		attendeePanel.add(attCountLabel);
 		attendeePanel.add(attendees);
-		
+		rootPanel.add(loadText);
+		rootPanel.add(loadButton);
 		rootPanel.add(infoPanel);
-
 		rootPanel.add(joinButton);
 		rootPanel.add(parkPanel);
 	}
 
+	/**
+	 * This loads the specifics of the event into the info panel.
+	 * 
+	 * @param eventID: The id of the event you want to load to the page.
+	 * 
+	 * TODO: - Add event positions to map
+	 * 		 - Get the park information loaded into a parks page
+	 * 		 - Set real attendees list.
+	 */
+	private void loadEvent(int eventID) {
+		// stupid way of dealing with the disparity between array position and event #
+		eventID--;
+		HashMap<String, String> event = new HashMap<String, String>();
+		if (allEvents != null){
+			try { 
+				allEvents.get(eventID); {
+					event = allEvents.get(eventID);
+					eventName.setText("The name of the event is " + event.get("name")); // TODO: get proper enum settings
+					eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
+					eventLoc.setText(event.get("park_id") + " is the park ID.");
+					eventCreator.setText(event.get("creator") + " is the event creator.");
+					eventMap.checkResizeAndCenter();
+					eventCategory.setText("This event is in the category: " + event.get("category"));
+				}
+				
+			} catch (Exception e) {
+				Window.alert("There is no event " + ++eventID + ".");
+			}
+		}
+		else Window.alert("No events!");
+
+	}
+
+
+	/**
+	 * Loads all existing Events into a list.
+	 */
+	private void loadEvents(){
+		eventService.get("Event", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("You're doing it wrong!");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<HashMap<String, String>> events) {
+				allEvents = events;
+				for (int i = 0; i < allEvents.size(); i++){
+					System.out.println(allEvents.get(i).get("id"));
+				}
+			}
+		});
+	}
+
+	/**
+	 * Use this to create various sample events to test with.
+	 * This doesn't need to be used once full event creation is implemented.
+	 * TODO: Make this not just overwrite existing events of the same id.
+	 */
+	private void buildSampleEvent() {
+		HashMap<String, String> sampleEventMap = new HashMap<String, String>();
+		sampleEventMap.put("id", "1");
+		sampleEventMap.put("name","Champion's League");
+		sampleEventMap.put("park_id", "1");
+		sampleEventMap.put("num_attending","0");
+		sampleEventMap.put("creator","Ben");
+		sampleEventMap.put("category","Soccer");
+		sampleEventMap.put("date","Feb 29th, 2012");
+		sampleEventMap.put("start_time","1:00");
+		sampleEventMap.put("end_time", "4:00");
+
+		eventService.add("Event", sampleEventMap, new AsyncCallback<HashMap<String, String>>() {
+			public void onFailure(Throwable error) {
+				System.out.println("Flip a table!  (>o.o)> _|__|_)");
+			}
+
+			public void onSuccess(HashMap<String, String> newEvent) {
+				//TODO: Add call to helper to scheduler to get event view based on event id
+				System.out.println(newEvent);
+				Window.alert("Event Created!");
+			}
+		});
+
+	}
+	
+	/**
+	 * This creates the panel with the relevant information of the event.
+	 */
 	private void setUpInfoPanel() {
+		infoPanel.add(eventCreator);
+		infoPanel.add(eventCategory);
 		infoPanel.add(eventLoc);
 		infoPanel.add(eventTime);
 		infoPanel.add(attendeePanel);
 		infoPanel.add(eventNotes);
+		eventNotes.setText("This is the information for the event. Needs to be persistent.");
 	}
 
+	/**
+	 * Helper to manage the list of attendees at the event.
+	 */
 	private void setUpAttendees() {
-		 for (int i = 0; i< members.size(); i++){
-			 attendees.addItem(members.get(i));
-		 }
+		for (int i = 0; i< members.size(); i++){
+			attendees.addItem(members.get(i));
+		}
 		attendees.setVisibleItemCount(members.size());
 		attendeeCount = members.size();
 		attCountLabel.setText(attendeeCount + " people are attending.");
-		
+
 	}
 
+	/**
+	 * Helper to set up the DialogBox that pops up when you click the Join Event button.
+	 */
 	protected void setJoinBox() {
-		
-		//Hide joinBox and set the caption
+
+		//Set up the joinBox
 		joinBox.hide();
 		joinBox.setText("Join this event!");
-		
-		//Create the contents of joinBox
 		VerticalPanel joinContents = new VerticalPanel();
 		joinContents.setSpacing(4);
 		joinBox.setWidget(joinContents);
-		
+
 		//Add to joinContents
 		joinContents.add(joinName);
 		joinName.setText("Please enter your name");
-		
+
 		// add the Submit Button
 		Button submitButton = new Button();
 		joinContents.add(submitButton);
 		submitButton.setText("Join");
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-			//TODO: Set this to attendee list	
 				members.add(joinName.getValue());
 				attendees.clear();
 				setUpAttendees();
 				joinName.setText(null);
 				joinBox.hide();
-				//TODO: Refresh the attendee list after adding new attendee.
 			}
 		});
+		
 		//Add a cancel button
 		Button cancelButton = new Button();
 		cancelButton.setText("Cancel");
-		
+
 		cancelButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				joinBox.hide();
 			}
 		});
 		joinContents.add(cancelButton);
-		
-	
-		
+
+
+
 	}
-	
-//	/**
-//	 * This method makes the AsyncCallback to get an ArrayList of events stored
-//	 * in a HashMap. On success recent events table is loaded and event marker 
-//	 * overlays are placed on the map.
-//	 * 
-//	 * @param map The Google Maps widget that gets the event marker overlays
-//	 */
-//	//TODO: popup for errors, Async for load recent events?
-//	private void loadEvents(final MapWidget map){
-//		eventService.get("Event", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				System.out.println("oh noes event data didnt werks");
-//			}
-//
-//			@Override
-//			public void onSuccess(ArrayList<HashMap<String, String>> events) {
-//				allEvents = events;
-//				
-//			}
-//		});
-//	}
+
+
 
 	//TODO: 
 	/**
-	 *  
+	 *  Add styling with CSS
+	 *  Fix up the interface to make it look nice
 	 * make Attendees a JDO, and persistent
 	 * Catch exceptions from creating jdo objects, etc.
 	 * 
