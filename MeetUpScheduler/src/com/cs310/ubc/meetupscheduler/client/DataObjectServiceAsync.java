@@ -6,9 +6,8 @@ import java.util.HashMap;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * Asynchronous Interface for calls to get DataObjects. See DataObject and DataObjectServiceImpl for more details on DataObjects and the following methods.
- * @author Connor
- *
+ * Asynchronous Interface for calls to get DataObjects. See DataObject and DataObjectServiceImpl 
+ * for more details on DataObjects and the following methods.
  */
 public interface DataObjectServiceAsync {
 	public void add(String table, HashMap<String, String> fields, AsyncCallback<HashMap<String, String>> callback);
@@ -17,5 +16,5 @@ public interface DataObjectServiceAsync {
 	public void remove(String table, String query, AsyncCallback<Void> callback);
 	public void remove(String table, AsyncCallback<Void> callback);
 	public void update(String table, String query, String column, String newValue, AsyncCallback<ArrayList<HashMap<String, String>>> callback);
-	void update(String table, String column, String newValue, AsyncCallback<ArrayList<HashMap<String, String>>> callback);
+	public void update(String table, String column, String newValue, AsyncCallback<ArrayList<HashMap<String, String>>> callback);
 }

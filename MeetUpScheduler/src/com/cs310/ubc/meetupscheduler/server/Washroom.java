@@ -8,8 +8,17 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+/**
+ * A persistent class to hold washroom data.
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Washroom extends DataObject {
+	
+	public Washroom(Map<String, String> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		super(myFields);
+	}
+
+	//Can be used to access Washroom field names.
 	public enum WashroomField {
 		PID {
 		    public String toString() {
@@ -38,25 +47,19 @@ public class Washroom extends DataObject {
 		        return "winter_hours";
 		    }
 		}
-
 	}
 	
-	  @PrimaryKey 
-	  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	  protected Long id; //Automatically generated pk
-	  @Persistent
-	  protected String park_id;
-	  @Persistent
-	  protected String location;
-	  @Persistent
-	  protected String notes;
-	  @Persistent
-	  protected String summer_hours;
-	  @Persistent
-	  protected String winter_hours;
-	
-	  public Washroom(Map<String, String> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		  super(myFields);
-	  }
-
+	@PrimaryKey 
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	protected Long id; //Automatically generated pk
+	@Persistent
+	protected String park_id;
+	@Persistent
+	protected String location;
+	@Persistent
+	protected String notes;
+	@Persistent
+	protected String summer_hours;
+	@Persistent
+	protected String winter_hours;
 }

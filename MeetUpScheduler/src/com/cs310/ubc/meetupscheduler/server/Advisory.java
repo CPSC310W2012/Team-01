@@ -8,8 +8,17 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+/**
+ * Persistent class to hold advisory data.
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Advisory extends DataObject {
+	  
+	public Advisory(Map<String, String> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		super(myFields);
+	}
+	  
+	//Can be used to access advisory fields
 	public enum AdvisoryField {
 		PID {
 		    public String toString() {
@@ -33,23 +42,17 @@ public class Advisory extends DataObject {
 		        return "url";
 		    }
 		}
-
-		}
+	}
 	
-	  @PrimaryKey 
-	  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	  protected Long id; //Automatically generated PK
-	  @Persistent
-	  protected String park_id;
-	  @Persistent
-	  protected String date_last;
-	  @Persistent
-	  protected String text;
-	  @Persistent
-	  protected String url;
-	  
-	  public Advisory(Map<String, String> myFields) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		  super(myFields);
-	  }
-
+	@PrimaryKey 
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	protected Long id; //Automatically generated PK
+	@Persistent
+	protected String park_id;
+	@Persistent
+	protected String date_last;
+	@Persistent
+	protected String text;
+	@Persistent
+	protected String url;
 }

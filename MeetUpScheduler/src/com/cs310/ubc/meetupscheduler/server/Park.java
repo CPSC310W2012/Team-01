@@ -8,6 +8,9 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+/**
+ * A persistent class to hold park data.
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Park extends DataObject {
 
@@ -15,6 +18,7 @@ public class Park extends DataObject {
 		super(myFields);
 	}
 
+	//Can be used to access park field names.
 	public enum ParkField {
 		ID {
 		    public String toString() {
@@ -82,42 +86,49 @@ public class Park extends DataObject {
 		        return "special_features";
 		    }
 		}
-
-		}
+	}
 	
-	  @PrimaryKey
-	  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	  protected String id;
-	  @Persistent
-	  protected String name;
-	  @Persistent
-	  protected String street_number;
-	  @Persistent
-	  protected String street_name;
-	  @Persistent
-	  protected String ew_street;
-	  @Persistent
-	  protected String ns_street;
-	  @Persistent
-	  protected String google_map_dest;
-	  @Persistent
-	  protected String hectares;
-	  @Persistent
-	  protected String neighbourhood_name;
-	  @Persistent
-	  protected String neighbourhood_url;
-	  @Persistent
-	  protected String advisories;
-	  @Persistent
-	  protected String facilities;
-	  @Persistent
-	  protected String special_features;
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	protected String id; //Park id is given by XML data.
+	@Persistent
+	protected String name;
+	@Persistent
+	protected String street_number;
+	@Persistent
+	protected String street_name;
+	@Persistent
+	protected String ew_street;
+	@Persistent
+	protected String ns_street;
+	@Persistent
+	protected String google_map_dest;
+	@Persistent
+	protected String hectares;
+	@Persistent
+	protected String neighbourhood_name;
+	@Persistent
+	protected String neighbourhood_url;
+	@Persistent
+	protected String advisories;
+	@Persistent
+	protected String facilities;
+	@Persistent
+	protected String special_features;
 	  
-	  public boolean hasAdvisories() {
-		  return this.advisories == "Y" ? true: false;
-	  }
+	/**
+	 * Checks if a park has advisories
+	 * @return true if has advisories, false otherwise.
+	 */
+	public boolean hasAdvisories() {
+		return this.advisories == "Y" ? true: false;
+	}
 	  
-	  public boolean hasFacilities() {
-		  return this.facilities == "Y" ? true: false;
-	  }
+	/**
+	 * Checks if a park has facilities
+	 * @return true if has facilities, false otherwise.
+	 */
+	public boolean hasFacilities() {
+		return this.facilities == "Y" ? true: false;
+	}
 }

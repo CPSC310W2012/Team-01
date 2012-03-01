@@ -14,9 +14,7 @@ public class ServerException extends Exception implements Serializable {
 		//Serializable objects need a constructor with no objects.
 	}
 	
-	public ServerException(String message) {
-		
-	}
+	public ServerException(String message) { }
 	
 	public ServerException(String message, StackTraceElement[] stackTrace) {
 		super(message);

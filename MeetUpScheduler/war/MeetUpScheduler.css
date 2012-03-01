@@ -39,19 +39,20 @@ h1 {
 
 /* Recent Events Table Headers in Global View*/
 .recentEventHeaders {
-	border: 1px solid #909090;
-	background-color: #909090;
-	color: white;
+	border: 1px solid #F4F3F0;
+	background-color: #F4F3F0;
+	color: black;
 	padding: 4px
 	}
 
 /* Recent Events Table Title in Global View*/
 .recentEventTitles{
-	background-color: white;
-	border: 1px solid #909090;
+	background-color: #C9DFAF;
+	border: 1px solid #C9DFAF;
   	border-top-left-radius: 3px;
   	border-top-right-radius: 3px;
   	padding: 5px;
   	font-weight:600;
   	font-size:13px;
+  	color: #4C674C;
 	}

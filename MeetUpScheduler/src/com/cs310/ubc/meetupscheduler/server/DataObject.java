@@ -7,8 +7,6 @@ import java.util.Map;
 /**
  * DataObject is a parent class for all the JDO objects in our application. This parent class allows for use of only a single Service
  * to do asynchronous retrieval, as well as some nifty inherited methods.
- * @author Connor
- *
  */
 public class DataObject {
 	  public DataObject() {
@@ -16,8 +14,7 @@ public class DataObject {
 	  }
 	  
 	  /**
-	   * This creates a data object. There is a fairly good chance this will never be called since GWT seems to have a bug 
-	   * re: getting access rights to parent classes on the server side.
+	   * This creates a data object.
 	   * @param myFields A Map of Strings where the key is the column name as defined in the object's fields enum and the value
 	   * 				 is the value to be used in the created object.
 	   * @throws IllegalArgumentException

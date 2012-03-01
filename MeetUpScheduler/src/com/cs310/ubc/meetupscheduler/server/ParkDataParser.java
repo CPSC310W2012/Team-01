@@ -23,10 +23,20 @@ import javax.jdo.Query;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+/**
+ * A class to parse uploaded XML data into persistent JDOs.
+ */
 public class ParkDataParser {
 	
 	private Document doc;
+	private ArrayList<DataObject> createdObjects;
 	
+	/**
+	 * Parses an XML file containing parks data and saves objects contained in the file in
+	 * the application database.
+	 * @param xmlFile The XML file to parse.
+	 * @throws ServerException
+	 */
 	public void parseXML(InputStream xmlFile) throws ServerException {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -54,7 +64,10 @@ public class ParkDataParser {
 			} finally {
 				pm.close();
 			}
-
+			//List to hold created objects
+			createdObjects = new ArrayList<DataObject>();
+			
+			//Create objects from XML elements.
 			boolean areNoParks = true;
 			for (int i = 0; i < elementList.getLength(); i++) {
 				Element element = (Element) elementList.item(i);
@@ -64,13 +77,26 @@ public class ParkDataParser {
 			if (areNoParks) {
 				throw new ServerException("XML file contains no park data");
 			}
+			
+			//Batch persist objects
+			pm = getPersistenceManager();
+			try {
+				pm.makePersistentAll(createdObjects);
+			} finally {
+				pm.close();
+			}
 
 		} catch (Exception e) {
 			throw new ServerException(e.getMessage(), e.getStackTrace());
 		}
 	}
 	
-	//Creates a Park Object. Only Park ID is guaranteed to exist.
+	/**
+	 * Creates a park from an XML element and appends it to the created objects list. Calls
+	 * functions to create objects found inside the park.
+	 * @param element The XML element containing the park information.
+	 * @throws ServerException
+	 */
 	private void createPark(Element element) throws ServerException {
 		Map<String, String> parkDataMap = new HashMap<String, String>();
 		
@@ -153,18 +179,21 @@ public class ParkDataParser {
 			}
 			parkDataMap.put(ParkField.SPECIALFEAT.toString(), specialFeatures);
 
-			PersistenceManager pm = getPersistenceManager();
 			try {
-				pm.makePersistent(new Park(parkDataMap));
+				createdObjects.add(new Park(parkDataMap));
 			} catch (Exception e) {
 				throw new ServerException(e.getMessage(), e.getStackTrace());
-			} finally {
-				pm.close();
-			}
-			
+			} 
 		}		
 	}
 
+	/**
+	 * Creates a washroom for a park from an XML element and appends it to the created
+	 * objects list.
+	 * @param washroomElement The XML element containing the washroom information.
+	 * @param pID The ID of the park containing the washroom
+	 * @throws ServerException
+	 */
 	private void createWashroom(Element washroomElement, String pID) throws ServerException {
 		Map<String, String> washroomDataMap = new HashMap<String, String>();
 		washroomDataMap.put(WashroomField.PID.toString(), pID);
@@ -191,17 +220,21 @@ public class ParkDataParser {
 					washroomDataMap.put(WashroomField.WINHR.toString(), wshElement.getTextContent());
 				}
 			}
-			PersistenceManager pm = getPersistenceManager();
 			try {
-				pm.makePersistent(new Washroom(washroomDataMap));
+				createdObjects.add(new Washroom(washroomDataMap));
 			} catch (Exception e) {
 				throw new ServerException(e.getMessage(), e.getStackTrace());
-			} finally {
-				pm.close();
 			}
 		}
 	}
 
+	/**
+	 * Creates an advisory for a park from an XML element and appends it to the created
+	 * objects list.
+	 * @param advisoryElement The XML element containing information about the advisory
+	 * @param iD The ID of the park containing the advisory.
+	 * @throws ServerException
+	 */
 	private void createAdvisory(Element advisoryElement, String iD) throws ServerException {
 		Map<String, String> advisoryDataMap = new HashMap<String, String>();
 		advisoryDataMap.put(AdvisoryField.PID.toString(), iD);
@@ -225,18 +258,21 @@ public class ParkDataParser {
 					advisoryDataMap.put(AdvisoryField.URL.toString(), advElement.getTextContent());
 				}
 			}
-			PersistenceManager pm = getPersistenceManager();
 			try {
-				pm.makePersistent(new Advisory(advisoryDataMap));
+				createdObjects.add(new Advisory(advisoryDataMap));
 			} catch (Exception e) {
 				throw new ServerException(e.getMessage(), e.getStackTrace());
-			} finally {
-				pm.close();
-			}		
+			}	
 		}
-		
 	}
 
+	/**
+	 * Creates a facility for a park from an XML element and appends it to the created
+	 * objects list.
+	 * @param facilityElement The XML element containing facility information
+	 * @param iD The ID of the park containing the facility
+	 * @throws ServerException
+	 */
 	private void createFacility(Element facilityElement, String iD) throws ServerException {
 		Map<String, String> facilityDataMap = new HashMap<String, String>();
 		facilityDataMap.put(FacilityField.PID.toString(), iD);
@@ -260,14 +296,11 @@ public class ParkDataParser {
 					facilityDataMap.put(FacilityField.URL.toString(), facElement.getTextContent());
 				}
 			}
-			PersistenceManager pm = getPersistenceManager();
 			try {
-				pm.makePersistent(new Facility(facilityDataMap));
+				createdObjects.add(new Facility(facilityDataMap));
 			} catch (Exception e) {
 				throw new ServerException(e.getMessage(), e.getStackTrace());
-			} finally {
-				pm.close();
-			}
+			} 
 		}
 	}
 
