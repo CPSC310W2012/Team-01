@@ -11,6 +11,8 @@ import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -27,6 +29,17 @@ public class EventView extends View{
 	 */
 	private final int MAP_HEIGHT = 400;
 	private final int MAP_WIDTH = 500;
+	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);	
+	
+	private String currEventID;
+	private String currEventName;
+	private String currEventparkID;
+	private String currEventnumAttend;
+	private String currEventCreator;
+	private String currEventCategory;
+	private String currEventDate;
+	private String currEventStartTime;
+	private String currEventEndTime;
 	
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private Label eventName = new Label();
@@ -45,8 +58,6 @@ public class EventView extends View{
 	Label attCountLabel = new Label();
 	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
 	private ArrayList<HashMap<String, String>> allEvents;
-	private HashMap<String, String> sampleEventMap;
-	private Event sampleEvent;
 	
 
 
@@ -74,8 +85,11 @@ public class EventView extends View{
 	}
 	
 	public void buildUI(){
-		// set up the Map
+		// Create and load the sample event
 		buildSampleEvent();
+		loadEvent(1);
+		
+		// set up the Map
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
 		final MapWidget eventMap = new MapWidget(vancouver, 11);
 
@@ -128,31 +142,48 @@ public class EventView extends View{
 		rootPanel.add(parkPanel);
 	}
 
+	private void loadEvent(int eventID) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private void loadEvents(){
+		eventService.get("Event", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println("You're doing it wrong!");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<HashMap<String, String>> events) {
+				allEvents = events;
+			}
+		});
+	}
+
 	private void buildSampleEvent() {
-		sampleEventMap.put("ID", "1");
-		sampleEventMap.put("Name","Champion's League");
-		sampleEventMap.put("PID", "1");
-		sampleEventMap.put("ATTND","0");
-		sampleEventMap.put("CREATOR","Ben");
-		sampleEventMap.put("CAT","Soccer");
-		sampleEventMap.put("DATE","Tomorrow");
-		sampleEventMap.put("START","1:00");
-		sampleEventMap.put("END", "4:00");
-		try {
-			sampleEvent = new Event(sampleEventMap);
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		HashMap<String, String> sampleEventMap = new HashMap<String, String>();
+		sampleEventMap.put("id", "1");
+		sampleEventMap.put("name","Champion's League");
+		sampleEventMap.put("park_id", "1");
+		sampleEventMap.put("num_attending","0");
+		sampleEventMap.put("creator","Ben");
+		sampleEventMap.put("category","Soccer");
+		sampleEventMap.put("date","Tomorrow");
+		sampleEventMap.put("start_time","1:00");
+		sampleEventMap.put("end_time", "4:00");
+
+		objectService.add("Event", sampleEventMap, new AsyncCallback<HashMap<String, String>>() {
+			public void onFailure(Throwable error) {
+				System.out.println("Flip a table!  (>o.o)> _|__|_)");
+			}
+			
+			public void onSuccess(HashMap<String, String> newEvent) {
+				//TODO: Add call to helper to scheduler to get event view based on event id
+				System.out.println(newEvent);
+				Window.alert("Event Created!");
+			}
+		});
 		
 	}
 
@@ -218,28 +249,7 @@ public class EventView extends View{
 		
 	}
 	
-//	/**
-//	 * This method makes the AsyncCallback to get an ArrayList of events stored
-//	 * in a HashMap. On success recent events table is loaded and event marker 
-//	 * overlays are placed on the map.
-//	 * 
-//	 * @param map The Google Maps widget that gets the event marker overlays
-//	 */
-//	//TODO: popup for errors, Async for load recent events?
-//	private void loadEvents(final MapWidget map){
-//		eventService.get("Event", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				System.out.println("oh noes event data didnt werks");
-//			}
-//
-//			@Override
-//			public void onSuccess(ArrayList<HashMap<String, String>> events) {
-//				allEvents = events;
-//				
-//			}
-//		});
-//	}
+
 
 	//TODO: 
 	/**
