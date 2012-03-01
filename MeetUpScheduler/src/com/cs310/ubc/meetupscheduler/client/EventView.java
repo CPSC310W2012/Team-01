@@ -159,23 +159,26 @@ public class EventView extends View{
 	 * 		 - Set real attendees list.
 	 */
 	private void loadEvent(int eventID) {
-		// stupid way of dealing with the disparity between array position and event #
-		eventID--;
+
 		HashMap<String, String> event = new HashMap<String, String>();
 		if (allEvents != null){
 			try { 
-				allEvents.get(eventID); {
-					event = allEvents.get(eventID);
+				for (int i = 0; i < allEvents.size(); i++){
+					if (Integer.parseInt(allEvents.get(i).get("id")) == eventID){
+				
+					event = allEvents.get(i);
 					eventName.setText("The name of the event is " + event.get("name")); // TODO: get proper enum settings
 					eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
 					eventLoc.setText(event.get("park_id") + " is the park ID.");
 					eventCreator.setText(event.get("creator") + " is the event creator.");
 					eventMap.checkResizeAndCenter();
 					eventCategory.setText("This event is in the category: " + event.get("category"));
+				
+					}
 				}
 				
 			} catch (Exception e) {
-				Window.alert("There is no event " + ++eventID + ".");
+				Window.alert("There is no event " + eventID + ".");
 			}
 		}
 		else Window.alert("No events!");

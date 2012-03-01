@@ -154,15 +154,19 @@ public class GlobalView extends View {
 	 * specified by the EVENT_TABLE_LENGTH field.
 	 * 
 	 * @param events The events to be added to the recent events table
-	 */
-	//TODO: time stamp?
+	 *///TODO: fix the async problem here with the allParks field
 	private void addRecentEvents(ArrayList<HashMap<String, String>> events){
-		for(int i=0; i<events.size() && i<EVENT_TABLE_LENGTH ; i++){
+		
+		int indexStop = events.size() - EVENT_TABLE_LENGTH;
+		int indexStart = events.size() - 1;
+		
+		for(int i=indexStart; i>=indexStop; i--){
 			int row = eventTable.getRowCount();
 			String park_id = events.get(i).get("park_id");
 
 			eventTable.setText(row, 0, events.get(i).get("name"));
 			eventTable.setText(row, 1, events.get(i).get("category"));
+			eventTable.setText(row, 2, events.get(i).get("park_id"));
 
 			/*for(int n=0; n < allParks.size(); n++){
 				if(allParks.get(n).get("park_id").equals(park_id)){
@@ -203,7 +207,7 @@ public class GlobalView extends View {
 	 * @param map Map widget receiving marker overlays
 	 */
 	private void addParkMarkers(ArrayList<HashMap<String, String>> parks, MapWidget map){
-		for(int i = 0; i<50; i++){
+		for(int i = 0; i<parks.size(); i++){
 
 			String latLong = parks.get(i).get("google_map_dest");
 
