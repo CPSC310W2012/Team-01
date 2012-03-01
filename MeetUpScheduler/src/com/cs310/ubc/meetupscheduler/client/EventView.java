@@ -1,74 +1,65 @@
 package com.cs310.ubc.meetupscheduler.client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
+import com.google.gwt.maps.client.control.LargeMapControl3D;
+import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+
 
 public class EventView extends View{
 	/**
 	 * These are the UI components of the View
 	 */
-	private HorizontalPanel panel = new HorizontalPanel();
+	private final int MAP_HEIGHT = 400;
+	private final int MAP_WIDTH = 500;
+	
+	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private Label eventName = new Label();
-	//private mapWidget eventMap = new mapWidget();
 	private Button joinButton = new Button();
 	private DialogBox joinBox = new DialogBox();
 	private TextBox joinName = new TextBox();
+	private VerticalPanel parkPanel = new VerticalPanel();
 	private ListBox attendees = new ListBox();
+	private VerticalPanel attendeePanel = new VerticalPanel();
+	private VerticalPanel infoPanel = new VerticalPanel();
 	private Label eventLoc = new Label();
-	private Label time = new Label();
-	private ListBox notes = new ListBox();
+	private Label eventTime = new Label();
+	private Label eventNotes = new Label();
+	private ArrayList<String> members;
+	private Integer attendeeCount = 0;
+	Label attCountLabel = new Label();
+	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
+	private ArrayList<HashMap<String, String>> allEvents;
+	
 
 
 
-//	public Panel createPage(Event event) {
-//		//TODO: Figure out how to get Event details from the JDO.
-//
-//		//set up the eventName label
-//		//eventName.setText(event.NAME.toString()); // TODO: get proper enum settings
-//
-//
-//		//set up the joinButton
-//		joinButton.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				joinPopup.show();
+
+//	public Widget createPage (Event event) {
+//		currentEvent = event;
+//		//Initialize Map, needs a key before it can be deployed
+//		Maps.loadMapsApi("", "2", false, new Runnable() {
+//			public void run() {
+//				buildUI();
 //			}
 //		});
-//		joinPopup.add(joinName);
-//		joinPopup.add(submitButton);
-//
-//		submitButton.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				//TODO: Add the name in joinName to the Event object
-//				joinPopup.hide();
-//				//TODO: Refresh the attendee list after adding new attendee.
-//			}
-//		});
-//
-//		//TODO: Add all attendiing members 
-//	//	attendees.addItem(event.getField()
-//		
-//		panel.add(eventName);
-//		//panel.add(eventMap);
-//		panel.add(joinButton);
-//		panel.add(attendees);
-//		panel.add(attendees);
-//		panel.add(eventLoc);
-//		panel.add(time);
-//		panel.add(notes);
 //		return panel;
 //	}
-
-
-	@Override
+	
 	public HorizontalPanel createPage() {
 		//Initialize Map, needs a key before it can be deployed
 		Maps.loadMapsApi("", "2", false, new Runnable() {
@@ -76,12 +67,23 @@ public class EventView extends View{
 				buildUI();
 			}
 		});
-		return panel;
+		return rootPanel;
 	}
 	
 	public void buildUI(){
+		// set up the Map
+		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
+		final MapWidget eventMap = new MapWidget(vancouver, 11);
+
+		eventMap.setPixelSize(MAP_WIDTH, MAP_HEIGHT);
+		eventMap.setScrollWheelZoomEnabled(true);
+		eventMap.addControl(new LargeMapControl3D());
+		
 		//set up the eventName label
 		eventName.setText("This is the event name"); // TODO: get proper enum settings
+		eventTime.setText("3:00pm");
+		eventLoc.setText("Jericho Park");
+		eventNotes.setText("This is the information for the event. People should bring their own soccer ball to the game. Shinpads mandatory. \n Make sure to bring water!");
 
 
 		//set up the joinButton
@@ -96,31 +98,53 @@ public class EventView extends View{
 		
 		//Add the joinBox
 		setJoinBox();
+		
+		
 
+		members = new ArrayList<String>();
+		members.add("Adrian");
+		members.add("Ben");
+		members.add("Caroline");
+		members.add("Connor");
+		members.add("Dave");
+		setUpAttendees();
 		
+		//Put the UI together
 		
+		setUpInfoPanel();
+		eventMap.setSize("500px", "400px");
+		eventMap.checkResizeAndCenter();
+		parkPanel.add(eventMap);
+		attendeePanel.add(attCountLabel);
+		attendeePanel.add(attendees);
 		
-		attendees.addItem("Adrian");
-		attendees.addItem("Ben");
-		attendees.addItem("Caroline");
-		attendees.addItem("Connor");
-		attendees.addItem("Dave");
+		rootPanel.add(infoPanel);
+
+		rootPanel.add(joinButton);
+		rootPanel.add(parkPanel);
+	}
+
+	private void setUpInfoPanel() {
+		infoPanel.add(eventLoc);
+		infoPanel.add(eventTime);
+		infoPanel.add(attendeePanel);
+		infoPanel.add(eventNotes);
+	}
+
+	private void setUpAttendees() {
+		 for (int i = 0; i< members.size(); i++){
+			 attendees.addItem(members.get(i));
+		 }
+		attendees.setVisibleItemCount(members.size());
+		attendeeCount = members.size();
+		attCountLabel.setText(attendeeCount + " people are attending.");
 		
-		
-		panel.add(eventName);
-		//panel.add(eventMap);
-		panel.add(joinButton);
-		panel.add(attendees);
-		panel.add(eventLoc);
-		panel.add(time);
-		panel.add(notes);
 	}
 
 	protected void setJoinBox() {
 		
 		//Hide joinBox and set the caption
 		joinBox.hide();
-		joinBox.ensureDebugId("cwDialogBox");
 		joinBox.setText("Join this event!");
 		
 		//Create the contents of joinBox
@@ -139,7 +163,10 @@ public class EventView extends View{
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 			//TODO: Set this to attendee list	
-				System.out.println(joinName.getValue());
+				members.add(joinName.getValue());
+				attendees.clear();
+				setUpAttendees();
+				joinName.setText(null);
 				joinBox.hide();
 				//TODO: Refresh the attendee list after adding new attendee.
 			}
@@ -158,10 +185,33 @@ public class EventView extends View{
 	
 		
 	}
+	
+//	/**
+//	 * This method makes the AsyncCallback to get an ArrayList of events stored
+//	 * in a HashMap. On success recent events table is loaded and event marker 
+//	 * overlays are placed on the map.
+//	 * 
+//	 * @param map The Google Maps widget that gets the event marker overlays
+//	 */
+//	//TODO: popup for errors, Async for load recent events?
+//	private void loadEvents(final MapWidget map){
+//		eventService.get("Event", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				System.out.println("oh noes event data didnt werks");
+//			}
+//
+//			@Override
+//			public void onSuccess(ArrayList<HashMap<String, String>> events) {
+//				allEvents = events;
+//				
+//			}
+//		});
+//	}
 
 	//TODO: 
-	/** joinButton.onClick - show the joinPopup, add joinName and submitButton
-	 * submitButton.onClick - add the contents of joinName to the list of attendees 
+	/**
+	 *  
 	 * make Attendees a JDO, and persistent
 	 * Catch exceptions from creating jdo objects, etc.
 	 * 
