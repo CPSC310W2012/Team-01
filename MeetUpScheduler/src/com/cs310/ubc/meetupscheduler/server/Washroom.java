@@ -10,8 +10,6 @@ import javax.jdo.annotations.PrimaryKey;
 
 /**
  * A persistent class to hold washroom data.
- * @author connor
- *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Washroom extends DataObject {

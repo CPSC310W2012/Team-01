@@ -6,8 +6,6 @@ import javax.jdo.PersistenceManagerFactory;
 
 /**
  * Singleton-type class to manage the persistence manager.
- * @author Connor
- *
  */
 public class PersistenceManagerSingleton {
 	

@@ -57,7 +57,7 @@ public class GlobalView extends View {
 	 * Builds the parks and events summary page ui and places it 
 	 * in the rootPanel field
 	 */
-	private void buildUi(){
+	public void buildUi() {
 
 		//Map
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
@@ -91,7 +91,7 @@ public class GlobalView extends View {
 
 		eventTable.setText(1, 2, "Park Name");
 		eventTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
-		loadEvents(map);
+
 
 
 		//put ui elements into rootPanel field
@@ -143,6 +143,8 @@ public class GlobalView extends View {
 				allParks = parks;
 				addParksToListBox(parks);
 				addParkMarkers(parks, map);
+				//TODO: solve async issue
+				loadEvents(map);
 			}
 		});
 	}
@@ -155,20 +157,18 @@ public class GlobalView extends View {
 	 */
 	//TODO: time stamp?
 	private void addRecentEvents(ArrayList<HashMap<String, String>> events){
-		if(allParks != null){
-			for(int i=0; i<EVENT_TABLE_LENGTH; i++){
-				int row = eventTable.getRowCount();
-				String park_id = events.get(i).get("park_id");
+		for(int i=0; i<events.size() && i<EVENT_TABLE_LENGTH ; i++){
+			int row = eventTable.getRowCount();
+			String park_id = events.get(i).get("park_id");
 
-				eventTable.setText(row, 0, events.get(i).get("name"));
-				eventTable.setText(row, 1, events.get(i).get("category"));
+			eventTable.setText(row, 0, events.get(i).get("name"));
+			eventTable.setText(row, 1, events.get(i).get("category"));
 
-				for(int n=0; n < allParks.size(); n++){
-					if(allParks.get(n).get("park_id").equals(park_id)){
-						eventTable.setText(row, 2, allParks.get(n).get("name"));
-					}
+			/*for(int n=0; n < allParks.size(); n++){
+				if(allParks.get(n).get("park_id").equals(park_id)){
+					eventTable.setText(row, 2, allParks.get(n).get("name"));
 				}
-			}
+			}*/
 		}
 	}
 
@@ -193,7 +193,7 @@ public class GlobalView extends View {
 
 
 	private void addEventMarkers(ArrayList<HashMap<String, String>> events, MapWidget map){
-		//TODO: Add event markers to map widet
+		//TODO: Add event markers to map widget
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class GlobalView extends View {
 	 * @param map Map widget receiving marker overlays
 	 */
 	private void addParkMarkers(ArrayList<HashMap<String, String>> parks, MapWidget map){
-		for(int i = 0; i<parks.size(); i++){
+		for(int i = 0; i<50; i++){
 
 			String latLong = parks.get(i).get("google_map_dest");
 

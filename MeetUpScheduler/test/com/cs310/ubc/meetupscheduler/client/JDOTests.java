@@ -1,4 +1,4 @@
-package com.cs310.ubc.meetupscheduler.test;
+package com.cs310.ubc.meetupscheduler.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -91,7 +91,6 @@ public class JDOTests {
 		facilityRow.put("count", "2");
 		facilityRow.put("type", "Frisbee Golfcourse");
 		facilityRow.put("url", "www.frisbeevancouver.com");
-		facilityRow.put("special_features", "N");
 		myFacility = new Facility(facilityRow);
 		
 		HashMap<String, String> myFacilityFields = myFacility.formatForTable();

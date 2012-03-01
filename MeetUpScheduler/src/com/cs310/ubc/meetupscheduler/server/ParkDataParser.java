@@ -27,7 +27,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * A class to parse uploaded XML data into persistent JDOs.
+<<<<<<< HEAD
  * 
+=======
+>>>>>>> f1f4c29b2aaab0cf1f67029a36e7d573e0b1e793
  */
 public class ParkDataParser {
 
