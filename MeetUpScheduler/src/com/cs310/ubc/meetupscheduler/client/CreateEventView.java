@@ -82,6 +82,7 @@ public class CreateEventView extends View {
 		
 		//categories set-up
 		categoriesListBox.addItem("Default Category");
+		populateCategories(categoriesListBox);
 		categoriesListBox.setVisibleItemCount(1);
 		
 		//get parks for parks list
@@ -202,5 +203,18 @@ public class CreateEventView extends View {
 			list.addItem(i+":00");
 		}
 		list.setVisibleItemCount(1);
+	}
+	
+	private void populateCategories(ListBox categoriesList) {
+		categoriesList.addItem("Sack-race");
+		categoriesList.addItem("Larping");
+		categoriesList.addItem("Ultimate");
+		categoriesList.addItem("Spelling-B");
+		categoriesList.addItem("Judo");
+		categoriesList.addItem("Arctic Char Fishing");
+		categoriesList.addItem("Treasure Hunt");
+		categoriesList.addItem("Night Soccer");
+		categoriesList.addItem("Dog Show");
+		categoriesList.addItem("Chili Cook-off");
 	}
 }
