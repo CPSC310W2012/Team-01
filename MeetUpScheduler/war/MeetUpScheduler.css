@@ -6,7 +6,7 @@ h1 {
   font-size: 2em;
   font-weight: bold;
   color: #777777;
-  margin: 40px 0px 70px;
+  margin: 10px 0px 20px;
   text-align: center;
 }
 
@@ -24,8 +24,33 @@ h1 {
   width: 400px;
 }
 
+.gwt-Button {
+  padding: 0px;
+  border: 1.5px;
+}
+
 .dialogVPanel {
   margin: 5px;
+}
+#adminVertPan {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#adminHorPan {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	background-color: lightgray;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#adminSubBut {
+	margin: 2px;
+}
+
+#adminFileUp {
+	margin: 6px; 
 }
 
 .serverResponseLabelError {

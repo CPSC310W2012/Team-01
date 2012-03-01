@@ -1,24 +1,18 @@
 package com.cs310.ubc.meetupscheduler.client;
 
 import com.google.gwt.core.client.EntryPoint;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
+
+
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -37,8 +31,12 @@ public class MeetUpScheduler implements EntryPoint {
 	  private TabPanel tabPanel;
 	  private DataObjectServiceAsync dataObjectService = GWT.create(DataObjectService.class);
 	  private GlobalView globalView = new GlobalView();
+
+	  private AdminView admin;
+
 	  private CreateEventView createEventView = new CreateEventView();
 	  private EventView eventView = new EventView();
+
 
 
 
@@ -48,9 +46,8 @@ public class MeetUpScheduler implements EntryPoint {
 	public void onModuleLoad() {
 	    tabPanel = new TabPanel();
 	    initTabPanel();
-	    //set pages here
-	    AdminView admin = new AdminView();
-	    tabPanel.add(admin.createPage(), "Upload XML file");
+	    admin = new AdminView();
+	    tabPanel.add(admin.createPage(), "Administrator");
 	    RootPanel.get().add(tabPanel);
 	  }
 
@@ -62,7 +59,8 @@ public class MeetUpScheduler implements EntryPoint {
 	    tabPanel.add(eventView.createPage(), "Event Information Page");
 	    tabPanel.addSelectionHandler(new SelectionHandler<Integer>(){
 	      public void onSelection(SelectionEvent<Integer> event) {
-	        // TODO Auto-generated method stub
+	    	  //TODO Load widgets on demand. Too slow right now.
+	      
 	        History.newItem("page" + event.getSelectedItem());
 	      }});
 
@@ -93,4 +91,6 @@ public class MeetUpScheduler implements EntryPoint {
 	public void createTab(Widget w, String name) {
 	    tabPanel.add(w, name);
 	}
+
+	
 }

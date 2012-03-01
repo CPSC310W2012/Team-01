@@ -7,6 +7,13 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -14,6 +21,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AdminView extends View {
 	  private FormPanel form;
+	  private TextArea ta  = new TextArea();
+	  private ScrollPanel scrollPan = new ScrollPanel(ta);;
 	  
 	public AdminView() {
 		createFileUploadForm();
@@ -27,26 +36,39 @@ public class AdminView extends View {
 	    // Create a FormPanel and point it at a service.
 	    form = new FormPanel();
 	    form.setAction(GWT.getModuleBaseURL()+"filereader");
-
 	    form.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    form.setMethod(FormPanel.METHOD_POST);
+	    
 
+	    
 	    // Create a panel to hold all of the form widgets.
-	    VerticalPanel panel = new VerticalPanel();
-	    form.setWidget(panel);
+	    VerticalPanel vPanel = new VerticalPanel();
+	    vPanel.getElement().setId("adminVertPan");
+	    vPanel.add(new HTML("<h1>Administrator View: Data Upload</h1>"));
+	    HorizontalPanel hPanel = new HorizontalPanel();
+	    hPanel.getElement().setId("adminHorPan");
 
+
+	    form.setWidget(vPanel);
+	    vPanel.add(hPanel);
+        
 	    // Create a FileUpload widget.
 	    final FileUpload upload = new FileUpload();
+	    upload.getElement().setId("adminFileUp");
 	    upload.setName("uploadFormElement");
 	   
-	    panel.add(upload);
+	    hPanel.add(upload);
 
 	    // 'submit' button.
-	    panel.add(new Button("Submit", new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	        form.submit();
-	      }
-	    }));
+		   Button subBut = new Button("Submit", new ClickHandler() {
+			      public void onClick(ClickEvent event) {
+			        form.submit();
+			      }
+			    });
+		subBut.getElement().setId("adminSubBut");
+		hPanel.add(subBut);
+	    initTextArea();
+	    vPanel.add(scrollPan);
 
 	    // Form event handlers
 	    form.addSubmitHandler(new FormPanel.SubmitHandler() {
@@ -57,7 +79,7 @@ public class AdminView extends View {
 	        }
 	        //TODO: CAROLINE can set the filetype in the file chooser?
 	        else if (!isXML(upload.getFilename())) {
-	        	  Window.alert("Only XML files are supported at this time.");
+	        	  Window.alert("Only XML files are supported.");
 	        	  event.cancel();
 	        }
 	      }
@@ -65,11 +87,20 @@ public class AdminView extends View {
 	    });
 	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 	      public void onSubmitComplete(SubmitCompleteEvent event) {
-	        // complete event
-	        Window.alert(event.getResults());
+		    ta.setVisible(true);
+	    	ta.setText(event.getResults());
 	      }
 	    });
 		
+	}
+
+	private void initTextArea() {
+        ta.setVisible(false);
+	    ta.setCharacterWidth(150);
+	    ta.setHeight("20 px");
+	    ta.setVisibleLines(20);
+	    ta.setReadOnly(true);
+	    ta.setAlignment(TextAlignment.JUSTIFY);
 	}
 
 	private boolean isXML(String filename) {
@@ -82,9 +113,7 @@ public class AdminView extends View {
 		if (lastdot != -1) {
 			return isXML(pastDotStr.substring(lastdot + 1));
 		}
-		
 		else {
-
 			if (pastDotStr.trim().toLowerCase().equals("xml")) {
 				return true;
 			}

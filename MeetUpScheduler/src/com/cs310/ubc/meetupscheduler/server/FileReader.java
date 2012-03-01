@@ -36,10 +36,10 @@ public class FileReader extends HttpServlet {
           log.warning("Got an uploaded file: " + item.getFieldName() +
                       ", name = " + item.getName());   
          
-          ParkDataParser xmlParser = new ParkDataParser();
+          ParkDataParser xmlParser = new ParkDataParser(res);
           xmlParser.parseXML(stream);
           
-          res.getOutputStream().print("XML file successfully uploaded.");
+          res.getOutputStream().println("XML file successfully parsed.");
         }
       }
     } catch (Exception ex) {
