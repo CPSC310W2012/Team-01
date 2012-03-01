@@ -14,8 +14,10 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
@@ -33,11 +35,14 @@ public class CreateEventView extends View {
 	private String endTime;
 	
 	//Panel to hold Create Event Components
-	private VerticalPanel createEventPanel = new VerticalPanel();
-	//Name boxes
-	//TODO: Add labels for these boxes
+	private VerticalPanel rightPanel = new VerticalPanel();
+	private VerticalPanel leftPanel = new VerticalPanel();
+	private HorizontalPanel createEventPanel = new HorizontalPanel();
+	//Name boxes	
 	private TextBox eventNameBox = new TextBox();
 	private TextBox userNameBox = new TextBox();
+	private Label eventNameLabel = new Label("Event Name");
+	private Label userNameLabel = new Label("Creator Name");
 	//Date Selector for Event
 	private DatePicker eventDatePicker = new DatePicker();
 	private Label eventDatePickerLabel = new Label();
@@ -51,16 +56,14 @@ public class CreateEventView extends View {
 	
 	
 	public CreateEventView() {
-		//TODO: Default Constructor
+		
 	}
 	
 	public CreateEventView(String parkID) {
 		park = parkID;
 	}
 	
-	public VerticalPanel createPage() {				
-		
-		//TODO: Add change handlers to take values			
+	public HorizontalPanel createPage() {					
 		
 		//Sets the label when a date is selected		
 		eventDatePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
@@ -73,8 +76,7 @@ public class CreateEventView extends View {
 		//Default Value for date
 		eventDatePicker.setValue(new Date(), true);
 		
-		//populate time lists
-		//TODO: add change handlers		
+		//populate time lists 			
 		setHoursList(startTimeList);
 		setHoursList(endTimeList);		
 		
@@ -94,24 +96,33 @@ public class CreateEventView extends View {
 				setEventFields();				
 				
 				if (verifyFields()) {
-					createEvent();
-					Window.alert("Event Created!");
+					createEvent();					
 				}
+				else {
 				Window.alert("Something went wrong!");
+				}
 			}
 		});
 		
 		//Add items to panel
 		//TODO: fix appearance through sub-panels
-		createEventPanel.add(eventNameBox);
-		createEventPanel.add(userNameBox);
-		createEventPanel.add(eventDatePickerLabel);
-		createEventPanel.add(eventDatePicker);
-		createEventPanel.add(startTimeList);
-		createEventPanel.add(endTimeList);
-		createEventPanel.add(parksListBox);
-		createEventPanel.add(categoriesListBox);
-		createEventPanel.add(submitButton);
+		leftPanel.add(eventNameLabel);
+		leftPanel.add(eventNameBox);
+		leftPanel.add(userNameLabel);
+		leftPanel.add(userNameBox);
+		leftPanel.add(parksListBox);
+		leftPanel.add(categoriesListBox);
+		leftPanel.add(submitButton);
+		
+		rightPanel.add(eventDatePickerLabel);
+		rightPanel.add(eventDatePicker);
+		rightPanel.add(startTimeList);
+		rightPanel.add(endTimeList);
+		
+		
+		createEventPanel.add(leftPanel);
+		createEventPanel.add(rightPanel);		
+		
 		return createEventPanel;
 	}
 	
@@ -171,8 +182,19 @@ public class CreateEventView extends View {
 		event.put("date", date);
 		event.put("start_time", startTime);
 		event.put("end_time", endTime);
-		//TODO: Make data object service call to create event		
-		System.out.println(event);
+		
+		objectService.add("Event", event, new AsyncCallback<HashMap<String, String>>() {
+			public void onFailure(Throwable error) {
+				System.out.println("Flip a table!  (>o.o)> _|__|_)");
+			}
+			
+			public void onSuccess(HashMap<String, String> newEvent) {
+				//TODO: Add call to helper to scheduler to get event view based on event id
+				System.out.println(newEvent);
+				Window.alert("Event Created!");
+			}
+		});
+		
 	}
 	
 	private void setHoursList(ListBox list) {
