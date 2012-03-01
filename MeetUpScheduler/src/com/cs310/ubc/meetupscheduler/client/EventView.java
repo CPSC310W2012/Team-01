@@ -3,6 +3,7 @@ package com.cs310.ubc.meetupscheduler.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.cs310.ubc.meetupscheduler.server.Event;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -44,6 +45,8 @@ public class EventView extends View{
 	Label attCountLabel = new Label();
 	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
 	private ArrayList<HashMap<String, String>> allEvents;
+	private HashMap<String, String> sampleEventMap;
+	private Event sampleEvent;
 	
 
 
@@ -72,6 +75,7 @@ public class EventView extends View{
 	
 	public void buildUI(){
 		// set up the Map
+		buildSampleEvent();
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
 		final MapWidget eventMap = new MapWidget(vancouver, 11);
 
@@ -122,6 +126,34 @@ public class EventView extends View{
 
 		rootPanel.add(joinButton);
 		rootPanel.add(parkPanel);
+	}
+
+	private void buildSampleEvent() {
+		sampleEventMap.put("ID", "1");
+		sampleEventMap.put("Name","Champion's League");
+		sampleEventMap.put("PID", "1");
+		sampleEventMap.put("ATTND","0");
+		sampleEventMap.put("CREATOR","Ben");
+		sampleEventMap.put("CAT","Soccer");
+		sampleEventMap.put("DATE","Tomorrow");
+		sampleEventMap.put("START","1:00");
+		sampleEventMap.put("END", "4:00");
+		try {
+			sampleEvent = new Event(sampleEventMap);
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void setUpInfoPanel() {
