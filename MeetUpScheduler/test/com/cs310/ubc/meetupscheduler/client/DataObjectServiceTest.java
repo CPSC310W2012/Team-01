@@ -55,7 +55,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 					}
 					
 					public void onSuccess(HashMap<String, String> results) {
-						assert(results.equals(parkRow));
+						assertEquals(results, parkRow);
 						finishTest();
 					}
 				};
@@ -77,7 +77,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 					}
 					
 					public void onSuccess(ArrayList<HashMap<String, String>> result) {
-						assert(result.equals(parkRow));
+						assertEquals(result, parkRow);
 						finishTest();
 					}
 				};
@@ -99,7 +99,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 					}
 					
 					public void onSuccess(ArrayList<HashMap<String, String>> result) {
-						assert(result.equals(parkRow));
+						assertEquals(result, parkRow);
 						finishTest();
 					}
 				};
@@ -121,7 +121,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 					}
 					
 					public void onSuccess(ArrayList<HashMap<String, String>> result) {
-						assert(result.get(0).get("name").equals("Party Park"));
+						assertEquals(result.get(0).get("name"), "Party Park");
 						finishTest();
 					}
 				};

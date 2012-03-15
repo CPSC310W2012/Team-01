@@ -154,6 +154,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 				q = pm.newQuery(tableClass);
 			else 
 				q = pm.newQuery(tableClass, query);
+			q.setOrdering((String) tableClass.getDeclaredMethod("getDefaultOrdering").invoke(null));
 			objects = (List<DataObject>) q.execute(query);
 			for (DataObject object: objects) {
 				retObjs.add(object.formatForTable());

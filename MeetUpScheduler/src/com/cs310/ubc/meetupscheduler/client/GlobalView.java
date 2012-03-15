@@ -29,6 +29,7 @@ public class GlobalView extends View {
 	private final int MAP_WIDTH = 500;
 	private final int EVENT_TABLE_LENGTH = 15;
 
+	//TODO: Do we need separate services for this?
 	private final DataObjectServiceAsync parkService = GWT.create(DataObjectService.class);
 	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
 	private HorizontalPanel rootPanel = new HorizontalPanel();
@@ -132,7 +133,7 @@ public class GlobalView extends View {
 	 */
 	//TODO: popup for errors and remove markers
 	private void loadParks(final MapWidget map){
-		parkService.get("Park", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
+		parkService.get("Park", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				System.out.println("oh noes park data didnt werks");

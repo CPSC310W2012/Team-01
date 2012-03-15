@@ -92,4 +92,8 @@ public class Event extends DataObject {
 	protected String end_time;
 	@Persistent
 	protected Date creation_date;
+	
+	public static String getDefaultOrdering() {
+		return "creation_date";
+	}
 }

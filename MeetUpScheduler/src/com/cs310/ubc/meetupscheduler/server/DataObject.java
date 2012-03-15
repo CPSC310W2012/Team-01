@@ -83,4 +83,8 @@ public class DataObject {
 		  Field f = myClass.getDeclaredField(field);
 		  return f.get(this).toString();
 	  }
+	  
+	  public static String getDefaultOrdering() {
+		  return null;
+	  }
 }

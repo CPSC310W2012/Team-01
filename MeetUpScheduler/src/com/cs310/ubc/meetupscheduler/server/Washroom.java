@@ -62,4 +62,8 @@ public class Washroom extends DataObject {
 	protected String summer_hours;
 	@Persistent
 	protected String winter_hours;
+	
+	public static String getDefaultOrdering() {
+		return "park_id";
+	}
 }
