@@ -1,37 +1,32 @@
 /** Add css rules here for your application. */
-
-
 /** Example rules used by the template application (remove for your app) */
 h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 10px 0px 20px;
-  text-align: center;
-}
-
-.gwt-TabPanel {
-  margin: auto;
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 10px 0px 20px;
+	text-align: center;
 }
 
 .sendButton {
-  display: block;
-  font-size: 16pt;
+	display: block;
+	font-size: 16pt;
 }
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
-  width: 400px;
+	width: 400px;
 }
 
 .gwt-Button {
-  padding: 0px;
-  border: 1.5px;
+	padding: 0px;
+	border: 1.5px;
 }
 
 .dialogVPanel {
-  margin: 5px;
+	margin: 5px;
 }
+
 #adminVertPan {
 	margin-left: auto;
 	margin-right: auto;
@@ -50,34 +45,22 @@ h1 {
 }
 
 #adminFileUp {
-	margin: 6px; 
+	margin: 6px;
 }
 
 .serverResponseLabelError {
-  color: red;
+	color: red;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
-  margin: 15px 6px 6px;
+	margin: 15px 6px 6px;
 }
 
 /* Recent Events Table Headers in Global View*/
 .recentEventHeaders {
-	border: 1px solid #F4F3F0;
-	background-color: #F4F3F0;
+	border: 1px solid #C9DFAF;
+	background-color: #C9DFAF;
 	color: black;
 	padding: 4px
-	}
-
-/* Recent Events Table Title in Global View*/
-.recentEventTitles{
-	background-color: #C9DFAF;
-	border: 1px solid #C9DFAF;
-  	border-top-left-radius: 3px;
-  	border-top-right-radius: 3px;
-  	padding: 5px;
-  	font-weight:600;
-  	font-size:13px;
-  	color: #4C674C;
-	}
+}

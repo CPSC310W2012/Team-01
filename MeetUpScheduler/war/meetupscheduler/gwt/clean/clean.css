@@ -859,14 +859,18 @@ select {
   overflow: hidden;
 }
 
+/*Light Park Green	#C9DFAF*/
+/*Dark Park Green   #4C674C*/
+
 .gwt-TabBar {
-  background: #ccc;
+  background: #E2E2E2;
   padding-top: 6px;
 }
 .gwt-TabBar .gwt-TabBarFirst {
   width: 5px;  /* first tab distance from the left */
 }
 .gwt-TabBar .gwt-TabBarRest {
+	background: #E2E2E2;
 }
 .gwt-TabBar .gwt-TabBarItem {
   margin-left: 4px;
@@ -876,24 +880,24 @@ select {
   color: white;
   font-weight: normal;
   text-align: center;
-  background: #8E8E8E;
+  background: #4C674C;
   -moz-border-radius: 3px 3px 0px 0px;
   border-radius: 3px 3px 0px 0px;
 }
 .gwt-TabBar .gwt-TabBarItem-selected {
   cursor: default;
-  background: white;
-  color: #333;
+  background: #C9DFAF;
+  color: #4C674C;
   font-weight: bold;
 } 
 .gwt-TabBar .gwt-TabBarItem-disabled {
   cursor: default;
-  color: #999999;
+  color: #E2E2E2;
 }
 .gwt-TabPanel {
 }
 .gwt-TabPanelBottom {
-  border-color: #ccc;
+  border-color: #E2E2E2;
   border-style: solid;
   border-width: 0px 1px 1px;
   overflow: hidden;
