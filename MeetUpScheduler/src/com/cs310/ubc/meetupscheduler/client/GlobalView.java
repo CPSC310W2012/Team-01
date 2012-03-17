@@ -25,9 +25,9 @@ import com.google.gwt.maps.client.control.LargeMapControl3D;
 
 public class GlobalView extends View {
 
-	private final int MAP_HEIGHT = 400;
-	private final int MAP_WIDTH = 500;
-	private final int EVENT_TABLE_LENGTH = 15;
+	private static final int MAP_HEIGHT = 400;
+	private static final int MAP_WIDTH = 500;
+	private static final int EVENT_TABLE_LENGTH = 15;
 
 	private final DataObjectServiceAsync parkService = GWT.create(DataObjectService.class);
 	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
@@ -154,7 +154,7 @@ public class GlobalView extends View {
 	 * specified by the EVENT_TABLE_LENGTH field.
 	 * 
 	 * @param events The events to be added to the recent events table
-	 *///TODO: fix the async problem here with the allParks field
+	 *///TODO: fix the async problem here with the allParks field, add if statement (empty events)
 	private void addRecentEvents(ArrayList<HashMap<String, String>> events){
 		
 		int indexStop = events.size() - EVENT_TABLE_LENGTH;
