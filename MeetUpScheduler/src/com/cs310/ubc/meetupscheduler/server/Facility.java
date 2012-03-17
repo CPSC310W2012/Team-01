@@ -60,4 +60,8 @@ public class Facility extends DataObject {
 	protected String type;
 	@Persistent
 	protected String url;
+	
+	public static String getDefaultOrdering() {
+		return "park_id";
+	}
 }

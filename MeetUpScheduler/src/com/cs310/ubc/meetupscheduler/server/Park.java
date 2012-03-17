@@ -90,7 +90,7 @@ public class Park extends DataObject {
 	
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	protected String id; //Park id is given by XML data.
+	protected Long id; //Park id is given by XML data.
 	@Persistent
 	protected String name;
 	@Persistent
@@ -130,5 +130,9 @@ public class Park extends DataObject {
 	 */
 	public boolean hasFacilities() {
 		return this.facilities == "Y" ? true: false;
+	}
+	
+	public static String getDefaultOrdering() {
+		return "name";
 	}
 }

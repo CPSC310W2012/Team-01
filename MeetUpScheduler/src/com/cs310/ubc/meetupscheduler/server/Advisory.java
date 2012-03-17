@@ -55,4 +55,8 @@ public class Advisory extends DataObject {
 	protected String text;
 	@Persistent
 	protected String url;
+	
+	public static String getDefaultOrdering() {
+		return "park_id";
+	}
 }

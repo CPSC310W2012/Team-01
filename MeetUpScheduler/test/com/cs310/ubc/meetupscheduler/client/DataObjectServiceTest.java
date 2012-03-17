@@ -55,7 +55,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 					}
 					
 					public void onSuccess(HashMap<String, String> results) {
-						assert(results.equals(parkRow));
+						assertEquals(results, parkRow);
 						finishTest();
 					}
 				};
@@ -68,59 +68,91 @@ public class DataObjectServiceTest extends GWTTestCase {
 	
 	@Test
 	public void testQueryAllParks() {
-		AsyncCallback<ArrayList<HashMap<String, String>>> callback = new AsyncCallback<ArrayList<HashMap<String, String>>>() {
-			public void onFailure(Throwable caught) {
-				//Oh no!
-			}
-			
-			public void onSuccess(ArrayList<HashMap<String, String>> results) {
-				System.out.println(results);
+		Timer timer = new Timer() {
+			public void run() {
+				AsyncCallback<ArrayList<HashMap<String, String>>> callback = new AsyncCallback<ArrayList<HashMap<String, String>>>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						finishTest();
+					}
+					
+					public void onSuccess(ArrayList<HashMap<String, String>> result) {
+						assertEquals(result, parkRow);
+						finishTest();
+					}
+				};
+				dataObjectService.get("Park", callback);
 			}
 		};
-		dataObjectService.get("Park", callback);
+		delayTestFinish(5000);
+		timer.schedule(100);
 	}
 	
 	@Test
 	public void testQueryOnePark() {
-		AsyncCallback<ArrayList<HashMap<String, String>>> callback = new AsyncCallback<ArrayList<HashMap<String, String>>>() {
-			public void onFailure(Throwable caught) {
-				//Oh no!
-			}
-			
-			public void onSuccess(ArrayList<HashMap<String, String>> results) {
-				System.out.println(results);
+		Timer timer = new Timer() {
+			public void run() {
+				AsyncCallback<ArrayList<HashMap<String, String>>> callback = new AsyncCallback<ArrayList<HashMap<String, String>>>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						finishTest();
+					}
+					
+					public void onSuccess(ArrayList<HashMap<String, String>> result) {
+						assertEquals(result, parkRow);
+						finishTest();
+					}
+				};
+				dataObjectService.get("Park", "name=='Super Park'", callback);
 			}
 		};
-		dataObjectService.get("Park", "name=='Super Park'", callback);
+		delayTestFinish(5000);
+		timer.schedule(100);
 	}
 	
 	@Test
 	public void testUpdatePark() {
-		AsyncCallback<ArrayList<HashMap<String, String>>> callback = new AsyncCallback<ArrayList<HashMap<String, String>>>() {
-			public void onFailure(Throwable caught) {
-				//Oh no!
-			}
-			
-			public void onSuccess(ArrayList<HashMap<String, String>> results) {
-				System.out.println(results);
+		Timer timer = new Timer() {
+			public void run() {
+				AsyncCallback<ArrayList<HashMap<String, String>>> callback = new AsyncCallback<ArrayList<HashMap<String, String>>>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						finishTest();
+					}
+					
+					public void onSuccess(ArrayList<HashMap<String, String>> result) {
+						assertEquals(result.get(0).get("name"), "Party Park");
+						finishTest();
+					}
+				};
+				dataObjectService.update("Park", "id==\"1\"", "name", "Party Park", callback);
 			}
 		};
-		dataObjectService.update("Park", "id==\"1\"", "name", "Party Park", callback);
+		delayTestFinish(5000);
+		timer.schedule(100);
 	}
 
 	@Test
 	public void testRemovePark() {
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-			public void onFailure(Throwable caught) {
-				//Oh no!
-			}
-			
-			public void onSuccess(Void ignore) {
-				System.out.println("All gone!");
-			}
-		};
-		dataObjectService.remove("Park", "id==\"1\"", callback);
+			Timer timer = new Timer() {
+				public void run() {
+					AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+						public void onFailure(Throwable caught) {
+							System.out.println(caught.getMessage());
+							finishTest();
+						}
+						
+						public void onSuccess(Void ignore) {
+							finishTest();
+						}
+					};
+					dataObjectService.remove("Park", "id==\"1\"", callback);
+				}
+			};
+			delayTestFinish(5000);
+			timer.schedule(100);
 	}
+	
 	@Override
 	public String getModuleName() {
 		return "com.cs310.ubc.meetupscheduler.MeetUpScheduler";

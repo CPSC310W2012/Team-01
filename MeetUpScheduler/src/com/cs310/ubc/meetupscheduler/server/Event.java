@@ -1,5 +1,6 @@
 package com.cs310.ubc.meetupscheduler.server;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -42,6 +43,11 @@ public class Event extends DataObject {
 		    public String toString() {
 		        return "num_attending";
 		    }
+		},
+		ATTND_NAMES {
+			public String toString() {
+				return "attending_names";
+			}
 		},
 		CREATOR {
 		    public String toString() {
@@ -91,5 +97,11 @@ public class Event extends DataObject {
 	@Persistent
 	protected String end_time;
 	@Persistent
+	public ArrayList<String> attending_names;
+	@Persistent
 	protected Date creation_date;
+	
+	public static String getDefaultOrdering() {
+		return "creation_date";
+	}
 }

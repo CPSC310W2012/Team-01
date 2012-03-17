@@ -1,6 +1,8 @@
 package com.cs310.ubc.meetupscheduler.server;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +30,8 @@ public class DataObject {
 			  Field f = myClass.getDeclaredField(key);
 			  if (f.getType() == Long.class)
 				  f.set(this, new Long(myFields.get(key)));
+			  else if (f.getType() == ArrayList.class)
+				  f.set(this, new ArrayList<String>(Arrays.asList(myFields.get(key).split(","))));
 			  else
 				  f.set(this, myFields.get(key));
 		  }
@@ -47,6 +51,8 @@ public class DataObject {
 		  Field f = myClass.getDeclaredField(field);
 		  if (f.getType() == Long.class)
 			  f.set(this, new Long(newValue));
+		  else if (f.getType() == ArrayList.class)
+			  f.set(this, new ArrayList<String>(Arrays.asList(newValue.split(","))));
 		  else
 			  f.set(this, newValue);
 	  }
@@ -57,6 +63,7 @@ public class DataObject {
 	   * @throws IllegalArgumentException
 	   * @throws IllegalAccessException
 	   */
+	  @SuppressWarnings("unchecked")
 	  public HashMap<String, String> formatForTable() throws IllegalArgumentException, IllegalAccessException {
 		  HashMap<String, String> myValues = new HashMap<String, String>();
 		  Class<?> myClass = this.getClass();
@@ -66,6 +73,15 @@ public class DataObject {
 				  myValues.put(field.getName(), (String) field.get(this));
 			  else if (field.getType() == Long.class)
 				  myValues.put(field.getName(), field.get(this).toString());
+			  else if (field.getType() == ArrayList.class) {
+				  StringBuilder sb = new StringBuilder();
+				  for (String item : (ArrayList<String>) field.get(this)) 
+					  sb.append(item + ",");
+				  String output = sb.toString();
+				  if (output.length() > 0)
+					  output = output.substring(0, output.length() -1);
+				  myValues.put(field.getName(), output); //Remove the trailing comma
+			  }
 		  return myValues;
 	  }
 	  
@@ -82,5 +98,9 @@ public class DataObject {
 		  Class<?> myClass = this.getClass();
 		  Field f = myClass.getDeclaredField(field);
 		  return f.get(this).toString();
+	  }
+	  
+	  public static String getDefaultOrdering() {
+		  return null;
 	  }
 }
