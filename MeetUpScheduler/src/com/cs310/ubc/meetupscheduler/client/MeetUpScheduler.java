@@ -8,8 +8,12 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 import com.google.gwt.user.client.ui.TabPanel;
@@ -36,20 +40,54 @@ public class MeetUpScheduler implements EntryPoint {
 
 	  private CreateEventView createEventView = new CreateEventView();
 	  private EventView eventView = new EventView();
-
-
-
+	  
+	  private LoginInfo loginInfo = null;
+	  private VerticalPanel loginPanel = new VerticalPanel();
+	  private Label loginLabel = new Label("Please sign in to your Google Account to access the Vancouver Meetup Scheduler application.");
+	  private Anchor signInLink = new Anchor("Sign In");
+	  private Anchor signOutLink = new Anchor("Sign Out");
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-	    tabPanel = new TabPanel();
+	    // Check login status using login service.
+	    LoginServiceAsync loginService = GWT.create(LoginService.class);
+	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+	      public void onFailure(Throwable error) {
+	    	  //Do something?
+	      }
+	
+	      public void onSuccess(LoginInfo result) {
+	        loginInfo = result;
+	        if(loginInfo.isLoggedIn()) {
+	        	loadMeetupScheduler();
+	        } else {
+	        	loadLogin();	
+	        }
+	      }
+	    });
+	}
+	
+	private void loadLogin() {
+	    // Assemble login panel.
+	    signInLink.setHref(loginInfo.getLoginUrl());
+	    loginPanel.add(loginLabel);
+	    loginPanel.add(signInLink);
+	    RootPanel.get().add(loginPanel);
+	}
+
+	public void loadMeetupScheduler() {
+		RootPanel.get().remove(loginPanel);
+		tabPanel = new TabPanel();
 	    initTabPanel();
 	    admin = new AdminView();
 	    tabPanel.add(admin.createPage(), "Administrator");
 	    RootPanel.get().add(tabPanel);
-	  }
+	    // Set up sign out hyperlink.
+	    signOutLink.setHref(loginInfo.getLogoutUrl());
+	    RootPanel.get().add(signOutLink);
+	}
 
 
 	private void initTabPanel() {
