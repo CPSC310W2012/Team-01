@@ -24,6 +24,16 @@
     <url-pattern>/meetupscheduler/dataobject</url-pattern>
   </servlet-mapping>  
   
+  <servlet>
+    <servlet-name>loginService</servlet-name>
+    <servlet-class>com.cs310.ubc.meetupscheduler.server.LoginServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>loginService</servlet-name>
+    <url-pattern>/meetupscheduler/login</url-pattern>
+  </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>MeetUpScheduler.html</welcome-file>
