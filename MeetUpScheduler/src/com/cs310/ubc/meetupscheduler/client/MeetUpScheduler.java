@@ -45,6 +45,7 @@ public class MeetUpScheduler implements EntryPoint {
 	  private VerticalPanel loginPanel = new VerticalPanel();
 	  private Label loginLabel = new Label("Please sign in to your Google Account to access the Vancouver Meetup Scheduler application.");
 	  private Anchor signInLink = new Anchor("Sign In");
+	  private Anchor signOutLink = new Anchor("Sign Out");
 
 	/**
 	 * This is the entry point method.
@@ -76,7 +77,6 @@ public class MeetUpScheduler implements EntryPoint {
 	    RootPanel.get().add(loginPanel);
 	}
 
-
 	public void loadMeetupScheduler() {
 		RootPanel.get().remove(loginPanel);
 		tabPanel = new TabPanel();
@@ -84,6 +84,9 @@ public class MeetUpScheduler implements EntryPoint {
 	    admin = new AdminView();
 	    tabPanel.add(admin.createPage(), "Administrator");
 	    RootPanel.get().add(tabPanel);
+	    // Set up sign out hyperlink.
+	    signOutLink.setHref(loginInfo.getLogoutUrl());
+	    RootPanel.get().add(signOutLink);
 	}
 
 
