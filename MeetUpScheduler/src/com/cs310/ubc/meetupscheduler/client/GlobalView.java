@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.user.client.ui.ListBox;
@@ -52,7 +53,7 @@ public class GlobalView extends View{
 	 * Loads the Maps API and returns the global view ui in a panel
 	 */
 	@Override
-	public HorizontalPanel createPage() {
+	public Widget asWidget() {
 		//Initialize Map, needs a key before this can be deployed
 		Maps.loadMapsApi("", "2", false, new Runnable() {
 			public void run() {

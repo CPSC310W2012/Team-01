@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
 public class CreateEventView extends View {
@@ -63,7 +64,8 @@ public class CreateEventView extends View {
 		park = parkID;
 	}
 	
-	public HorizontalPanel createPage() {					
+	@Override
+	public Widget asWidget() {					
 		
 		//Sets the label when a date is selected		
 		eventDatePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {

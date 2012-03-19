@@ -82,7 +82,7 @@ public class MeetUpScheduler implements EntryPoint {
 		tabPanel = new TabPanel();
 	    initTabPanel();
 	    admin = new AdminView();
-	    tabPanel.add(admin.createPage(), "Administrator");
+	    tabPanel.add(admin.asWidget(), "Administrator");
 	    RootPanel.get().add(tabPanel);
 	    // Set up sign out hyperlink.
 	    signOutLink.setHref(loginInfo.getLogoutUrl());
@@ -92,9 +92,9 @@ public class MeetUpScheduler implements EntryPoint {
 
 	private void initTabPanel() {
 		
-		tabPanel.add(globalView.createPage(), "Vancouver Parks and Events");
-	    tabPanel.add(createEventView.createPage(), "Create an Event");	   
-	    tabPanel.add(eventView.createPage(), "Event Information Page");
+		tabPanel.add(globalView.asWidget(), "Vancouver Parks and Events");
+	    tabPanel.add(createEventView.asWidget(), "Create an Event");	   
+	    tabPanel.add(eventView.asWidget(), "Event Information Page");
 	    tabPanel.addSelectionHandler(new SelectionHandler<Integer>(){
 	      public void onSelection(SelectionEvent<Integer> event) {
 	    	  //TODO Load widgets on demand. Too slow right now.

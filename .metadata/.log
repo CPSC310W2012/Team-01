@@ -1,0 +1,69 @@
+!SESSION 2012-03-18 10:53:39.311 -----------------------------------------------
+eclipse.buildId=M20110210-1200
+java.version=1.6.0_25
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product org.eclipse.epp.package.java.product
+
+!ENTRY com.android.ide.eclipse.ddms 4 0 2012-03-18 10:53:52.822
+!MESSAGE DDMS files not found: P:\Program Files (x86)\eclipse\platform-tools\adb.exe P:\Program Files (x86)\eclipse\tools\hprof-conv.exe P:\Program Files (x86)\eclipse\tools\traceview.bat 
+
+!ENTRY com.google.gdt.eclipse.core 4 0 2012-03-18 10:54:28.700
+!MESSAGE Error while tracking project-level changes from a change in R/
+!STACK 1
+Java Model Exception: Java Model Status [Unbound classpath container: 'App Engine SDK [missing]' in project 'MeetUpScheduler']
+	at org.eclipse.jdt.internal.core.JavaProject.getResolvedClasspath(JavaProject.java:1962)
+	at com.google.gdt.eclipse.core.projects.ProjectChangeTimestampTracker.isResourceInAnOutputPath(ProjectChangeTimestampTracker.java:121)
+	at com.google.gdt.eclipse.core.projects.ProjectChangeTimestampTracker.visitDelta(ProjectChangeTimestampTracker.java:162)
+	at com.google.gdt.eclipse.core.projects.ProjectChangeTimestampTracker.visitDelta(ProjectChangeTimestampTracker.java:169)
+	at com.google.gdt.eclipse.core.projects.ProjectChangeTimestampTracker.resourceChanged(ProjectChangeTimestampTracker.java:181)
+	at org.eclipse.core.internal.events.NotificationManager$2.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:327)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1181)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1984)
+	at org.eclipse.ui.actions.WorkspaceModifyOperation.run(WorkspaceModifyOperation.java:118)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+!SUBENTRY 1 org.eclipse.jdt.core 4 963 2012-03-18 10:54:28.700
+!MESSAGE Unbound classpath container: 'App Engine SDK [missing]' in project 'MeetUpScheduler'
+
+!ENTRY com.google.gdt.eclipse.core 4 0 2012-03-18 10:54:28.934
+!MESSAGE Error while tracking project-level changes from a change in R/
+!STACK 1
+Java Model Exception: Java Model Status [Unbound classpath container: 'App Engine SDK [missing]' in project 'MeetUpScheduler']
+	at org.eclipse.jdt.internal.core.JavaProject.getResolvedClasspath(JavaProject.java:1962)
+	at com.google.gdt.eclipse.core.projects.ProjectChangeTimestampTracker.isResourceInAnOutputPath(ProjectChangeTimestampTracker.java:121)
+	at com.google.gdt.eclipse.core.projects.ProjectChangeTimestampTracker.visitDelta(ProjectChangeTimestampTracker.java:162)
+	at com.google.gdt.eclipse.core.projects.ProjectChangeTimestampTracker.visitDelta(ProjectChangeTimestampTracker.java:169)
+	at com.google.gdt.eclipse.core.projects.ProjectChangeTimestampTracker.resourceChanged(ProjectChangeTimestampTracker.java:181)
+	at org.eclipse.core.internal.events.NotificationManager$2.run(NotificationManager.java:291)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:285)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:149)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:327)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1181)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:45)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.jdt.core 4 963 2012-03-18 10:54:28.934
+!MESSAGE Unbound classpath container: 'App Engine SDK [missing]' in project 'MeetUpScheduler'
+
+!ENTRY com.google.gdt.eclipse.suite 1 0 2012-03-18 10:54:29.935
+!MESSAGE Registering: com.google.appengine.eclipse.sdkbundle_1.6.1.v201201120043r36
+
+!ENTRY com.google.gdt.eclipse.suite 1 0 2012-03-18 10:54:30.428
+!MESSAGE Registering: com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r36
+
+!ENTRY com.google.gdt.eclipse.core 1 0 2012-03-18 10:54:30.906
+!MESSAGE Scheduled rebuild of project MeetUpScheduler because of plugin update (current version: 2.5.1.v201201120043-rel-r36)
+
+!ENTRY org.eclipse.jdt.core 4 977 2012-03-18 10:54:32.361
+!MESSAGE Build path contains duplicate entry: 'com.google.appengine.eclipse.core.GAE_CONTAINER' for project 'MeetUpScheduler'
+
+!ENTRY com.google.appengine.eclipse.core 1 0 2012-03-18 13:26:45.605
+!MESSAGE MeetUpScheduler successfully deployed to Google App Engine
+
+!ENTRY com.google.appengine.eclipse.core 1 0 2012-03-18 13:54:35.610
+!MESSAGE MeetUpScheduler successfully deployed to Google App Engine

@@ -51,6 +51,7 @@ public class EventView extends View{
 	private Label eventTime = new Label();
 	private Label eventNotes = new Label();
 	private Label eventCategory = new Label();
+	private Button shareButton = new Button();
 	private MapWidget eventMap;
 	private ArrayList<String> members;
 	private Integer attendeeCount = 0;
@@ -72,7 +73,8 @@ public class EventView extends View{
 	//		return panel;
 	//	}
 
-	public HorizontalPanel createPage() {
+	@Override
+	public Widget asWidget() {
 		//Initialize Map, needs a key before it can be deployed
 		Maps.loadMapsApi("", "2", false, new Runnable() {
 			public void run() {
@@ -111,6 +113,13 @@ public class EventView extends View{
 			}
 		});
 		
+		//set up the shareButton
+		shareButton.setText("Share on Google Plus.");
+		shareButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event){
+				com.google.gwt.user.client.Window.open("https://plus.google.com/share?url=vancitymeetupscheduler.appspot.com", "Share the Meetup Scheduler!", "");
+			}
+		});
 		
 		//set up the joinButton
 		joinButton.setText("Join event!");
@@ -146,7 +155,9 @@ public class EventView extends View{
 		rootPanel.add(loadButton);
 		rootPanel.add(infoPanel);
 		rootPanel.add(joinButton);
+		rootPanel.add(shareButton);
 		rootPanel.add(parkPanel);
+		
 	}
 
 	/**
