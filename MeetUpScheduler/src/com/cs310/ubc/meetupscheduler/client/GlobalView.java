@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -34,7 +33,7 @@ import com.google.gwt.maps.client.control.LargeMapControl3D;
 
 public class GlobalView extends View{
 
-	private static final int MAP_HEIGHT = 600;
+	private static final int MAP_HEIGHT = 550;
 	private static final int MAP_WIDTH = 700;
 	private static final int EVENT_TABLE_LENGTH = 15;
 
