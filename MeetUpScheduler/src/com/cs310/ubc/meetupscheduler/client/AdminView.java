@@ -28,7 +28,8 @@ public class AdminView extends View {
 		createFileUploadForm();
 	}
 	
-	public FormPanel createPage() {
+	@Override
+	public Widget asWidget() {
 		return form;
 	}
 

@@ -73,7 +73,8 @@ public class EventView extends View{
 	//		return panel;
 	//	}
 
-	public HorizontalPanel createPage() {
+	@Override
+	public Widget asWidget() {
 		//Initialize Map, needs a key before it can be deployed
 		Maps.loadMapsApi("", "2", false, new Runnable() {
 			public void run() {
