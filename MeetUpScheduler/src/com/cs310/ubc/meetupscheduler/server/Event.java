@@ -49,10 +49,20 @@ public class Event extends DataObject {
 				return "attending_names";
 			}
 		},
-		CREATOR {
+		ATTND_EMAILS {
+			public String toString() {
+				return "attending_emails";
+			}
+		},
+		CREATOR_EMAIL {
 		    public String toString() {
-		        return "creator";
+		        return "creator_email";
 		    }
+		},
+		CREATOR_NAME {
+			public String toString() {
+				return "creator_name";
+			}
 		},
 		CAT {
 		    public String toString() {
@@ -87,7 +97,9 @@ public class Event extends DataObject {
 	@Persistent
 	protected String num_attending;
 	@Persistent
-	protected String creator;
+	protected String creator_email;
+	@Persistent
+	protected String creator_name;
 	@Persistent
 	protected String category;
 	@Persistent
@@ -96,6 +108,9 @@ public class Event extends DataObject {
 	protected String start_time;
 	@Persistent
 	protected String end_time;
+	//TODO: Easy way to associate emails and names?
+	@Persistent
+	public ArrayList<String> attending_emails;
 	@Persistent
 	public ArrayList<String> attending_names;
 	@Persistent
