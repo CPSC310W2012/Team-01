@@ -32,7 +32,8 @@ public class EventView extends View{
 	 */
 	private final int MAP_HEIGHT = 400;
 	private final int MAP_WIDTH = 500;
-	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);	
+	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
+	
 
 
 	private TextBox loadText = new TextBox();
@@ -201,20 +202,7 @@ public class EventView extends View{
 	 * Loads all existing Events into a list.
 	 */
 	private void loadEvents(){
-		eventService.get("Event", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("You're doing it wrong!");
-			}
-
-			@Override
-			public void onSuccess(ArrayList<HashMap<String, String>> events) {
-				allEvents = events;
-				for (int i = 0; i < allEvents.size(); i++){
-					System.out.println(allEvents.get(i).get("id"));
-				}
-			}
-		});
+		allEvents = MeetUpScheduler.getEvents();
 	}
 
 	/**
