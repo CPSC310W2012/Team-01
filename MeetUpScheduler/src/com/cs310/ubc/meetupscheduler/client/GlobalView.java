@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.maps.client.InfoWindow;
@@ -26,6 +28,7 @@ import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
+import com.google.gwt.user.client.Element;
 
 /**
  * view for the parks and events summary page
@@ -33,7 +36,7 @@ import com.google.gwt.maps.client.control.LargeMapControl3D;
  * @author David
  */
 
-public class GlobalView extends View{
+public class GlobalView extends Composite implements View{
 
 	private static final int MAP_HEIGHT = 600;
 	private static final int MAP_WIDTH = 700;
@@ -49,6 +52,13 @@ public class GlobalView extends View{
 	private ListBox parkBox = new ListBox();
 	private ArrayList<HashMap<String, String>> allEvents;
 	private ArrayList<HashMap<String, String>> allParks;
+    SimplePanel viewPanel = new SimplePanel();
+    Element nameSpan = DOM.createSpan();
+	
+    public GlobalView() {
+        viewPanel.getElement().appendChild(nameSpan);
+        initWidget(viewPanel);
+    }
 
 	/**
 	 * Loads the Maps API and returns the global view ui in a panel
@@ -283,6 +293,12 @@ public class GlobalView extends View{
 
 			map.addOverlay(new Marker(LatLng.newInstance(lat, lon)));
 		}*/
+	}
+
+	@Override
+	public void setName(String name) {
+		nameSpan.setInnerText("Global View, " + name);
+		
 	}
 }
 

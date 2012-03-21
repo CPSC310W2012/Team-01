@@ -1,18 +1,29 @@
 package com.cs310.ubc.meetupscheduler.client;
 
+import com.google.gwt.activity.shared.ActivityManager;
+import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.EntryPoint;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HeaderPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
@@ -31,21 +42,29 @@ public class MeetUpScheduler implements EntryPoint {
 	private static final String SERVER_ERROR = "An error occurred while "
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
-	
-	  private TabPanel tabPanel;
-	  private DataObjectServiceAsync dataObjectService = GWT.create(DataObjectService.class);
-	  private GlobalView globalView = new GlobalView();
-
-	  private AdminView admin;
-
-	  private CreateEventView createEventView = new CreateEventView();
-	  private EventView eventView = new EventView();
 	  
 	  private LoginInfo loginInfo = null;
 	  private VerticalPanel loginPanel = new VerticalPanel();
 	  private Label loginLabel = new Label("Please sign in to your Google Account to access the Vancouver Meetup Scheduler application.");
 	  private Anchor signInLink = new Anchor("Sign In");
 	  private Anchor signOutLink = new Anchor("Sign Out");
+	  
+	  private Place defaultPlace = new GlobalPlace("Home");
+	  private Place createEventPlace;
+	  private Place eventPlace;
+	  private Place adminPlace;
+	  private SimplePanel appWidget = new SimplePanel();
+	  //private Anchor createEvent = new Anchor("Create Event");
+	  private Button createEventButton = new Button("Create Event");
+	  private Button eventButton = new Button("Event");
+	  private Button adminButton = new Button("Admin");
+	  private Button homeButton = new Button("Home");
+	  
+	  public MeetUpScheduler() {
+		  //instantiate data class TODO needed?
+		 new SharedData(); 
+	  }
+	  
 
 	/**
 	 * This is the entry point method.
@@ -79,55 +98,108 @@ public class MeetUpScheduler implements EntryPoint {
 
 	public void loadMeetupScheduler() {
 		RootPanel.get().remove(loginPanel);
-		tabPanel = new TabPanel();
-	    initTabPanel();
-	    admin = new AdminView();
-	    tabPanel.add(admin.asWidget(), "Administrator");
-	    RootPanel.get().add(tabPanel);
+		homeButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				//already intialized
+				if (SharedData.placeController.getWhere().equals(Place.NOWHERE)) {
+					return;
+				}
+				else {
+					SharedData.getPlaceController().goTo(defaultPlace);
+				}
+					
+			}
+		});
+		createEventButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (createEventPlace == null) {
+					createEventPlace = new CreateEventPlace("Create_Event");
+				}
+				else if (SharedData.placeController.getWhere().equals(Place.NOWHERE)) {
+					return;
+				}
+				else {
+					//TODO needs an update?
+				}
+				SharedData.getPlaceController().goTo(createEventPlace);
+					
+			}
+		});
+		//TODO: Move
+		eventButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (eventPlace == null) {
+					eventPlace = new EventPlace("Event");
+				}
+				else {
+					//TODO needs an update?
+				}
+				SharedData.getPlaceController().goTo(eventPlace);
+					
+			}
+		});
+		adminButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (adminPlace == null) {
+					adminPlace = new AdminPlace("Admin");
+				}
+				else if (SharedData.placeController.getWhere().equals(Place.NOWHERE)) {
+					return;
+				}
+				else {
+					//TODO needs an update?
+				}
+				SharedData.getPlaceController().goTo(adminPlace);
+					
+			}
+		});
+		RootPanel.get().add(homeButton);
+		RootPanel.get().add(createEventButton);
+		RootPanel.get().add(eventButton);
+		RootPanel.get().add(adminButton);
+			
+		
+        // Start ActivityManager for the main widget with our ActivityMapper
+        ActivityMapper activityMapper = new MSActivityMapper();
+        ActivityManager activityManager = new ActivityManager(activityMapper, SharedData.getEventBus());
+        activityManager.setDisplay(appWidget);
+
+        // Start PlaceHistoryHandler with our PlaceHistoryMapper
+        MSPlaceMapper historyMapper= GWT.create(MSPlaceMapper.class);
+        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
+  
+        historyHandler.register(SharedData.getPlaceController(), SharedData.eventBus, defaultPlace);
+
+        RootPanel.get().add(appWidget);
+        // Goes to the place represented on URL else default place
+        historyHandler.handleCurrentHistory();
 	    // Set up sign out hyperlink.
 	    signOutLink.setHref(loginInfo.getLogoutUrl());
 	    RootPanel.get().add(signOutLink);
 	}
 
-
-	private void initTabPanel() {
+	
+	public static final class SharedData {
 		
-		tabPanel.add(globalView.asWidget(), "Vancouver Parks and Events");
-	    tabPanel.add(createEventView.asWidget(), "Create an Event");	   
-	    tabPanel.add(eventView.asWidget(), "Event Information Page");
-	    tabPanel.addSelectionHandler(new SelectionHandler<Integer>(){
-	      public void onSelection(SelectionEvent<Integer> event) {
-	    	  //TODO Load widgets on demand. Too slow right now.
-	      
-	        History.newItem("page" + event.getSelectedItem());
-	      }});
+		  private static final EventBus eventBus = new SimpleEventBus();
 
-	    History.addValueChangeHandler(new ValueChangeHandler<String>() {
-	      public void onValueChange(ValueChangeEvent<String> event) {
-	        String historyToken = event.getValue();
+		 private static final PlaceController placeController = new PlaceController(eventBus);
+		  
+		 private SharedData() {			 
+		 }
+		  	
+		public static PlaceController getPlaceController() {
+				return placeController;
+			}
+		
+		public static EventBus getEventBus() {
+			return eventBus;
+		}
 
-	        // Parse the history token
-	        try {
-	          if (historyToken.substring(0, 4).equals("page")) {
-	            String tabIndexToken = historyToken.substring(4, 5);
-	            int tabIndex = Integer.parseInt(tabIndexToken);
-	            // Select the specified tab panel
-	            tabPanel.selectTab(tabIndex);
-	          } else {
-	            tabPanel.selectTab(0);
-	          }
-
-	        } catch (IndexOutOfBoundsException e) {
-	          tabPanel.selectTab(0);
-	        }
-	      }
-	    });
-
-	    tabPanel.selectTab(0);
-	    tabPanel.setSize("85%", "100%");
-	}
-	public void createTab(Widget w, String name) {
-	    tabPanel.add(w, name);
 	}
 
 	

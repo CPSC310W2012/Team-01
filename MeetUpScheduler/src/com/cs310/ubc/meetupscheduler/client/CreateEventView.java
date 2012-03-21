@@ -6,24 +6,27 @@ import java.util.Date;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
-public class CreateEventView extends View {
+public class CreateEventView extends Composite implements View {
 
 	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);	
 	//event fields
@@ -54,13 +57,18 @@ public class CreateEventView extends View {
 	private ListBox categoriesListBox = new ListBox();
 	//Park Selector
 	private ListBox parksListBox = new ListBox();
+	private SimplePanel viewPanel = new SimplePanel();
+	private Element nameSpan = DOM.createSpan();
 	
-	
+	//TODO Have to figure this out
 	public CreateEventView() {
-		
+	     viewPanel.getElement().appendChild(nameSpan);
+	      initWidget(viewPanel);
 	}
 	
 	public CreateEventView(String parkID) {
+	    viewPanel.getElement().appendChild(nameSpan);
+	    initWidget(viewPanel);
 		park = parkID;
 	}
 	
@@ -218,5 +226,11 @@ public class CreateEventView extends View {
 		categoriesList.addItem("Night Soccer");
 		categoriesList.addItem("Dog Show");
 		categoriesList.addItem("Chili Cook-off");
+	}
+
+	@Override
+	public void setName(String name) {
+		nameSpan.setInnerText("Create Event " + name);
+		
 	}
 }

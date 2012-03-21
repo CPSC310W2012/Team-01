@@ -1,17 +1,19 @@
 package com.cs310.ubc.meetupscheduler.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -19,12 +21,16 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.Widget;
 
-public class AdminView extends View {
+public class AdminView extends Composite implements View {
 	  private FormPanel form;
 	  private TextArea ta  = new TextArea();
 	  private ScrollPanel scrollPan = new ScrollPanel(ta);;
+	  private SimplePanel viewPanel = new SimplePanel();
+	  private Element nameSpan = DOM.createSpan();
 	  
 	public AdminView() {
+		viewPanel.getElement().appendChild(nameSpan);
+        initWidget(viewPanel);
 		createFileUploadForm();
 	}
 	
@@ -121,5 +127,11 @@ public class AdminView extends View {
 		return false;
 		}
 	}
+
+	@Override
+	public void setName(String name) {
+		nameSpan.setInnerText("Admin " + name);
+	}
+
 
 }
