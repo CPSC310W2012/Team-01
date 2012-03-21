@@ -28,7 +28,8 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 
 public class CreateEventView extends Composite implements View {
 
-	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);	
+	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);
+	private ArrayList<HashMap<String, String>> allParks;
 	//event fields
 	private String eventName;
 	private String userName;
@@ -96,8 +97,7 @@ public class CreateEventView extends Composite implements View {
 		categoriesListBox.setVisibleItemCount(1);
 		
 		//get parks for parks list
-		getParks(parksListBox);
-		parksListBox.addItem("1");
+		getParks(parksListBox);		
 		parksListBox.setVisibleItemCount(1);		
 		
 		Button submitButton = new Button("Submit", new ClickHandler() {
@@ -139,17 +139,9 @@ public class CreateEventView extends Composite implements View {
 	
 	private void getParks(final ListBox parksList) {
 		
-		objectService.get("Park", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>() {
-			@Override
-			public void onFailure(Throwable error) {
-				//TODO: replace with actual table flip
-				System.out.println("Table Flip!");
-			}
-			
-			public void onSuccess(ArrayList<HashMap<String, String>> parks) {
-				addParksToParksListBox(parks, parksList);
-			}
-		});
+		allParks = MeetUpScheduler.getParks();
+		addParksToParksListBox(allParks, parksList);		
+		
 	}
 	
 	private void addParksToParksListBox(ArrayList<HashMap<String, String>> parks, ListBox parksList){
@@ -194,6 +186,7 @@ public class CreateEventView extends Composite implements View {
 		event.put("start_time", startTime);
 		event.put("end_time", endTime);
 		
+		//TODO: move to static data object? Make call to reload method to re get events and load views
 		objectService.add("Event", event, new AsyncCallback<HashMap<String, String>>() {
 			public void onFailure(Throwable error) {
 				System.out.println("Flip a table!  (>o.o)> _|__|_)");
