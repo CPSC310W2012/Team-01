@@ -11,6 +11,7 @@ public class AdminPlace extends Place {
 	public AdminPlace(String token)
     {
         super();
+		name = token;
     }
 	
 	public String getName() {

@@ -11,6 +11,7 @@ public class EventPlace extends Place {
 	public EventPlace(String token)
     {
         super();
+		name = token;
     }
 	
 	public String getName() {

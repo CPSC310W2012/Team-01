@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 public class CreateEventActivity extends AbstractActivity implements PlaceNavigator {
 
     private String name;
+    private CreateEventView cv;
 
     public CreateEventActivity(CreateEventPlace place) {
         this.name = place.getName();
@@ -25,16 +26,11 @@ public class CreateEventActivity extends AbstractActivity implements PlaceNaviga
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
-		CreateEventView cv = new CreateEventView();
+		if (cv == null) {
+			cv = new CreateEventView();
+		}
 		cv.setName(name);
 		panel.setWidget(cv.asWidget());
 	}
 	
-    /**
-     * Ask user before stopping this activity TODO: needed?
-     */
-    @Override
-    public String mayStop() {
-        return "Please hold on. This page is stopping.";
-    }
 }

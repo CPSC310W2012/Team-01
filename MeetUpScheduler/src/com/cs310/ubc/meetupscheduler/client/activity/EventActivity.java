@@ -30,11 +30,4 @@ public class EventActivity extends AbstractActivity implements PlaceNavigator {
 		panel.setWidget(ev.asWidget());
 	}
 	
-    /**
-     * Ask user before stopping this activity TODO: needed?
-     */
-    @Override
-    public String mayStop() {
-        return "Please hold on. This page is stopping.";
-    }
 }

@@ -12,7 +12,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 public class AdminActivity extends AbstractActivity implements PlaceNavigator {
 
-    private String name;
+    private String name = "Upload";
+    private AdminView av;
 
     public AdminActivity(AdminPlace place) {
         this.name = place.getName();
@@ -25,16 +26,11 @@ public class AdminActivity extends AbstractActivity implements PlaceNavigator {
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
-		AdminView av = new AdminView();
+		if (av == null) {
+		 av = new AdminView();
+		}
 		av.setName(name);
 		panel.setWidget(av.asWidget());
 	}
 		
-	    /**
-	     * Ask user before stopping this activity TODO: needed?
-	     */
-	    @Override
-	    public String mayStop() {
-	        return "Please hold on. This page is stopping.";
-	    }
 }

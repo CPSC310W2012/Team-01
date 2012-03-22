@@ -10,6 +10,7 @@ public class CreateEventPlace extends Place {
 	public CreateEventPlace(String token)
     {
         super();
+		name = token;
     }
 	
 	public String getName() {

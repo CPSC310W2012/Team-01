@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 public class GlobalActivity extends AbstractActivity implements PlaceNavigator {
 
     private String name;
+    private GlobalView gv;
 
     public GlobalActivity(GlobalPlace place) {
         this.name = place.getName();
@@ -26,18 +27,12 @@ public class GlobalActivity extends AbstractActivity implements PlaceNavigator {
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
-		GlobalView gv = new GlobalView();
+		if (gv == null) {
+			gv = new GlobalView();
+		}
 		gv.setName(name);
 		panel.setWidget(gv.asWidget());
 	}
 	
-    /**
-     * Ask user before stopping this activity TODO: needed?
-     */
-    @Override
-    public String mayStop() {
-        return "Please hold on. This activity is stopping.";
-    }
-
 
 }

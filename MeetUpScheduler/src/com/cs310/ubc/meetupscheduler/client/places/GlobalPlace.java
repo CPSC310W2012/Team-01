@@ -11,6 +11,7 @@ public class GlobalPlace extends Place {
 	public GlobalPlace(String token)
     {
         super();
+		name = token;
     }
 	
 	public String getName() {
