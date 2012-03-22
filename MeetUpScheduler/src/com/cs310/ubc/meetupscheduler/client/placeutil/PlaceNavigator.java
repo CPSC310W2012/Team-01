@@ -1,4 +1,4 @@
-package com.cs310.ubc.meetupscheduler.client;
+package com.cs310.ubc.meetupscheduler.client.placeutil;
 
 import com.google.gwt.place.shared.Place;
 

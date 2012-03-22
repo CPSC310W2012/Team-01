@@ -1,5 +1,13 @@
-package com.cs310.ubc.meetupscheduler.client;
+package com.cs310.ubc.meetupscheduler.client.placeutil;
 
+import com.cs310.ubc.meetupscheduler.client.activity.AdminActivity;
+import com.cs310.ubc.meetupscheduler.client.activity.CreateEventActivity;
+import com.cs310.ubc.meetupscheduler.client.activity.EventActivity;
+import com.cs310.ubc.meetupscheduler.client.activity.GlobalActivity;
+import com.cs310.ubc.meetupscheduler.client.places.AdminPlace;
+import com.cs310.ubc.meetupscheduler.client.places.CreateEventPlace;
+import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
+import com.cs310.ubc.meetupscheduler.client.places.GlobalPlace;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;

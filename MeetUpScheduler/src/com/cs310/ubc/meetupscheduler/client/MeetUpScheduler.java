@@ -1,5 +1,11 @@
 package com.cs310.ubc.meetupscheduler.client;
 
+import com.cs310.ubc.meetupscheduler.client.places.AdminPlace;
+import com.cs310.ubc.meetupscheduler.client.places.CreateEventPlace;
+import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
+import com.cs310.ubc.meetupscheduler.client.places.GlobalPlace;
+import com.cs310.ubc.meetupscheduler.client.placeutil.MSActivityMapper;
+import com.cs310.ubc.meetupscheduler.client.placeutil.MSPlaceMapper;
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
 import java.util.ArrayList;
@@ -50,15 +56,9 @@ public class MeetUpScheduler implements EntryPoint {
 			+ "connection and try again.";
 	
 	  private TabPanel tabPanel;
-	  private DataObjectServiceAsync dataObjectService = GWT.create(DataObjectService.class);
 	  private final DataObjectServiceAsync parkService = GWT.create(DataObjectService.class);
 	  private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
-	  private GlobalView globalView;
 
-	  private AdminView admin;
-
-	  private CreateEventView createEventView;
-	  private EventView eventView;
 	  
 	  private LoginInfo loginInfo = null;
 	  private VerticalPanel loginPanel = new VerticalPanel();
@@ -128,6 +128,7 @@ public class MeetUpScheduler implements EntryPoint {
 					return;
 				}
 				else {
+					//History.newItem(event.get);
 					SharedData.getPlaceController().goTo(defaultPlace);
 				}
 					

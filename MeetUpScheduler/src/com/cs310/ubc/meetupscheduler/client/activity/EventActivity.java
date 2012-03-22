@@ -1,5 +1,10 @@
-package com.cs310.ubc.meetupscheduler.client;
+package com.cs310.ubc.meetupscheduler.client.activity;
 
+import com.cs310.ubc.meetupscheduler.client.EventView;
+import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler;
+import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
+import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
+import com.cs310.ubc.meetupscheduler.client.placeutil.PlaceNavigator;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
@@ -9,7 +14,7 @@ public class EventActivity extends AbstractActivity implements PlaceNavigator {
 
     private String name;
 
-    public EventActivity(AbstractPlace place) {
+    public EventActivity(EventPlace place) {
         this.name = place.getName();
     }
 	
