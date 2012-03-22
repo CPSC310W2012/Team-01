@@ -122,10 +122,8 @@ public class GlobalView extends View{
 		eventTabPanel.getTabBar().getElement().getStyle();
 		eventTabPanel.add(recentEventsTable, "Recent Events");
 		eventTabPanel.add(new HTML("My Events Here"), "My Events");
-		eventTabPanel.add(new HTML("My Events Here"), "Park Notifications");
+		eventTabPanel.add(new HTML("Advisories Here"), "Park Advisories");
 		eventTabPanel.selectTab(0);
-
-
 
 		//put ui elements into rootPanel field
 		rootPanel.add(parkTable);
