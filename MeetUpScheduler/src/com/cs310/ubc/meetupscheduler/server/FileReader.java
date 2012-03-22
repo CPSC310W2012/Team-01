@@ -12,11 +12,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+/**
+ * posts the xml file to the server
+ * @author Caroline
+ *
+ */
 public class FileReader extends HttpServlet {
   private static final Logger log =
       Logger.getLogger(FileReader.class.getName());
 
+  /**
+   * method associate with submit button on admin view page
+   */
   public void doPost(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
 

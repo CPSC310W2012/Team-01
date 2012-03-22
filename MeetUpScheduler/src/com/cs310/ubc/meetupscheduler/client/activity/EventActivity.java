@@ -10,10 +10,19 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+/**
+ * gwt activity associated with event view
+ * @author Caroline
+ *
+ */
 public class EventActivity extends AbstractActivity implements PlaceNavigator {
 
     private String name;
 
+    /**
+     * constructor
+     * @param place the place for event view
+     */
     public EventActivity(EventPlace place) {
         this.name = place.getName();
     }

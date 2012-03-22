@@ -9,16 +9,26 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-
+/**
+ * The GWT activity that wraps the admin view
+ * @author Caroline
+ *
+ */
 public class AdminActivity extends AbstractActivity implements PlaceNavigator {
 
     private String name = "Upload";
     private AdminView av;
-
+    
+    /**
+     * constructor
+     * The gwt place/tokenizer for admin view
+     * @param place
+     */
     public AdminActivity(AdminPlace place) {
         this.name = place.getName();
     }
 	
+
 	@Override
 	public void goTo(Place place) {
 		MeetUpScheduler.SharedData.getPlaceController().goTo(place);
