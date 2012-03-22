@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.maps.client.InfoWindow;
@@ -25,6 +28,7 @@ import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
+import com.google.gwt.user.client.Element;
 
 /**
  * view for the parks and events summary page
@@ -32,15 +36,13 @@ import com.google.gwt.maps.client.control.LargeMapControl3D;
  * @author David
  */
 
-public class GlobalView extends View{
+public class GlobalView extends Composite implements View{
 
 	private static final int MAP_HEIGHT = 550;
 	private static final int MAP_WIDTH = 700;
 	private static final int EVENT_TABLE_LENGTH = 15;
 
-	//TODO: Do we need separate services for this?
-	private final DataObjectServiceAsync parkService = GWT.create(DataObjectService.class);
-	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
+		
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private VerticalPanel parkTable = new VerticalPanel();
 	private FlexTable recentEventsTable = new FlexTable();
@@ -48,6 +50,13 @@ public class GlobalView extends View{
 	private ListBox parkBox = new ListBox();
 	private ArrayList<HashMap<String, String>> allEvents;
 	private ArrayList<HashMap<String, String>> allParks;
+    SimplePanel viewPanel = new SimplePanel();
+    Element nameSpan = DOM.createSpan();
+	
+    public GlobalView() {
+        viewPanel.getElement().appendChild(nameSpan);
+        initWidget(viewPanel);
+    }
 
 	/**
 	 * Loads the Maps API and returns the global view ui in a panel
@@ -139,18 +148,8 @@ public class GlobalView extends View{
 	 */
 	//TODO: popup for errors, Async for load recent events?
 	private void loadEvents(final MapWidget map, ArrayList<HashMap<String,String>> parks){
-		eventService.get("Event", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println("oh noes event data didnt werks");
-			}
-
-			@Override
-			public void onSuccess(ArrayList<HashMap<String, String>> events) {
-				allEvents = events;
-				addRecentEvents(events);
-			}
-		});
+		allEvents = MeetUpScheduler.getEvents();
+		addRecentEvents(allEvents);
 	}
 
 	/**
@@ -162,24 +161,14 @@ public class GlobalView extends View{
 	 */
 	//TODO: popup for errors and remove markers
 	private void loadParks(final MapWidget map){
-		parkService.get("Park", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println("oh noes park data didnt werks");
-			}
+		allParks = MeetUpScheduler.getParks();
+		addParksToListBox(allParks);
+		addParkMarkers(allParks, map);
+		//TODO: solve async issue
+		loadEvents(map, allParks);
 
-			@Override
-			public void onSuccess(ArrayList<HashMap<String, String>> parks) {
-				allParks = parks;
-				addParksToListBox(parks);
-				addParkMarkers(parks, map);
-				//TODO: solve async issue
-				loadEvents(map, parks);
-
-				//TODO: change this when async is refactored
-				addEventMarkers(parks, map);
-			}
-		});
+		//TODO: change this when async is refactored
+		addEventMarkers(allParks, map);
 	}
 
 	/**
@@ -280,6 +269,12 @@ public class GlobalView extends View{
 
 			map.addOverlay(new Marker(LatLng.newInstance(lat, lon)));
 		}*/
+	}
+
+	@Override
+	public void setName(String name) {
+		nameSpan.setInnerText("Global View, " + name);
+		
 	}
 }
 

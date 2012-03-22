@@ -6,26 +6,30 @@ import java.util.Date;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
-public class CreateEventView extends View {
+public class CreateEventView extends Composite implements View {
 
-	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);	
+	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);
+	private ArrayList<HashMap<String, String>> allParks;
 	//event fields
 	private String eventName;
 	private String userName;
@@ -54,13 +58,18 @@ public class CreateEventView extends View {
 	private ListBox categoriesListBox = new ListBox();
 	//Park Selector
 	private ListBox parksListBox = new ListBox();
+	private SimplePanel viewPanel = new SimplePanel();
+	private Element nameSpan = DOM.createSpan();
 	
-	
+	//TODO Have to figure this out
 	public CreateEventView() {
-		
+	     viewPanel.getElement().appendChild(nameSpan);
+	      initWidget(viewPanel);
 	}
 	
 	public CreateEventView(String parkID) {
+	    viewPanel.getElement().appendChild(nameSpan);
+	    initWidget(viewPanel);
 		park = parkID;
 	}
 	
@@ -88,8 +97,7 @@ public class CreateEventView extends View {
 		categoriesListBox.setVisibleItemCount(1);
 		
 		//get parks for parks list
-		getParks(parksListBox);
-		parksListBox.addItem("1");
+		getParks(parksListBox);		
 		parksListBox.setVisibleItemCount(1);		
 		
 		Button submitButton = new Button("Submit", new ClickHandler() {
@@ -131,17 +139,9 @@ public class CreateEventView extends View {
 	
 	private void getParks(final ListBox parksList) {
 		
-		objectService.get("Park", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>() {
-			@Override
-			public void onFailure(Throwable error) {
-				//TODO: replace with actual table flip
-				System.out.println("Table Flip!");
-			}
-			
-			public void onSuccess(ArrayList<HashMap<String, String>> parks) {
-				addParksToParksListBox(parks, parksList);
-			}
-		});
+		allParks = MeetUpScheduler.getParks();
+		addParksToParksListBox(allParks, parksList);		
+		
 	}
 	
 	private void addParksToParksListBox(ArrayList<HashMap<String, String>> parks, ListBox parksList){
@@ -186,6 +186,7 @@ public class CreateEventView extends View {
 		event.put("start_time", startTime);
 		event.put("end_time", endTime);
 		
+		//TODO: move to static data object? Make call to reload method to re get events and load views
 		objectService.add("Event", event, new AsyncCallback<HashMap<String, String>>() {
 			public void onFailure(Throwable error) {
 				System.out.println("Flip a table!  (>o.o)> _|__|_)");
@@ -218,5 +219,11 @@ public class CreateEventView extends View {
 		categoriesList.addItem("Night Soccer");
 		categoriesList.addItem("Dog Show");
 		categoriesList.addItem("Chili Cook-off");
+	}
+
+	@Override
+	public void setName(String name) {
+		nameSpan.setInnerText("Create Event " + name);
+		
 	}
 }

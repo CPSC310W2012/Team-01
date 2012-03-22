@@ -3,28 +3,31 @@ package com.cs310.ubc.meetupscheduler.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.cs310.ubc.meetupscheduler.server.Event;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 
 
-public class EventView extends View{
+public class EventView extends Composite implements View{
 	/**
 	 * EventView for looking at the details of a specific event
 	 * 
@@ -32,7 +35,8 @@ public class EventView extends View{
 	 */
 	private final int MAP_HEIGHT = 400;
 	private final int MAP_WIDTH = 500;
-	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);	
+	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
+	
 
 
 	private TextBox loadText = new TextBox();
@@ -57,9 +61,14 @@ public class EventView extends View{
 	private Integer attendeeCount = 0;
 	private Label attCountLabel = new Label();
 	private ArrayList<HashMap<String, String>> allEvents;
+    SimplePanel viewPanel = new SimplePanel();
+    Element nameSpan = DOM.createSpan();
 
 
-
+    public EventView() {
+        viewPanel.getElement().appendChild(nameSpan);
+        initWidget(viewPanel);
+    }
 
 	// TODO: Make this into a working constructor that takes an eventID string
 	//	public Widget createPage (String eventID) {
@@ -201,20 +210,7 @@ public class EventView extends View{
 	 * Loads all existing Events into a list.
 	 */
 	private void loadEvents(){
-		eventService.get("Event", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("You're doing it wrong!");
-			}
-
-			@Override
-			public void onSuccess(ArrayList<HashMap<String, String>> events) {
-				allEvents = events;
-				for (int i = 0; i < allEvents.size(); i++){
-					System.out.println(allEvents.get(i).get("id"));
-				}
-			}
-		});
+		allEvents = MeetUpScheduler.getEvents();
 	}
 
 	/**
@@ -317,6 +313,11 @@ public class EventView extends View{
 
 
 
+	}
+
+	@Override
+	public void setName(String name) {
+		nameSpan.setInnerText("Event " + name);
 	}
 
 
