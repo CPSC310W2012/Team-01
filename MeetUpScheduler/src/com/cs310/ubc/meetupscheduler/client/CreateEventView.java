@@ -186,7 +186,7 @@ public class CreateEventView extends Composite implements View {
 		event.put("date", date);
 		event.put("start_time", startTime);
 		event.put("end_time", endTime);
-		
+
 		//TODO: move to static data object? Make call to reload method to re get events and load views
 		objectService.add("Event", event, new AsyncCallback<HashMap<String, String>>() {
 			public void onFailure(Throwable error) {

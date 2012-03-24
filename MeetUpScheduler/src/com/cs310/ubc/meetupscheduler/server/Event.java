@@ -39,11 +39,6 @@ public class Event extends DataObject {
 		        return "park_id";
 		    }
 		},
-		P_NAME {
-			public String toString() {
-				return "park_name";
-			}
-		},
 		ATTND {
 		    public String toString() {
 		        return "num_attending";
@@ -97,8 +92,6 @@ public class Event extends DataObject {
 	protected Long id; //Automatically generated pk
 	@Persistent
 	protected String park_id;
-	@Persistent
-	protected String park_name;
 	@Persistent
 	protected String name;
 	@Persistent

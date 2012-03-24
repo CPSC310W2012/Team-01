@@ -34,9 +34,7 @@ public class EventView extends Composite implements View{
 	 * @author Ben
 	 */
 	private final int MAP_HEIGHT = 400;
-	private final int MAP_WIDTH = 500;
-	private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
-	
+	private final int MAP_WIDTH = 500;	
 
 
 	private TextBox loadText = new TextBox();
@@ -47,7 +45,7 @@ public class EventView extends Composite implements View{
 	private TextBox joinName = new TextBox();
 	private Button loadButton = new Button();
 	private VerticalPanel parkPanel = new VerticalPanel();
-	private ListBox attendees = new ListBox();
+	private ListBox attendeesBox = new ListBox();
 	private VerticalPanel attendeePanel = new VerticalPanel();
 	private VerticalPanel infoPanel = new VerticalPanel();
 	private Label eventCreator = new Label();
@@ -57,17 +55,24 @@ public class EventView extends Composite implements View{
 	private Label eventCategory = new Label();
 	private Button shareButton = new Button();
 	private MapWidget eventMap;
-	private ArrayList<String> members;
+	private ArrayList<String> members = new ArrayList<String>();
 	private Integer attendeeCount = 0;
 	private Label attCountLabel = new Label();
 	private ArrayList<HashMap<String, String>> allEvents;
-    SimplePanel viewPanel = new SimplePanel();
+    private SimplePanel viewPanel = new SimplePanel();
+    private ArrayList<HashMap<String, String>> allParks;
     Element nameSpan = DOM.createSpan();
+    private HashMap<String, String> event = new HashMap<String, String>();
 
 
     public EventView() {
         viewPanel.getElement().appendChild(nameSpan);
         initWidget(viewPanel);
+    }
+    public EventView(int eventID){
+    	viewPanel.getElement().appendChild(nameSpan);
+    	initWidget(viewPanel);
+    	loadEvent(eventID);
     }
 
 	// TODO: Make this into a working constructor that takes an eventID string
@@ -97,10 +102,8 @@ public class EventView extends Composite implements View{
 	 * Constructs the UI elements of EventView
 	 */
 	public void buildUI(){
-		//Persistent data should mean that this call isn't needed.
-//		buildSampleEvent();
 		
-		loadEvents();
+		loadData();
 
 		// set up the Map
 		// TODO: Make the map relevant. Load markers of the location, etc.
@@ -111,7 +114,7 @@ public class EventView extends Composite implements View{
 		eventMap.setScrollWheelZoomEnabled(true);
 		eventMap.addControl(new LargeMapControl3D());
 		eventMap.checkResizeAndCenter();
-
+		
 		// Sets the eventLoad button to load the events
 
 		loadText.setText("Enter the number of the event to load");
@@ -123,6 +126,8 @@ public class EventView extends Composite implements View{
 		});
 		
 		//set up the shareButton
+		//TODO: Make this work with the proper URL
+		
 		shareButton.setText("Share on Google Plus.");
 		shareButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event){
@@ -143,14 +148,14 @@ public class EventView extends Composite implements View{
 		setJoinBox();
 
 
-		// Sets up a temporary attendee list.
-		members = new ArrayList<String>();
-		members.add("Adrian");
-		members.add("Ben");
-		members.add("Caroline");
-		members.add("Connor");
-		members.add("Dave");
-		setUpAttendees();
+//		// Sets up a temporary attendee list.
+//		members = new ArrayList<String>();
+//		members.add("Adrian");
+//		members.add("Ben");
+//		members.add("Caroline");
+//		members.add("Connor");
+//		members.add("Dave");
+//		setUpAttendees();
 
 
 		setUpInfoPanel();
@@ -159,7 +164,7 @@ public class EventView extends Composite implements View{
 		// Add items to panels
 		parkPanel.add(eventMap);
 		attendeePanel.add(attCountLabel);
-		attendeePanel.add(attendees);
+		attendeePanel.add(attendeesBox);
 		rootPanel.add(loadText);
 		rootPanel.add(loadButton);
 		rootPanel.add(infoPanel);
@@ -180,7 +185,7 @@ public class EventView extends Composite implements View{
 	 */
 	private void loadEvent(int eventID) {
 
-		HashMap<String, String> event = new HashMap<String, String>();
+		
 		if (allEvents != null){
 			try { 
 				for (int i = 0; i < allEvents.size(); i++){
@@ -193,6 +198,10 @@ public class EventView extends Composite implements View{
 					eventCreator.setText(event.get("creator_name") + " is the event creator.");
 					eventMap.checkResizeAndCenter();
 					eventCategory.setText("This event is in the category: " + event.get("category"));
+//					for (int j = 0; j < (event.get("attending_names")).size(); j++){
+//						members.add(event.get(members.get(i)));	
+//					}
+					Window.alert("WHEEEEE");
 				
 					}
 				}
@@ -209,40 +218,16 @@ public class EventView extends Composite implements View{
 	/**
 	 * Loads all existing Events into a list.
 	 */
-	private void loadEvents(){
+	private void loadData(){
 		allEvents = MeetUpScheduler.getEvents();
+		allParks = MeetUpScheduler.getParks();
+		Window.alert("Data loaded from MeetUpScheduler!");
+//		for (int i=0; i<allEvents.size(); i++){
+//			HashMap<String, String> tempEvent = allEvents[i];
+//			System.out.println("Loaded event " + allEvents);
+//		}
 	}
 
-	/**
-	 * Use this to create various sample events to test with.
-	 * This doesn't need to be used once full event creation is implemented.
-	 * TODO: Make this not just overwrite existing events of the same id.
-	 */
-	private void buildSampleEvent() {
-		HashMap<String, String> sampleEventMap = new HashMap<String, String>();
-		sampleEventMap.put("id", "1");
-		sampleEventMap.put("name","Champion's League");
-		sampleEventMap.put("park_id", "1");
-		sampleEventMap.put("num_attending","0");
-		sampleEventMap.put("creator","Ben");
-		sampleEventMap.put("category","Soccer");
-		sampleEventMap.put("date","Feb 29th, 2012");
-		sampleEventMap.put("start_time","1:00");
-		sampleEventMap.put("end_time", "4:00");
-
-		eventService.add("Event", sampleEventMap, new AsyncCallback<HashMap<String, String>>() {
-			public void onFailure(Throwable error) {
-				System.out.println("Flip a table!  (>o.o)> _|__|_)");
-			}
-
-			public void onSuccess(HashMap<String, String> newEvent) {
-				//TODO: Add call to helper to scheduler to get event view based on event id
-				System.out.println(newEvent);
-				Window.alert("Event Created!");
-			}
-		});
-
-	}
 	
 	/**
 	 * This creates the panel with the relevant information of the event.
@@ -262,9 +247,9 @@ public class EventView extends Composite implements View{
 	 */
 	private void setUpAttendees() {
 		for (int i = 0; i< members.size(); i++){
-			attendees.addItem(members.get(i));
+			attendeesBox.addItem(members.get(i));
 		}
-		attendees.setVisibleItemCount(members.size());
+		attendeesBox.setVisibleItemCount(members.size());
 		attendeeCount = members.size();
 		attCountLabel.setText(attendeeCount + " people are attending.");
 
@@ -293,7 +278,7 @@ public class EventView extends Composite implements View{
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				members.add(joinName.getValue());
-				attendees.clear();
+				attendeesBox.clear();
 				setUpAttendees();
 				joinName.setText(null);
 				joinBox.hide();
