@@ -60,7 +60,7 @@ public class MeetUpScheduler implements EntryPoint {
 	  private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
 
 	  
-	  private LoginInfo loginInfo = null;
+	  private static LoginInfo loginInfo = null;
 	  private VerticalPanel loginPanel = new VerticalPanel();
 	  private Label loginLabel = new Label("Please sign in to your Google Account to access the Vancouver Meetup Scheduler application.");
 	  private Anchor signInLink = new Anchor("Sign In");
@@ -246,11 +246,6 @@ public class MeetUpScheduler implements EntryPoint {
 		return allEvents;
 	}
 	
-	//TODO: Implement accessor for login info
-	public static void getLoginInfo() {
-		return;
-	}
-	
 	//TODO: Implement reload of page. To be called by event creation. 
 	public void reloadViews() {
 		//remove old elements? then redraw
@@ -266,6 +261,8 @@ public class MeetUpScheduler implements EntryPoint {
 		
 		 private static final EventBus eventBus = new SimpleEventBus();
 		 private static final PlaceController placeController = new PlaceController(eventBus);
+		 private static final LoginInfo loginFields = loginInfo;
+		 
 		  
 		 private SharedData() {			 
 		 }
@@ -276,6 +273,10 @@ public class MeetUpScheduler implements EntryPoint {
 		
 		public static EventBus getEventBus() {
 			return eventBus;
+		}
+		
+		public static LoginInfo getLoginInfo() {
+			return loginFields;
 		}
 
 	}
