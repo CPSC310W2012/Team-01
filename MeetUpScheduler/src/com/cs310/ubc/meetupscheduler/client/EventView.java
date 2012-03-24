@@ -10,7 +10,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
+import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 
@@ -114,7 +116,7 @@ public class EventView extends Composite implements View{
 		eventMap.setScrollWheelZoomEnabled(true);
 		eventMap.addControl(new LargeMapControl3D());
 		eventMap.checkResizeAndCenter();
-
+		eventMap.addControl(new MapTypeControl());
 		// Sets the eventLoad button to load the events
 
 		loadText.setText("Enter the number of the event to load");
@@ -218,6 +220,9 @@ public class EventView extends Composite implements View{
 				double lon = Double.parseDouble(latLong.substring(index+1));
 
 				eventMap.setCenter(LatLng.newInstance(lat, lon), 17);
+				final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
+				eventMap.addOverlay(eventMarker);
+				
 			}
 		}
 		
