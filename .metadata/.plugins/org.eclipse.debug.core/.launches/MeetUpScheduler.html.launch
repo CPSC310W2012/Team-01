@@ -11,7 +11,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.suite.appengineClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl MeetUpScheduler.html -logLevel INFO -codeServerPort 9997 -port 8888 -server com.google.appengine.tools.development.gwt.AppEngineLauncher -war &quot;P:\Workspaces\310 project\MeetUpScheduler\war&quot; com.cs310.ubc.meetupscheduler.MeetUpScheduler"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl MeetUpScheduler.html -logLevel INFO -codeServerPort 9997 -port 8888 -server com.google.appengine.tools.development.gwt.AppEngineLauncher -war C:\Workspaces\MeetUpScheduler\war com.cs310.ubc.meetupscheduler.MeetUpScheduler"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MeetUpScheduler"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=50 -Xmx512m &quot;-javaagent:P:\Program Files (x86)\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.6.1.v201201120043r36\appengine-java-sdk-1.6.1\lib\agent\appengine-agent.jar&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=50 -Xmx512m &quot;-javaagent:C:\Program Files\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.6.3.v201202290255r36\appengine-java-sdk-1.6.3\lib\agent\appengine-agent.jar&quot;"/>
 </launchConfiguration>
