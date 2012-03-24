@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -19,7 +18,6 @@ import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapWidget;
@@ -28,6 +26,7 @@ import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
+import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.user.client.Element;
 
 /**
@@ -38,11 +37,11 @@ import com.google.gwt.user.client.Element;
 
 public class GlobalView extends Composite implements View{
 
-	private static final int MAP_HEIGHT = 600;
+	private static final int MAP_HEIGHT = 550;
 	private static final int MAP_WIDTH = 700;
 	private static final int EVENT_TABLE_LENGTH = 15;
 
-		
+
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private VerticalPanel parkTable = new VerticalPanel();
 	private FlexTable recentEventsTable = new FlexTable();
@@ -50,13 +49,16 @@ public class GlobalView extends Composite implements View{
 	private ListBox parkBox = new ListBox();
 	private ArrayList<HashMap<String, String>> allEvents;
 	private ArrayList<HashMap<String, String>> allParks;
-    SimplePanel viewPanel = new SimplePanel();
-    Element nameSpan = DOM.createSpan();
-	
-    public GlobalView() {
-        viewPanel.getElement().appendChild(nameSpan);
-        initWidget(viewPanel);
-    }
+	SimplePanel viewPanel = new SimplePanel();
+	Element nameSpan = DOM.createSpan();
+
+	public GlobalView() {
+		allEvents = MeetUpScheduler.getEvents();
+		allParks = MeetUpScheduler.getParks();
+
+		viewPanel.getElement().appendChild(nameSpan);
+		initWidget(viewPanel);
+	}
 
 	/**
 	 * Loads the Maps API and returns the global view ui in a panel
@@ -77,13 +79,14 @@ public class GlobalView extends Composite implements View{
 	 * in the rootPanel field
 	 */
 	public void buildUi() {
-
+		//TODO: pull this out for all classes to use
 		//Map
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
 		final MapWidget map = new MapWidget(vancouver, 11);
 		map.setPixelSize(MAP_WIDTH, MAP_HEIGHT);
 		map.setScrollWheelZoomEnabled(true);
 		map.addControl(new LargeMapControl3D());
+		map.addControl(new MapTypeControl());
 
 		//Zoom to park button
 		Button parkButton = new Button("Zoom to Park", new ClickHandler() {
@@ -91,7 +94,7 @@ public class GlobalView extends Composite implements View{
 				if(parkBox.getItemCount()>0 && parkBox != null && allParks != null){
 					int boxIndex = parkBox.getSelectedIndex();
 					String selectedPark = parkBox.getValue(boxIndex);
-					
+
 					for(int i=0; i<allParks.size(); i++){
 						if(allParks.get(i).get("name").equals(selectedPark)){
 							String latLong = allParks.get(i).get("google_map_dest");
@@ -99,7 +102,7 @@ public class GlobalView extends Composite implements View{
 							int index = latLong.indexOf(",");
 							double lat = Double.parseDouble(latLong.substring(0, index));
 							double lon = Double.parseDouble(latLong.substring(index+1));
-							
+
 							map.setCenter(LatLng.newInstance(lat, lon), 17);
 						}
 					}
@@ -108,11 +111,11 @@ public class GlobalView extends Composite implements View{
 		});
 
 		//Parks
+		addParksToListBox(allParks);
 		parkTable.add(parkBox);
 		parkTable.add(parkButton);
 		parkTable.setWidth("500");
 		parkTable.add(map);
-		loadParks(map);
 
 		//Recent Events
 		recentEventsTable.setCellPadding(2);
@@ -127,14 +130,18 @@ public class GlobalView extends Composite implements View{
 		recentEventsTable.setText(1, 2, "Park Name");
 		recentEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
 
+		
+
 		//Add Recent Event Table to tabPanel
 		eventTabPanel.getTabBar().getElement().getStyle();
 		eventTabPanel.add(recentEventsTable, "Recent Events");
 		eventTabPanel.add(new HTML("My Events Here"), "My Events");
-		eventTabPanel.add(new HTML("My Events Here"), "Park Notifications");
+		eventTabPanel.add(new HTML("Advisories Here"), "Park Advisories");
 		eventTabPanel.selectTab(0);
-
-
+		
+		//Add Events in tables and on map
+		addRecentEvents(allEvents);
+		addEventMarkers(allEvents, allParks, map);
 
 		//put ui elements into rootPanel field
 		rootPanel.add(parkTable);
@@ -142,60 +149,30 @@ public class GlobalView extends Composite implements View{
 	}
 
 	/**
-	 * This method makes the AsyncCallback to get an ArrayList of events stored
-	 * in a HashMap. On success recent events table is loaded and event marker 
-	 * overlays are placed on the map.
-	 * 
-	 * @param map The Google Maps widget that gets the event marker overlays
-	 */
-	//TODO: popup for errors, Async for load recent events?
-	private void loadEvents(final MapWidget map, ArrayList<HashMap<String,String>> parks){
-		allEvents = MeetUpScheduler.getEvents();
-		addRecentEvents(allEvents);
-	}
-
-	/**
-	 * This method makes the AsyncCallback to get an ArrayList of parks stored
-	 * in a HashMap. On success parks ListBox is loaded and park marker overlays 
-	 * are placed on the map.
-	 * 
-	 * @param map The Google Maps widget that gets the park marker overlays
-	 */
-	//TODO: popup for errors and remove markers
-	private void loadParks(final MapWidget map){
-		allParks = MeetUpScheduler.getParks();
-		addParksToListBox(allParks);
-		addParkMarkers(allParks, map);
-		//TODO: solve async issue
-		loadEvents(map, allParks);
-
-		//TODO: change this when async is refactored
-		addEventMarkers(allParks, map);
-	}
-
-	/**
 	 * Adds events to the recent events table. Number of events added is
 	 * specified by the EVENT_TABLE_LENGTH field.
 	 * 
 	 * @param events The events to be added to the recent events table
-	 *///TODO: fix the async problem here with the allParks field, add if statement (empty events)
+	 */
 	private void addRecentEvents(ArrayList<HashMap<String, String>> events){
+		if(events != null && events.size() >0){
+			// If there are less events than our max table length, use the number of events for the length
+			int tableLength = (events.size() < EVENT_TABLE_LENGTH) ? events.size(): EVENT_TABLE_LENGTH;
 
-		int tableLength = (events.size() < EVENT_TABLE_LENGTH) ? events.size(): EVENT_TABLE_LENGTH;
+			for(int i=0; i<tableLength; i++){
+				int row = recentEventsTable.getRowCount();
+				String park_id = events.get(i).get("park_id");
 
-		for(int i=0; i<tableLength; i++){
-			int row = recentEventsTable.getRowCount();
-			String park_id = events.get(i).get("park_id");
+				recentEventsTable.setText(row, 0, events.get(i).get("name"));
+				recentEventsTable.setText(row, 1, events.get(i).get("category"));
+				recentEventsTable.setText(row, 2, events.get(i).get("park_id"));
 
-			recentEventsTable.setText(row, 0, events.get(i).get("name"));
-			recentEventsTable.setText(row, 1, events.get(i).get("category"));
-			recentEventsTable.setText(row, 2, events.get(i).get("park_id"));
-
-			/*for(int n=0; n < allParks.size(); n++){
+				/*for(int n=0; n < allParks.size(); n++){
 				if(allParks.get(n).get("park_id").equals(park_id)){
 					eventTable.setText(row, 2, allParks.get(n).get("name"));
 				}
 			}*/
+			}
 		}
 	}
 
@@ -205,50 +182,57 @@ public class GlobalView extends Composite implements View{
 	 * @param parks The parks to be added to the parks ListBox
 	 */
 	private void addParksToListBox(ArrayList<HashMap<String, String>> parks){
-		ArrayList<String> parkNames = new ArrayList<String>();
+		if(parks != null && parks.size() > 0){
+			ArrayList<String> parkNames = new ArrayList<String>();
 
-		for(int i = 0; i<parks.size(); i++){
-			parkNames.add(parks.get(i).get("name"));
-		}
+			for(int i = 0; i<parks.size(); i++){
+				parkNames.add(parks.get(i).get("name"));
+			}
 
-		Collections.sort(parkNames);
+			Collections.sort(parkNames);
 
-		for(int i = 0; i<parks.size(); i++){
-			parkBox.addItem(parkNames.get(i));
+			for(int i = 0; i<parks.size(); i++){
+				parkBox.addItem(parkNames.get(i));
+			}
 		}
 	}
 
+	private void addEventMarkers(ArrayList<HashMap<String, String>> events, ArrayList<HashMap<String, String>> parks, final MapWidget map){
 
-	private void addEventMarkers(ArrayList<HashMap<String, String>> events, final MapWidget map){
+		if(map != null && events != null && events.size() > 0 && parks != null && parks.size() > 0){
+			
+			for(int i=0; i<parks.size(); i++){
+				for(int j=0; j<events.size(); j++){
+					//TODO: change this back to strings when park_id for events are actual park_id's
+					if(parks.get(i).get("name").equals(events.get(j).get("park_id"))){
+						System.out.println("Adding Marker...For park name: " + parks.get(i).get("name") + ". For event: " + events.get(j).get("name"));
+						
+						String latLong = parks.get(i).get("google_map_dest");
+						int index = latLong.indexOf(",");
 
-		for(int i=0; i<50; i++){
+						double lat = Double.parseDouble(latLong.substring(0, index));
+						double lon = Double.parseDouble(latLong.substring(index+1));
+						
+						//this is to pass event info into the info window creation
+						final HashMap<String, String> eventName = events.get(j);
+						final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
 
-			String latLong = events.get(i).get("google_map_dest");
-
-			int index = latLong.indexOf(",");
-
-			double lat = Double.parseDouble(latLong.substring(0, index));
-			double lon = Double.parseDouble(latLong.substring(index+1));
-
-			final HashMap<String, String> singleEvent = events.get(i);
-			final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
-
-
-			eventMarker.addMarkerClickHandler(new MarkerClickHandler() {
-				public void onClick(MarkerClickEvent event) {
-					InfoWindow info = map.getInfoWindow();
-					InfoWindowContent content = new InfoWindowContent(
-							"<font color=\"#4C674C\"><big><b> Event Details: </b></big></font><br/>"
-							+ "<a href=\"http://127.0.0.1:8888/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#page2\">" + singleEvent.get("name") + "</a><br/>"
-
-					);
-					info.open(eventMarker, content);
-
+						eventMarker.addMarkerClickHandler(new MarkerClickHandler() {
+							public void onClick(MarkerClickEvent event) {
+								
+								InfoWindow info = map.getInfoWindow();
+								InfoWindowContent content = new InfoWindowContent(
+										"<font color=\"#4C674C\"><big><b> Event Details: </b></big></font><br/>"
+										+ "<a href=\"http://127.0.0.1:8888/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#page2\">" + eventName.get("name") + "</a><br/>"
+								);
+								info.open(eventMarker, content);
+							}
+						});
+						
+						map.addOverlay(eventMarker);
+					}
 				}
-			});
-
-			map.addOverlay(eventMarker);
-
+			}
 		}
 	}
 
@@ -276,7 +260,7 @@ public class GlobalView extends Composite implements View{
 	@Override
 	public void setName(String name) {
 		nameSpan.setInnerText("Global View, " + name);
-		
+
 	}
 }
 
