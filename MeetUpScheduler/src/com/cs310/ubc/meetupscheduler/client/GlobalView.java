@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -19,7 +18,6 @@ import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapWidget;
@@ -164,10 +162,8 @@ public class GlobalView extends Composite implements View{
 		allParks = MeetUpScheduler.getParks();
 		addParksToListBox(allParks);
 		addParkMarkers(allParks, map);
-		//TODO: solve async issue
+		
 		loadEvents(map, allParks);
-
-		//TODO: change this when async is refactored
 		addEventMarkers(allParks, map);
 	}
 

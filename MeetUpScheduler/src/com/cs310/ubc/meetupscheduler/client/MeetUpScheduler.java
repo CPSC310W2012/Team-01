@@ -78,12 +78,7 @@ public class MeetUpScheduler implements EntryPoint {
 	  private Button createEventButton = new Button("Create Event");
 	  private Button eventButton = new Button("Event");
 	  private Button adminButton = new Button("Admin");
-	  private Button homeButton = new Button("Home");
-	  
-	  public MeetUpScheduler() {
-		  //instantiate data class TODO needed?
-		 new SharedData(); 
-	  }
+	  private Button homeButton = new Button("Home"); 
 	  
 
 	/**
@@ -262,11 +257,14 @@ public class MeetUpScheduler implements EntryPoint {
 		//loadEvents();
 	}
 
-	
+	/**
+	 * 
+	 * @author Caroline
+	 * Class to store data needed throughout the app
+	 */
 	public static final class SharedData {
 		
-		  private static final EventBus eventBus = new SimpleEventBus();
-
+		 private static final EventBus eventBus = new SimpleEventBus();
 		 private static final PlaceController placeController = new PlaceController(eventBus);
 		  
 		 private SharedData() {			 

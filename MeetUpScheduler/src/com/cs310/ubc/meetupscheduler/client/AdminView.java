@@ -20,25 +20,38 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.Widget;
-
+/**
+ * 
+ * @author Caroline
+ * The administrator view
+ */
 public class AdminView extends Composite implements View {
 	  private FormPanel form;
 	  private TextArea ta  = new TextArea();
 	  private ScrollPanel scrollPan = new ScrollPanel(ta);;
 	  private SimplePanel viewPanel = new SimplePanel();
 	  private Element nameSpan = DOM.createSpan();
-	  
+	 
+	  /**
+	   * constructor
+	   */
 	public AdminView() {
 		viewPanel.getElement().appendChild(nameSpan);
         initWidget(viewPanel);
 		createFileUploadForm();
 	}
 	
+	/**
+	 *  @return form: this view as a widget
+	 */
 	@Override
 	public Widget asWidget() {
 		return form;
 	}
 
+	/**
+	 * builds the widget and saves it to form
+	 */
 	private void createFileUploadForm() {
 	    // Create a FormPanel and point it at a service.
 	    form = new FormPanel();
@@ -100,7 +113,9 @@ public class AdminView extends Composite implements View {
 	    });
 		
 	}
-
+    /**
+     * displays form upload results
+     */
 	private void initTextArea() {
         ta.setVisible(false);
 	    ta.setCharacterWidth(150);
@@ -110,6 +125,11 @@ public class AdminView extends Composite implements View {
 	    ta.setAlignment(TextAlignment.JUSTIFY);
 	}
 
+	/**
+	 * Determins if a file name is of xml type
+	 * @param filename: the file name
+	 * @return result
+	 */
 	private boolean isXML(String filename) {
 		int dot = filename.indexOf(".");
 		

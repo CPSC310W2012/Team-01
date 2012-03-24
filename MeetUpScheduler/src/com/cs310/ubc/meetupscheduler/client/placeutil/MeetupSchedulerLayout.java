@@ -4,6 +4,11 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.LayoutPanel;
 
+/**
+ * gwt class for toggling the widget in the main panel
+ * @author Caroline
+ *
+ */
 public class MeetupSchedulerLayout  extends LayoutPanel implements AcceptsOneWidget {
     private IsWidget widget = null;
     

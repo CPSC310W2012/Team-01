@@ -10,7 +10,11 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
-
+/**
+ * gwt activity associated with global activity
+ * @author Caroline
+ *
+ */
 public class GlobalActivity extends AbstractActivity implements PlaceNavigator {
 
     private String name;
