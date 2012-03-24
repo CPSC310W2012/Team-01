@@ -190,7 +190,7 @@ public class EventView extends Composite implements View{
 					eventName.setText("The name of the event is " + event.get("name")); // TODO: get proper enum settings
 					eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
 					eventLoc.setText(event.get("park_id") + " is the park ID.");
-					eventCreator.setText(event.get("creator") + " is the event creator.");
+					eventCreator.setText(event.get("creator_name") + " is the event creator.");
 					eventMap.checkResizeAndCenter();
 					eventCategory.setText("This event is in the category: " + event.get("category"));
 				
