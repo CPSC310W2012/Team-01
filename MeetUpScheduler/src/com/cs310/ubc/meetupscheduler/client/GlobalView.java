@@ -201,17 +201,17 @@ public class GlobalView extends Composite implements View{
 
 		if(map != null && events != null && events.size() > 0 && parks != null && parks.size() > 0){
 
-			StringBuffer parkEvents = new StringBuffer("<br/>");
-
 			for(int i=0; i<parks.size(); i++){
+				StringBuffer parkEvents = new StringBuffer();
 				for(int j=0; j<events.size(); j++){
 					//TODO: change this back to strings when park_id for events are actual park_id's
 					if(parks.get(i).get("name").equals(events.get(j).get("park_id"))){
 						System.out.println("Adding Marker for park name: " + parks.get(i).get("name") + ". For event: " + events.get(j).get("name"));
 
 						parkEvents.append("Event:   " + 
+								"<a href=\"/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#CreateEventPlace:Create_Event\">" +
 								events.get(j).get("name") + 
-								"<a href=\"/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#CreateEventPlace:Create_Event\">" + "<br/>");
+								"</a><br/>");
 
 						String latLong = parks.get(i).get("google_map_dest");
 						int index = latLong.indexOf(",");
