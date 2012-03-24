@@ -41,20 +41,24 @@ public class GlobalView extends Composite implements View{
 	private static final int MAP_WIDTH = 700;
 	private static final int EVENT_TABLE_LENGTH = 15;
 
+	private ArrayList<HashMap<String, String>> allEvents;
+	private ArrayList<HashMap<String, String>> allParks;
+	private ArrayList<HashMap<String, String>> allAdvisories;
 
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private VerticalPanel parkTable = new VerticalPanel();
-	private FlexTable recentEventsTable = new FlexTable();
+	private FlexTable advisoryTable = new FlexTable();
+	private FlexTable eventsTable = new FlexTable();
+	private FlexTable myEventsTable = new FlexTable();
 	private TabPanel eventTabPanel = new TabPanel();
 	private ListBox parkBox = new ListBox();
-	private ArrayList<HashMap<String, String>> allEvents;
-	private ArrayList<HashMap<String, String>> allParks;
 	SimplePanel viewPanel = new SimplePanel();
 	Element nameSpan = DOM.createSpan();
 
 	public GlobalView() {
 		allEvents = MeetUpScheduler.getEvents();
 		allParks = MeetUpScheduler.getParks();
+		allAdvisories = MeetUpScheduler.getAdvisories();
 
 		viewPanel.getElement().appendChild(nameSpan);
 		initWidget(viewPanel);
@@ -118,29 +122,46 @@ public class GlobalView extends Composite implements View{
 		parkTable.add(map);
 
 		//Recent Events
-		recentEventsTable.setCellPadding(2);
-		recentEventsTable.setCellSpacing(0);
+		eventsTable.setCellPadding(2);
+		eventsTable.setCellSpacing(0);
 
-		recentEventsTable.setText(1, 0, "Event Title");
-		recentEventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
+		eventsTable.setText(1, 0, "Event Title");
+		eventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
 
-		recentEventsTable.setText(1, 1, "Event Type");
-		recentEventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
+		eventsTable.setText(1, 1, "Event Type");
+		eventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
 
-		recentEventsTable.setText(1, 2, "Park Name");
-		recentEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
+		eventsTable.setText(1, 2, "Park Name");
+		eventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
+		
+		//My Events
+		myEventsTable.setCellPadding(2);
+		myEventsTable.setCellSpacing(0);
 
+		myEventsTable.setText(1, 0, "My Events");
+		myEventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
 
+		myEventsTable.setText(1, 1, "Event Type");
+		myEventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
 
-		//Add Recent Event Table to tabPanel
+		myEventsTable.setText(1, 2, "Park Name");
+		myEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
+		
+		//Advisories
+		advisoryTable.setCellPadding(2);
+		advisoryTable.setCellSpacing(0);
+
+		//Add Tables to tabPanel
 		eventTabPanel.getTabBar().getElement().getStyle();
-		eventTabPanel.add(recentEventsTable, "Recent Events");
-		eventTabPanel.add(new HTML("My Events Here"), "My Events");
-		eventTabPanel.add(new HTML("Advisories Here"), "Park Advisories");
+		eventTabPanel.add(eventsTable, "Recent Events");
+		eventTabPanel.add(myEventsTable, "My Events");
+		eventTabPanel.add(advisoryTable, "Park Advisories");
 		eventTabPanel.selectTab(0);
+
 
 		//Add Events in tables and on map
 		addRecentEvents(allEvents);
+		addParkAdvisories(allAdvisories);
 		addEventMarkers(allEvents, allParks, map);
 
 		//put ui elements into rootPanel field
@@ -160,18 +181,33 @@ public class GlobalView extends Composite implements View{
 			int tableLength = (events.size() < EVENT_TABLE_LENGTH) ? events.size(): EVENT_TABLE_LENGTH;
 
 			for(int i=0; i<tableLength; i++){
-				int row = recentEventsTable.getRowCount();
+				int row = eventsTable.getRowCount();
 				String park_id = events.get(i).get("park_id");
 
-				recentEventsTable.setText(row, 0, events.get(i).get("name"));
-				recentEventsTable.setText(row, 1, events.get(i).get("category"));
-				recentEventsTable.setText(row, 2, events.get(i).get("park_id"));
+				eventsTable.setText(row, 0, events.get(i).get("name"));
+				eventsTable.setText(row, 1, events.get(i).get("category"));
+				eventsTable.setText(row, 2, events.get(i).get("park_id"));
 
 				/*for(int n=0; n < allParks.size(); n++){
 				if(allParks.get(n).get("park_id").equals(park_id)){
 					eventTable.setText(row, 2, allParks.get(n).get("name"));
 				}
 			}*/
+			}
+		}
+	}
+	
+	/**
+	 * Adds the park advisories to the park advisories table
+	 * 
+	 * @param parks list of parks to display advisories
+	 */
+	private void addParkAdvisories(ArrayList<HashMap<String, String>> advisories){
+		if(advisories != null && advisories.size() > 0){
+			
+			for(int i=0; i<advisories.size(); i++){
+				int row = advisoryTable.getRowCount();
+				advisoryTable.setHTML(row, 1, advisories.get(i).get("text"));
 			}
 		}
 	}
