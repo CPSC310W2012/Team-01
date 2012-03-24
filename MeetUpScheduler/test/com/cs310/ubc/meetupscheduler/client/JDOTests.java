@@ -71,7 +71,7 @@ public class JDOTests {
 		eventRow.put("park_id", "1");
 		eventRow.put("name", "CHEST BUMP FEST");
 		eventRow.put("num_attending", "1");
-		eventRow.put("creator", "xxxTHA_BUMPAxxx");
+		eventRow.put("creator_name", "xxxTHA_BUMPAxxx");
 		eventRow.put("category", "MMA");
 		eventRow.put("date", "12-12-2012");
 		eventRow.put("start_time", "9:00");

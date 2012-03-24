@@ -74,13 +74,15 @@ public class DataObject {
 			  else if (field.getType() == Long.class)
 				  myValues.put(field.getName(), field.get(this).toString());
 			  else if (field.getType() == ArrayList.class) {
-				  StringBuilder sb = new StringBuilder();
-				  for (String item : (ArrayList<String>) field.get(this)) 
-					  sb.append(item + ",");
-				  String output = sb.toString();
-				  if (output.length() > 0)
-					  output = output.substring(0, output.length() -1);
-				  myValues.put(field.getName(), output); //Remove the trailing comma
+				  if (field.get(this) != null) {
+					  StringBuilder sb = new StringBuilder();
+					  for (String item : (ArrayList<String>) field.get(this))
+						  sb.append(item + ",");
+					  String output = sb.toString();
+					  if (output.length() > 0)
+						  output = output.substring(0, output.length() -1);
+					  myValues.put(field.getName(), output); //Remove the trailing comma
+				  }
 			  }
 		  return myValues;
 	  }
