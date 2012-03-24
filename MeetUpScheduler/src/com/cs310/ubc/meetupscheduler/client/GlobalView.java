@@ -117,8 +117,6 @@ public class GlobalView extends Composite implements View{
 		parkTable.setWidth("500");
 		parkTable.add(map);
 
-		addEventMarkers(allEvents, map);
-
 		//Recent Events
 		recentEventsTable.setCellPadding(2);
 		recentEventsTable.setCellSpacing(0);
@@ -132,7 +130,7 @@ public class GlobalView extends Composite implements View{
 		recentEventsTable.setText(1, 2, "Park Name");
 		recentEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
 
-		addRecentEvents(allEvents);
+		
 
 		//Add Recent Event Table to tabPanel
 		eventTabPanel.getTabBar().getElement().getStyle();
@@ -140,6 +138,10 @@ public class GlobalView extends Composite implements View{
 		eventTabPanel.add(new HTML("My Events Here"), "My Events");
 		eventTabPanel.add(new HTML("Advisories Here"), "Park Advisories");
 		eventTabPanel.selectTab(0);
+		
+		//Add Events in tables and on map
+		addRecentEvents(allEvents);
+		addEventMarkers(allEvents, allParks, map);
 
 		//put ui elements into rootPanel field
 		rootPanel.add(parkTable);
@@ -195,31 +197,41 @@ public class GlobalView extends Composite implements View{
 		}
 	}
 
-	private void addEventMarkers(ArrayList<HashMap<String, String>> events, final MapWidget map){
-		if(events != null && events.size() > 0){
-			for(int i=0; i<50; i++){
-				String latLong = events.get(i).get("google_map_dest");
-				int index = latLong.indexOf(",");
+	private void addEventMarkers(ArrayList<HashMap<String, String>> events, ArrayList<HashMap<String, String>> parks, final MapWidget map){
 
-				double lat = Double.parseDouble(latLong.substring(0, index));
-				double lon = Double.parseDouble(latLong.substring(index+1));
+		if(map != null && events != null && events.size() > 0 && parks != null && parks.size() > 0){
+			
+			for(int i=0; i<parks.size(); i++){
+				for(int j=0; j<events.size(); j++){
+					//TODO: change this back to strings when park_id for events are actual park_id's
+					if(parks.get(i).get("name").equals(events.get(j).get("park_id"))){
+						System.out.println("Adding Marker...For park name: " + parks.get(i).get("name") + ". For event: " + events.get(j).get("name"));
+						
+						String latLong = parks.get(i).get("google_map_dest");
+						int index = latLong.indexOf(",");
 
-				final HashMap<String, String> singleEvent = events.get(i);
-				final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
+						double lat = Double.parseDouble(latLong.substring(0, index));
+						double lon = Double.parseDouble(latLong.substring(index+1));
+						
+						//this is to pass event info into the info window creation
+						final HashMap<String, String> eventName = events.get(j);
+						final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
 
-
-				eventMarker.addMarkerClickHandler(new MarkerClickHandler() {
-					public void onClick(MarkerClickEvent event) {
-						InfoWindow info = map.getInfoWindow();
-						InfoWindowContent content = new InfoWindowContent(
-								"<font color=\"#4C674C\"><big><b> Event Details: </b></big></font><br/>"
-								+ "<a href=\"http://127.0.0.1:8888/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#page2\">" + singleEvent.get("name") + "</a><br/>"
-						);
-						info.open(eventMarker, content);
-
+						eventMarker.addMarkerClickHandler(new MarkerClickHandler() {
+							public void onClick(MarkerClickEvent event) {
+								
+								InfoWindow info = map.getInfoWindow();
+								InfoWindowContent content = new InfoWindowContent(
+										"<font color=\"#4C674C\"><big><b> Event Details: </b></big></font><br/>"
+										+ "<a href=\"http://127.0.0.1:8888/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#page2\">" + eventName.get("name") + "</a><br/>"
+								);
+								info.open(eventMarker, content);
+							}
+						});
+						
+						map.addOverlay(eventMarker);
 					}
-				});
-				map.addOverlay(eventMarker);
+				}
 			}
 		}
 	}
