@@ -58,6 +58,7 @@ public class MeetUpScheduler implements EntryPoint {
 	  private TabPanel tabPanel;
 	  private final DataObjectServiceAsync parkService = GWT.create(DataObjectService.class);
 	  private final DataObjectServiceAsync eventService = GWT.create(DataObjectService.class);
+	  private final DataObjectServiceAsync advisoryService = GWT.create(DataObjectService.class);
 
 	  
 	  private static LoginInfo loginInfo = null;
@@ -68,6 +69,7 @@ public class MeetUpScheduler implements EntryPoint {
 	  
 	  private static ArrayList<HashMap<String, String>> allEvents;
 	  private static ArrayList<HashMap<String, String>> allParks;
+	  private static ArrayList<HashMap<String, String>> allAdvisories;
 	  
 	  private Place defaultPlace = new GlobalPlace("Home");
 	  private Place createEventPlace;
@@ -232,7 +234,24 @@ public class MeetUpScheduler implements EntryPoint {
 			@Override
 			public void onSuccess(ArrayList<HashMap<String, String>> events) {
 				allEvents = events;
-				loadMeetupScheduler();				
+				loadAdvisories();
+			}
+		});
+	}
+	
+	//loads events and stores in allEvents object for retrieval by views, etc.
+	private void loadAdvisories(){
+		advisoryService.get("Advisory", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println("oh noes event data didnt werks");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<HashMap<String, String>> advisories) {
+				allAdvisories = advisories;
+				loadMeetupScheduler();
+				loadAdvisories();
 			}
 		});
 	}
@@ -244,6 +263,10 @@ public class MeetUpScheduler implements EntryPoint {
 	
 	public static ArrayList<HashMap<String, String>> getEvents() {
 		return allEvents;
+	}
+	
+	public static ArrayList<HashMap<String, String>> getAdvisories() {
+		return allAdvisories;
 	}
 	
 	//TODO: Implement accessor for login info
