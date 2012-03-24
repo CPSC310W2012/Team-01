@@ -33,6 +33,7 @@ public class CreateEventView extends Composite implements View {
 	//event fields
 	private String eventName;
 	private String userName;
+	private String userEmail;
 	private String park;
 	private String eventType;
 	private String date;
@@ -45,9 +46,7 @@ public class CreateEventView extends Composite implements View {
 	private HorizontalPanel createEventPanel = new HorizontalPanel();
 	//Name boxes	
 	private TextBox eventNameBox = new TextBox();
-	private TextBox userNameBox = new TextBox();
 	private Label eventNameLabel = new Label("Event Name");
-	private Label userNameLabel = new Label("Creator Name");
 	//Date Selector for Event
 	private DatePicker eventDatePicker = new DatePicker();
 	private Label eventDatePickerLabel = new Label();
@@ -119,8 +118,6 @@ public class CreateEventView extends Composite implements View {
 		//TODO: fix appearance through sub-panels
 		leftPanel.add(eventNameLabel);
 		leftPanel.add(eventNameBox);
-		leftPanel.add(userNameLabel);
-		leftPanel.add(userNameBox);
 		leftPanel.add(parksListBox);
 		leftPanel.add(categoriesListBox);
 		leftPanel.add(submitButton);
@@ -161,7 +158,9 @@ public class CreateEventView extends Composite implements View {
 	private void setEventFields() {
 		
 		eventName = eventNameBox.getValue();
-		userName = userNameBox.getValue();
+		LoginInfo loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
+		userName = loginInfo.getNickname();
+		userEmail = loginInfo.getEmailAddress();
 		//TODO: Fix this so that it actually gets the park_id and not the name
 		park = parksListBox.getValue(parksListBox.getSelectedIndex());
 		eventType = categoriesListBox.getValue(categoriesListBox.getSelectedIndex());
@@ -176,16 +175,18 @@ public class CreateEventView extends Composite implements View {
 		return true;
 	}
 	
+	//TODO: Use the ENUM from event for the field names.
 	private void createEvent() {
 		HashMap<String, String> event = new HashMap<String, String>();
 		event.put("name", eventName);
 		event.put("park_id", park);
-		event.put("creator", userName);
+		event.put("creator_name", userName);
+		event.put("creator_email", userEmail);
 		event.put("category", eventType);
 		event.put("date", date);
 		event.put("start_time", startTime);
 		event.put("end_time", endTime);
-		
+
 		//TODO: move to static data object? Make call to reload method to re get events and load views
 		objectService.add("Event", event, new AsyncCallback<HashMap<String, String>>() {
 			public void onFailure(Throwable error) {
