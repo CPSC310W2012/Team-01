@@ -212,7 +212,7 @@ public class CreateEventView extends Composite implements View {
 			public void onSuccess(HashMap<String, String> newEvent) {
 				//TODO: Add call to helper to scheduler to get event view based on event id
 				System.out.println(newEvent);
-				Window.alert("Event Created!");
+				Window.alert("Event Created with ID " + newEvent.get("id"));
 			}
 		});
 		

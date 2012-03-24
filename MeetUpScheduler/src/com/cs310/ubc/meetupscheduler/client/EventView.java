@@ -191,10 +191,11 @@ public class EventView extends Composite implements View{
 				for (int i = 0; i < allEvents.size(); i++){
 					if (Integer.parseInt(allEvents.get(i).get("id")) == eventID){
 						event = allEvents.get(i);
+						eventCreator.setText("Welcome to " + event.get("creator_name") + "'s event.");
 						eventName.setText("The name of the event is " + event.get("name")); 
 						eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
-						eventLoc.setText("The event is at " + event.get("park_id"));
-						eventCreator.setText(event.get("creator_name") + " is the event creator.");
+						eventLoc.setText("The event is at " + event.get("park_name") + ".");
+
 						eventMap.checkResizeAndCenter();
 						eventCategory.setText("This event is in the category: " + event.get("category"));
 						zoomMap();
