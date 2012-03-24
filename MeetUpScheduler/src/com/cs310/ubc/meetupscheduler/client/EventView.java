@@ -211,7 +211,7 @@ public class EventView extends Composite implements View{
 
 	private void zoomMap(){
 		for(int i=0; i<allParks.size(); i++){
-			if(allParks.get(i).get("id").equals(event.get("park_id"))){
+			if(allParks.get(i).get("name").equals(event.get("park_name"))){
 				String latLong = allParks.get(i).get("google_map_dest");
 				int index = latLong.indexOf(",");
 				double lat = Double.parseDouble(latLong.substring(0, index));
@@ -220,7 +220,7 @@ public class EventView extends Composite implements View{
 				eventMap.setCenter(LatLng.newInstance(lat, lon), 17);
 			}
 		}
-		Window.alert("No parks found.");
+		
 	}
 	/**
 	 * Loads all existing Events into a list.
