@@ -10,5 +10,9 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-maps-noredist.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-maps.jar"/>
 	<classpathentry exported="true" kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-tools-api.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spring-core-2.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spring-test-2.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spring-web-2.5.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
