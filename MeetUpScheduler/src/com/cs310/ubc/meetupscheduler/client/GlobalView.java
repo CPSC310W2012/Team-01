@@ -162,6 +162,21 @@ public class GlobalView extends Composite implements View{
 		rootPanel.add(parkTable);
 		rootPanel.add(eventTabPanel);
 	}
+	
+	private void addMyEvents(ArrayList<HashMap<String, String>> events){
+		if(events != null && events.size() >0){
+			// If there are less events than our max table length, use the number of events for the length
+			int tableLength = (events.size() < EVENT_TABLE_LENGTH) ? events.size(): EVENT_TABLE_LENGTH;
+
+			for(int i=0; i<tableLength; i++){
+				int row = eventsTable.getRowCount();
+
+				eventsTable.setText(row, 0, events.get(i).get("name"));
+				eventsTable.setText(row, 1, events.get(i).get("category"));
+				eventsTable.setText(row, 2, events.get(i).get("park_name"));
+			}
+		}
+	}
 
 	/**
 	 * Adds events to the recent events table. Number of events added is
@@ -227,9 +242,8 @@ public class GlobalView extends Composite implements View{
 			for(int i=0; i<parks.size(); i++){
 				StringBuffer parkEvents = new StringBuffer();
 				for(int j=0; j<events.size(); j++){
-					//TODO: change this back to strings when park_id for events are actual park_id's
 					if(parks.get(i).get("name").equals(events.get(j).get("park_name"))){
-						parkEvents.append("<a href=\"/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#CreateEventPlace:Create_Event\">" +
+						parkEvents.append("<a href=/MeetUpScheduler.html?#EventPlace:Event?id=" + events.get(j).get("id") + ">" +
 								events.get(j).get("name") + "</a><br/>");
 
 						String latLong = parks.get(i).get("google_map_dest");
@@ -253,7 +267,6 @@ public class GlobalView extends Composite implements View{
 								info.open(eventMarker, content);
 							}
 						});
-
 						map.addOverlay(eventMarker);
 					}
 				}
