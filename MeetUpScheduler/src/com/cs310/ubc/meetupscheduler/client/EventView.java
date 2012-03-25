@@ -10,7 +10,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
+import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 
@@ -114,7 +116,7 @@ public class EventView extends Composite implements View{
 		eventMap.setScrollWheelZoomEnabled(true);
 		eventMap.addControl(new LargeMapControl3D());
 		eventMap.checkResizeAndCenter();
-
+		eventMap.addControl(new MapTypeControl());
 		// Sets the eventLoad button to load the events
 
 		loadText.setText("Enter the number of the event to load");
@@ -191,10 +193,11 @@ public class EventView extends Composite implements View{
 				for (int i = 0; i < allEvents.size(); i++){
 					if (Integer.parseInt(allEvents.get(i).get("id")) == eventID){
 						event = allEvents.get(i);
+						eventCreator.setText("Welcome to " + event.get("creator_name") + "'s event.");
 						eventName.setText("The name of the event is " + event.get("name")); 
 						eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
-						eventLoc.setText("The event is at " + event.get("park_id"));
-						eventCreator.setText(event.get("creator_name") + " is the event creator.");
+						eventLoc.setText("The event is at " + event.get("park_name") + ".");
+
 						eventMap.checkResizeAndCenter();
 						eventCategory.setText("This event is in the category: " + event.get("category"));
 						zoomMap();
@@ -210,16 +213,19 @@ public class EventView extends Composite implements View{
 
 	private void zoomMap(){
 		for(int i=0; i<allParks.size(); i++){
-			if(allParks.get(i).get("id").equals(event.get("park_id"))){
+			if(allParks.get(i).get("name").equals(event.get("park_name"))){
 				String latLong = allParks.get(i).get("google_map_dest");
 				int index = latLong.indexOf(",");
 				double lat = Double.parseDouble(latLong.substring(0, index));
 				double lon = Double.parseDouble(latLong.substring(index+1));
 
 				eventMap.setCenter(LatLng.newInstance(lat, lon), 17);
+				final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
+				eventMap.addOverlay(eventMarker);
+				
 			}
 		}
-		Window.alert("No parks found.");
+		
 	}
 	/**
 	 * Loads all existing Events into a list.
