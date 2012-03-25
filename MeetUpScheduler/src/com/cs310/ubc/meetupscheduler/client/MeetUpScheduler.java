@@ -251,7 +251,6 @@ public class MeetUpScheduler implements EntryPoint {
 			public void onSuccess(ArrayList<HashMap<String, String>> advisories) {
 				allAdvisories = advisories;
 				loadMeetupScheduler();
-				loadAdvisories();
 			}
 		});
 	}

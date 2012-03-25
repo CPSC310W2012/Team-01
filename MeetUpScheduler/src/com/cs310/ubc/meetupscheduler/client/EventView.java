@@ -1,6 +1,7 @@
 package com.cs310.ubc.meetupscheduler.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.GWT;
@@ -41,7 +42,6 @@ public class EventView extends Composite implements View{
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private Label eventName = new Label();
 	private Button joinButton = new Button();
-	private DialogBox joinBox = new DialogBox();
 	private TextBox joinName = new TextBox();
 	private Button loadButton = new Button();
 	private VerticalPanel parkPanel = new VerticalPanel();
@@ -63,6 +63,7 @@ public class EventView extends Composite implements View{
     private ArrayList<HashMap<String, String>> allParks;
     Element nameSpan = DOM.createSpan();
     private HashMap<String, String> event = new HashMap<String, String>();
+    private LoginInfo loginInfo;
 
 
     public EventView() {
@@ -103,6 +104,7 @@ public class EventView extends Composite implements View{
 	 */
 	public void buildUI(){
 		
+		loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		loadData();
 
 		// set up the Map
@@ -138,28 +140,26 @@ public class EventView extends Composite implements View{
 		//set up the joinButton
 		joinButton.setText("Join event!");
 		joinButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				joinBox.show();
+			public void onClick(ClickEvent clickEvent) {
+				members.add(loginInfo.getNickname());
+				attendeesBox.clear();
+				setUpAttendees();
+				//Add username to event
+				String newNames = event.get("attending_names") + "," + loginInfo.getNickname();
+				event.put("attending_names", newNames);
+				//Add user email to event
+				String newEmails = event.get("attending_emails") + "," + loginInfo.getEmailAddress();
+				event.put("attending_emails", newEmails);
+				//Increment number attending
+				Integer numAttending = Integer.parseInt(event.get("num_attending"));
+				numAttending++;
+				event.put("num_attending", numAttending.toString());
+				
+				//TODO: Make async call to update event. This async call needs to be changed to make it more convenient.
 			}
 		});
-
-
 		
-		setJoinBox();
-
-
-//		// Sets up a temporary attendee list.
-//		members = new ArrayList<String>();
-//		members.add("Adrian");
-//		members.add("Ben");
-//		members.add("Caroline");
-//		members.add("Connor");
-//		members.add("Dave");
-//		setUpAttendees();
-
-
 		setUpInfoPanel();
-
 		
 		// Add items to panels
 		parkPanel.add(eventMap);
@@ -190,19 +190,20 @@ public class EventView extends Composite implements View{
 			try { 
 				for (int i = 0; i < allEvents.size(); i++){
 					if (Integer.parseInt(allEvents.get(i).get("id")) == eventID){
-				
-					event = allEvents.get(i);
-					eventName.setText("The name of the event is " + event.get("name")); // TODO: get proper enum settings
-					eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
-					eventLoc.setText(event.get("park_id") + " is the park ID.");
-					eventCreator.setText(event.get("creator_name") + " is the event creator.");
-					eventMap.checkResizeAndCenter();
-					eventCategory.setText("This event is in the category: " + event.get("category"));
-//					for (int j = 0; j < (event.get("attending_names")).size(); j++){
-//						members.add(event.get(members.get(i)));	
-//					}
-					Window.alert("WHEEEEE");
-				
+						event = allEvents.get(i);
+						eventName.setText("The name of the event is " + event.get("name")); // TODO: get proper enum settings
+						eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
+						eventLoc.setText(event.get("park_id") + " is the park ID.");
+						eventCreator.setText(event.get("creator_name") + " is the event creator.");
+						eventMap.checkResizeAndCenter();
+						eventCategory.setText("This event is in the category: " + event.get("category"));
+						ArrayList<String> attendees = new ArrayList<String>(Arrays.asList(event.get("attending_names").split(",")));
+						members.clear();
+						for (String attendee : attendees){
+							members.add(attendee);
+						}
+						attendeesBox.clear();
+						setUpAttendees();
 					}
 				}
 				
@@ -214,21 +215,14 @@ public class EventView extends Composite implements View{
 
 	}
 
-
 	/**
 	 * Loads all existing Events into a list.
 	 */
 	private void loadData(){
 		allEvents = MeetUpScheduler.getEvents();
 		allParks = MeetUpScheduler.getParks();
-		Window.alert("Data loaded from MeetUpScheduler!");
-//		for (int i=0; i<allEvents.size(); i++){
-//			HashMap<String, String> tempEvent = allEvents[i];
-//			System.out.println("Loaded event " + allEvents);
-//		}
 	}
 
-	
 	/**
 	 * This creates the panel with the relevant information of the event.
 	 */
@@ -255,57 +249,10 @@ public class EventView extends Composite implements View{
 
 	}
 
-	/**
-	 * Helper to set up the DialogBox that pops up when you click the Join Event button.
-	 */
-	protected void setJoinBox() {
-
-		//Set up the joinBox
-		joinBox.hide();
-		joinBox.setText("Join this event!");
-		VerticalPanel joinContents = new VerticalPanel();
-		joinContents.setSpacing(4);
-		joinBox.setWidget(joinContents);
-
-		//Add to joinContents
-		joinContents.add(joinName);
-		joinName.setText("Please enter your name");
-
-		// add the Submit Button
-		Button submitButton = new Button();
-		joinContents.add(submitButton);
-		submitButton.setText("Join");
-		submitButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				members.add(joinName.getValue());
-				attendeesBox.clear();
-				setUpAttendees();
-				joinName.setText(null);
-				joinBox.hide();
-			}
-		});
-		
-		//Add a cancel button
-		Button cancelButton = new Button();
-		cancelButton.setText("Cancel");
-
-		cancelButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				joinBox.hide();
-			}
-		});
-		joinContents.add(cancelButton);
-
-
-
-	}
-
 	@Override
 	public void setName(String name) {
 		nameSpan.setInnerText("Event " + name);
 	}
-
-
 
 	//TODO: 
 	/**

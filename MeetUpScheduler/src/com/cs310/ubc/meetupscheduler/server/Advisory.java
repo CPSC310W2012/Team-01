@@ -25,7 +25,11 @@ public class Advisory extends DataObject {
 		        return "park_id";
 		    }
 		},
-		
+		P_NAME {
+			public String toString() {
+				return "park_name";
+			}
+		},
 		DATE {
 		    public String toString() {
 		        return "date_last";
@@ -49,6 +53,8 @@ public class Advisory extends DataObject {
 	protected Long id; //Automatically generated PK
 	@Persistent
 	protected String park_id;
+	@Persistent
+	protected String park_name;
 	@Persistent
 	protected String date_last;
 	@Persistent

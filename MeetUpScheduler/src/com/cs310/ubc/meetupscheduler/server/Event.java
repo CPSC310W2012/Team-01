@@ -124,6 +124,6 @@ public class Event extends DataObject {
 	protected Date creation_date;
 	
 	public static String getDefaultOrdering() {
-		return "creation_date";
+		return "creation_date descending";
 	}
 }
