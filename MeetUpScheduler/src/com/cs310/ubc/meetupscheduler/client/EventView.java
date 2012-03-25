@@ -11,10 +11,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
+import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -103,7 +105,6 @@ public class EventView extends Composite implements View{
 	 * Constructs the UI elements of EventView
 	 */
 	public void buildUI(){
-		
 		loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		loadData();
 
@@ -116,7 +117,7 @@ public class EventView extends Composite implements View{
 		eventMap.setScrollWheelZoomEnabled(true);
 		eventMap.addControl(new LargeMapControl3D());
 		eventMap.checkResizeAndCenter();
-		
+		eventMap.addControl(new MapTypeControl());
 		// Sets the eventLoad button to load the events
 
 		loadText.setText("Enter the number of the event to load");
@@ -126,17 +127,17 @@ public class EventView extends Composite implements View{
 				loadEvent(Integer.parseInt(loadText.getText()));
 			}
 		});
-		
+
 		//set up the shareButton
 		//TODO: Make this work with the proper URL
-		
+
 		shareButton.setText("Share on Google Plus.");
 		shareButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event){
 				com.google.gwt.user.client.Window.open("https://plus.google.com/share?url=vancitymeetupscheduler.appspot.com", "Share the Meetup Scheduler!", "");
 			}
 		});
-		
+
 		//set up the joinButton
 		joinButton.setText("Join event!");
 		joinButton.addClickHandler(new ClickHandler() {
@@ -171,7 +172,7 @@ public class EventView extends Composite implements View{
 		rootPanel.add(joinButton);
 		rootPanel.add(shareButton);
 		rootPanel.add(parkPanel);
-		
+
 	}
 
 	/**
@@ -185,16 +186,17 @@ public class EventView extends Composite implements View{
 	 */
 	private void loadEvent(int eventID) {
 
-		
-		if (allEvents != null){
+
+		if (allEvents != null && allEvents.size() > 0){
 			try { 
 				for (int i = 0; i < allEvents.size(); i++){
 					if (Integer.parseInt(allEvents.get(i).get("id")) == eventID){
 						event = allEvents.get(i);
-						eventName.setText("The name of the event is " + event.get("name")); // TODO: get proper enum settings
+						eventCreator.setText("Welcome to " + event.get("creator_name") + "'s event.");
+						eventName.setText("The name of the event is " + event.get("name")); 
 						eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
-						eventLoc.setText(event.get("park_id") + " is the park ID.");
-						eventCreator.setText(event.get("creator_name") + " is the event creator.");
+						eventLoc.setText("The event is at " + event.get("park_name") + ".");
+
 						eventMap.checkResizeAndCenter();
 						eventCategory.setText("This event is in the category: " + event.get("category"));
 						ArrayList<String> attendees = new ArrayList<String>(Arrays.asList(event.get("attending_names").split(",")));
@@ -204,17 +206,34 @@ public class EventView extends Composite implements View{
 						}
 						attendeesBox.clear();
 						setUpAttendees();
+						zoomMap();
 					}
 				}
-				
+
 			} catch (Exception e) {
 				Window.alert("There is no event " + eventID + ".");
 			}
 		}
 		else Window.alert("No events!");
-
 	}
 
+	private void zoomMap(){
+		for(int i=0; i<allParks.size(); i++){
+			if(allParks.get(i).get("name").equals(event.get("park_name"))){
+				String latLong = allParks.get(i).get("google_map_dest");
+				int index = latLong.indexOf(",");
+				double lat = Double.parseDouble(latLong.substring(0, index));
+				double lon = Double.parseDouble(latLong.substring(index+1));
+
+				eventMap.setCenter(LatLng.newInstance(lat, lon), 17);
+				final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
+				eventMap.addOverlay(eventMarker);
+				
+			}
+		}
+		
+	}
+	
 	/**
 	 * Loads all existing Events into a list.
 	 */

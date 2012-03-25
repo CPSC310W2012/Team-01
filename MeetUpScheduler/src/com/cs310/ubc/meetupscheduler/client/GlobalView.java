@@ -124,29 +124,24 @@ public class GlobalView extends Composite implements View{
 		//Recent Events
 		eventsTable.setCellPadding(2);
 		eventsTable.setCellSpacing(0);
-
 		eventsTable.setText(1, 0, "Event Title");
 		eventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
-
 		eventsTable.setText(1, 1, "Event Type");
 		eventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
-
 		eventsTable.setText(1, 2, "Park Name");
 		eventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
-		
+
 		//My Events
 		myEventsTable.setCellPadding(2);
 		myEventsTable.setCellSpacing(0);
 
 		myEventsTable.setText(1, 0, "My Events");
 		myEventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
-
 		myEventsTable.setText(1, 1, "Event Type");
 		myEventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
-
 		myEventsTable.setText(1, 2, "Park Name");
 		myEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
-		
+
 		//Advisories
 		advisoryTable.setCellPadding(2);
 		advisoryTable.setCellSpacing(0);
@@ -157,7 +152,6 @@ public class GlobalView extends Composite implements View{
 		eventTabPanel.add(myEventsTable, "My Events");
 		eventTabPanel.add(advisoryTable, "Park Advisories");
 		eventTabPanel.selectTab(0);
-
 
 		//Add Events in tables and on map
 		addRecentEvents(allEvents);
@@ -182,21 +176,14 @@ public class GlobalView extends Composite implements View{
 
 			for(int i=0; i<tableLength; i++){
 				int row = eventsTable.getRowCount();
-				String park_id = events.get(i).get("park_id");
 
 				eventsTable.setText(row, 0, events.get(i).get("name"));
 				eventsTable.setText(row, 1, events.get(i).get("category"));
-				eventsTable.setText(row, 2, events.get(i).get("park_id"));
-
-				/*for(int n=0; n < allParks.size(); n++){
-				if(allParks.get(n).get("park_id").equals(park_id)){
-					eventTable.setText(row, 2, allParks.get(n).get("name"));
-				}
-			}*/
+				eventsTable.setText(row, 2, events.get(i).get("park_name"));
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds the park advisories to the park advisories table
 	 * 
@@ -204,7 +191,7 @@ public class GlobalView extends Composite implements View{
 	 */
 	private void addParkAdvisories(ArrayList<HashMap<String, String>> advisories){
 		if(advisories != null && advisories.size() > 0){
-			
+
 			for(int i=0; i<advisories.size(); i++){
 				int row = advisoryTable.getRowCount();
 				advisoryTable.setHTML(row, 1, advisories.get(i).get("text"));
@@ -241,13 +228,9 @@ public class GlobalView extends Composite implements View{
 				StringBuffer parkEvents = new StringBuffer();
 				for(int j=0; j<events.size(); j++){
 					//TODO: change this back to strings when park_id for events are actual park_id's
-					if(parks.get(i).get("name").equals(events.get(j).get("park_id"))){
-						System.out.println("Adding Marker for park name: " + parks.get(i).get("name") + ". For event: " + events.get(j).get("name"));
-
-						parkEvents.append("Event:   " + 
-								"<a href=\"/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#CreateEventPlace:Create_Event\">" +
-								events.get(j).get("name") + 
-								"</a><br/>");
+					if(parks.get(i).get("name").equals(events.get(j).get("park_name"))){
+						parkEvents.append("<a href=\"/MeetUpScheduler.html?gwt.codesvr=127.0.0.1:9997#CreateEventPlace:Create_Event\">" +
+								events.get(j).get("name") + "</a><br/>");
 
 						String latLong = parks.get(i).get("google_map_dest");
 						int index = latLong.indexOf(",");
@@ -278,11 +261,9 @@ public class GlobalView extends Composite implements View{
 		}
 	}
 
-
 	@Override
 	public void setName(String name) {
 		nameSpan.setInnerText("Global View, " + name);
 
 	}
 }
-

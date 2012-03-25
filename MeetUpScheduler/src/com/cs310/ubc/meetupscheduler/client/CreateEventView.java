@@ -34,7 +34,8 @@ public class CreateEventView extends Composite implements View {
 	private String eventName;
 	private String userName;
 	private String userEmail;
-	private String park;
+	private String park_name;
+	private String park_id;
 	private String eventType;
 	private String date;
 	private String startTime;
@@ -69,7 +70,7 @@ public class CreateEventView extends Composite implements View {
 	public CreateEventView(String parkID) {
 	    viewPanel.getElement().appendChild(nameSpan);
 	    initWidget(viewPanel);
-		park = parkID;
+		park_id = parkID;
 	}
 	
 	@Override
@@ -109,7 +110,7 @@ public class CreateEventView extends Composite implements View {
 					createEvent();					
 				}
 				else {
-				Window.alert("Something went wrong!");
+				Window.alert("Please ensure all event fields are filled out");
 				}
 			}
 		});
@@ -155,14 +156,25 @@ public class CreateEventView extends Composite implements View {
 		}
 	}
 	
+	private String getParkID(String parkName) {
+		String id = "";		
+		for (int i=0;i<allParks.size(); i++) {			
+			if (allParks.get(i).get("name") == parkName) {
+				id = allParks.get(i).get("pid");
+			}
+		}
+		
+		return id;
+	}
+	
 	private void setEventFields() {
 		
 		eventName = eventNameBox.getValue();
 		LoginInfo loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		userName = loginInfo.getNickname();
-		userEmail = loginInfo.getEmailAddress();
-		//TODO: Fix this so that it actually gets the park_id and not the name
-		park = parksListBox.getValue(parksListBox.getSelectedIndex());
+		userEmail = loginInfo.getEmailAddress();		
+		park_name = parksListBox.getValue(parksListBox.getSelectedIndex());
+		park_id = getParkID(park_name);
 		eventType = categoriesListBox.getValue(categoriesListBox.getSelectedIndex());
 		date = DateTimeFormat.getMediumDateFormat().format(eventDatePicker.getValue());
 		startTime = startTimeList.getValue(startTimeList.getSelectedIndex());
@@ -171,15 +183,16 @@ public class CreateEventView extends Composite implements View {
 	
 	private boolean verifyFields() {
 		//TODO: specify conditions for field verification, add field specific errors
-		if (eventName == null || userName == null || park == null || date == null || startTime == null || endTime == null) return false;
+		if (eventName == null || userName == null || park_name == null || date == null || startTime == null || endTime == null) return false;
 		return true;
 	}
 	
-	//TODO: Use the ENUM from event for the field names.
+	//TODO: Use the ENUM from event for the field names. Note: breaks compilation at this point
 	private void createEvent() {
 		HashMap<String, String> event = new HashMap<String, String>();
 		event.put("name", eventName);
-		event.put("park_id", park);
+		event.put("park_name", park_name);
+		event.put("park_id", park_id);
 		event.put("creator_name", userName);
 		event.put("creator_email", userEmail);
 		event.put("category", eventType);
@@ -199,7 +212,7 @@ public class CreateEventView extends Composite implements View {
 			public void onSuccess(HashMap<String, String> newEvent) {
 				//TODO: Add call to helper to scheduler to get event view based on event id
 				System.out.println(newEvent);
-				Window.alert("Event Created!");
+				Window.alert("Event Created with ID " + newEvent.get("id"));
 			}
 		});
 		
