@@ -263,7 +263,7 @@ public class GlobalView extends Composite implements View{
 						eventButton.addClickHandler(new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
-									EventPlace eventPlace = new EventPlace("Event", id);
+									EventPlace eventPlace = new EventPlace("Event?id="+ id.toString(), id);
 									SharedData.getPlaceController().goTo(eventPlace);
 							}
 						});

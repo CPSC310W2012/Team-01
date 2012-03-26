@@ -268,6 +268,10 @@ public class MeetUpScheduler implements EntryPoint {
 		return allAdvisories;
 	}
 	
+	public static void addEvent(HashMap<String, String> event) {
+		allEvents.add(event);
+	}
+	
 	//TODO: Implement accessor for login info
 	public static void getLoginInfo() {
 		return;
