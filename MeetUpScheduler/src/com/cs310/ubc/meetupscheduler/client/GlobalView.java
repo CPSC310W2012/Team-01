@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -41,9 +42,10 @@ public class GlobalView extends Composite implements View{
 	private static final int MAP_WIDTH = 700;
 	private static final int EVENT_TABLE_LENGTH = 15;
 
-	private ArrayList<HashMap<String, String>> allEvents;
-	private ArrayList<HashMap<String, String>> allParks;
-	private ArrayList<HashMap<String, String>> allAdvisories;
+	private static ArrayList<HashMap<String, String>> allEvents;
+	private static ArrayList<HashMap<String, String>> allParks;
+	private static ArrayList<HashMap<String, String>> allAdvisories;
+	private final LoginInfo currentUser = SharedData.getLoginInfo();
 
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private VerticalPanel parkTable = new VerticalPanel();
@@ -122,8 +124,8 @@ public class GlobalView extends Composite implements View{
 		parkTable.add(map);
 
 		//Recent Events
-		eventsTable.setCellPadding(2);
-		eventsTable.setCellSpacing(0);
+		eventsTable.setCellPadding(4);
+		eventsTable.setCellSpacing(3);
 		eventsTable.setText(1, 0, "Event Title");
 		eventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
 		eventsTable.setText(1, 1, "Event Type");
@@ -132,8 +134,8 @@ public class GlobalView extends Composite implements View{
 		eventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
 
 		//My Events
-		myEventsTable.setCellPadding(2);
-		myEventsTable.setCellSpacing(0);
+		myEventsTable.setCellPadding(4);
+		myEventsTable.setCellSpacing(3);
 
 		myEventsTable.setText(1, 0, "My Events");
 		myEventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
@@ -141,10 +143,6 @@ public class GlobalView extends Composite implements View{
 		myEventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
 		myEventsTable.setText(1, 2, "Park Name");
 		myEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
-
-		//Advisories
-		advisoryTable.setCellPadding(2);
-		advisoryTable.setCellSpacing(0);
 
 		//Add Tables to tabPanel
 		eventTabPanel.getTabBar().getElement().getStyle();
@@ -154,6 +152,7 @@ public class GlobalView extends Composite implements View{
 		eventTabPanel.selectTab(0);
 
 		//Add Events in tables and on map
+		addMyEvents(allEvents);
 		addRecentEvents(allEvents);
 		addParkAdvisories(allAdvisories);
 		addEventMarkers(allEvents, allParks, map);
@@ -163,17 +162,23 @@ public class GlobalView extends Composite implements View{
 		rootPanel.add(eventTabPanel);
 	}
 	
+	/**
+	 * Adds events to the my events table. Only events belonging to
+	 * the current logged in user will be added
+	 * 
+	 * @param events The events to be added to the "My Events" table
+	 */
 	private void addMyEvents(ArrayList<HashMap<String, String>> events){
-		if(events != null && events.size() >0){
-			// If there are less events than our max table length, use the number of events for the length
-			int tableLength = (events.size() < EVENT_TABLE_LENGTH) ? events.size(): EVENT_TABLE_LENGTH;
-
-			for(int i=0; i<tableLength; i++){
+		
+		if(events != null && events.size()>0){
+			for(int i=0; i<events.size(); i++){
 				int row = eventsTable.getRowCount();
+				if(currentUser.getEmailAddress().equals(events.get(i).get("creator_email"))){
 
-				eventsTable.setText(row, 0, events.get(i).get("name"));
-				eventsTable.setText(row, 1, events.get(i).get("category"));
-				eventsTable.setText(row, 2, events.get(i).get("park_name"));
+					myEventsTable.setText(row, 0, events.get(i).get("name"));
+					myEventsTable.setText(row, 1, events.get(i).get("category"));
+					myEventsTable.setText(row, 2, events.get(i).get("park_name"));
+				}
 			}
 		}
 	}
@@ -234,17 +239,25 @@ public class GlobalView extends Composite implements View{
 			}
 		}
 	}
-
+	/**
+	 * Adds events markers that have info popups containing event titles and category
+	 * 
+	 * @param events All events to consider for markers
+	 * @param parks All parks these events may take place in
+	 * @param map	Map to display markers on
+	 */
 	private void addEventMarkers(ArrayList<HashMap<String, String>> events, ArrayList<HashMap<String, String>> parks, final MapWidget map){
 
 		if(map != null && events != null && events.size() > 0 && parks != null && parks.size() > 0){
 
 			for(int i=0; i<parks.size(); i++){
 				StringBuffer parkEvents = new StringBuffer();
+
 				for(int j=0; j<events.size(); j++){
 					if(parks.get(i).get("name").equals(events.get(j).get("park_name"))){
+
 						parkEvents.append("<a href=/MeetUpScheduler.html?#EventPlace:Event?id=" + events.get(j).get("id") + ">" +
-								events.get(j).get("name") + "</a><br/>");
+								events.get(j).get("name") + "</a> - " + events.get(j).get("category") + "<br/>");
 
 						String latLong = parks.get(i).get("google_map_dest");
 						int index = latLong.indexOf(",");
@@ -271,12 +284,11 @@ public class GlobalView extends Composite implements View{
 					}
 				}
 			}
-		}
+		}  
 	}
 
 	@Override
 	public void setName(String name) {
 		nameSpan.setInnerText("Global View, " + name);
-
 	}
 }
