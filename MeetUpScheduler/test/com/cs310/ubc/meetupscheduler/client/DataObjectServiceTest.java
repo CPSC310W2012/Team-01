@@ -125,7 +125,9 @@ public class DataObjectServiceTest extends GWTTestCase {
 						finishTest();
 					}
 				};
-				dataObjectService.update("Park", "id==\"1\"", "name", "Party Park", callback);
+				HashMap<String, String> newValues = new HashMap<String,String>();
+				newValues.put("name", "Party Park");
+				dataObjectService.update("Park", "id==\"1\"", newValues, callback);
 			}
 		};
 		delayTestFinish(5000);

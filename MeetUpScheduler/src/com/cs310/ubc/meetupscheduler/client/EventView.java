@@ -17,6 +17,7 @@ import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -66,6 +67,8 @@ public class EventView extends Composite implements View{
     Element nameSpan = DOM.createSpan();
     private HashMap<String, String> event = new HashMap<String, String>();
     private LoginInfo loginInfo;
+    
+    private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);
 
 
     public EventView() {
@@ -143,8 +146,6 @@ public class EventView extends Composite implements View{
 		joinButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent clickEvent) {
 				members.add(loginInfo.getNickname());
-				attendeesBox.clear();
-				setUpAttendees();
 				//Add username to event
 				String newNames = event.get("attending_names") + "," + loginInfo.getNickname();
 				event.put("attending_names", newNames);
@@ -156,7 +157,18 @@ public class EventView extends Composite implements View{
 				numAttending++;
 				event.put("num_attending", numAttending.toString());
 				
-				//TODO: Make async call to update event. This async call needs to be changed to make it more convenient.
+				objectService.update("Event", "id=="+event.get("id"), event, new AsyncCallback<ArrayList<HashMap<String, String>>>() {
+					public void onFailure(Throwable error) {
+						System.out.println("Joining the event failed!");
+					}
+					
+					public void onSuccess(ArrayList<HashMap<String, String>> newEvent) {
+						attendeesBox.clear();
+						setUpAttendees();
+						joinButton.setEnabled(false);
+						Window.alert("You are attending the event with ID " + newEvent.get(0).get("id"));
+					}
+				});
 			}
 		});
 		
@@ -182,7 +194,6 @@ public class EventView extends Composite implements View{
 	 * 
 	 * TODO: - Add event positions to map
 	 * 		 - Get the park information loaded into a parks page
-	 * 		 - Set real attendees list.
 	 */
 	private void loadEvent(int eventID) {
 
@@ -207,6 +218,11 @@ public class EventView extends Composite implements View{
 						attendeesBox.clear();
 						setUpAttendees();
 						zoomMap();
+						ArrayList<String> attendingEmails = new ArrayList<String>(Arrays.asList(event.get("attending_emails").split(",")));
+						if (attendingEmails.contains(loginInfo.getEmailAddress()))
+							joinButton.setEnabled(false);
+						else
+							joinButton.setEnabled(true);
 					}
 				}
 
