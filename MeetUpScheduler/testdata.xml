@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<!DOCTYPE COVParksFacilities [
+<!ELEMENT COVParksFacilities ( Park+ ) >
+<!ELEMENT Park ( Name, Official, StreetNumber, StreetName, EWStreet, NSStreet, GoogleMapDest, Hectare, Neighbourhood?, Advisories, Facilities ) >
+<!ELEMENT Name ( #PCDATA ) >
+<!ELEMENT Official ( #PCDATA ) >
+<!ELEMENT StreetNumber ( #PCDATA ) >
+<!ELEMENT StreetName ( #PCDATA ) >
+<!ELEMENT EWStreet ( #PCDATA ) >
+<!ELEMENT NSStreet ( #PCDATA ) >
+<!ELEMENT GoogleMapDest ( #PCDATA ) >
+<!ELEMENT Hectare ( #PCDATA ) >
+<!ELEMENT Neighbourhood ( NeighbourhoodName, NeighbourhoodURL ) >
+<!ELEMENT NeighbourhoodName ( #PCDATA ) >
+<!ELEMENT NeighbourhoodURL ( #PCDATA ) >
+<!ELEMENT Advisories ( Advisory* ) >
+<!ELEMENT Advisory ( DateLast, AdvisoryText, URL ) >
+<!ELEMENT DateLast ( #PCDATA ) >
+<!ELEMENT AdvisoryText ( ANY ) >
+<!ELEMENT URL ( #PCDATA ) >
+<!ELEMENT Facilities ( Facility*, SpecialFeature?, Washroom* ) >
+<!ELEMENT Facility ( FacilityCount, FacilityType, FacilityURL? ) >
+<!ELEMENT FacilityCount ( #PCDATA ) >
+<!ELEMENT FacilityType ( #PCDATA ) >
+<!ELEMENT FacilityURL ( #PCDATA ) >
+<!ELEMENT SpecialFeature ( #PCDATA ) >
+<!ELEMENT Washroom ( Location, Notes, SummerHours, WinterHours  ) >
+<!ELEMENT Location ( #PCDATA ) >
+<!ELEMENT Notes ( #PCDATA ) >
+<!ELEMENT SummerHours ( #PCDATA ) >
+<!ELEMENT WinterHours ( #PCDATA ) >
+<!ELEMENT SpecialNames ( SpecialName* ) >
+<!ELEMENT SpecialName ( #PCDATA ) >
+<!ATTLIST Park ID CDATA #REQUIRED >
+]>
+<COVParksFacilities>
+	<Park ID="2">
+		<Name>Carnarvon Park</Name>
+		<Official>1</Official>
+		<StreetNumber>2995</StreetNumber>
+		<StreetName>W 19th Avenue</StreetName>
+		<EWStreet>W 19th Avenue</EWStreet>
+		<NSStreet>Mackenzie Street</NSStreet>
+		<GoogleMapDest>49.256555,-123.171406</GoogleMapDest>
+		<Hectare>3.79</Hectare>
+		<Neighbourhood>
+			<NeighbourhoodName>Arbutus Ridge</NeighbourhoodName>
+			<NeighbourhoodURL>http://vancouver.ca/community_profiles/arbutus_ridge/index.htm</NeighbourhoodURL>
+		</Neighbourhood>
+		<Advisories></Advisories>
+		<Facilities>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Field Houses</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Playgrounds</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>2</FacilityCount>
+				<FacilityType>Softball</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>3</FacilityCount>
+				<FacilityType>Baseball Diamonds</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Football Fields</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Soccer Fields</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Washroom>
+				<Location>West side, field house</Location>
+				<Notes></Notes>
+				<SummerHours>Dawn to Dusk</SummerHours>
+				<WinterHours>Dawn to Dusk</WinterHours>
+			</Washroom>
+		</Facilities>
+	</Park>
+	<Park ID="3">
+		<Name>Prince of Wales Park</Name>
+		<Official>1</Official>
+		<StreetNumber>4780</StreetNumber>
+		<StreetName>Haggart Street</StreetName>
+		<EWStreet>W 32nd Avenue</EWStreet>
+		<NSStreet>Haggart Street</NSStreet>
+		<GoogleMapDest>49.244397,-123.156429</GoogleMapDest>
+		<Hectare>2.89</Hectare>
+		<Neighbourhood>
+			<NeighbourhoodName>Arbutus Ridge</NeighbourhoodName>
+			<NeighbourhoodURL>http://vancouver.ca/community_profiles/arbutus_ridge/index.htm</NeighbourhoodURL>
+		</Neighbourhood>
+		<Advisories></Advisories>
+		<Facilities>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Soccer Fields</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Jogging Trails</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Washroom></Washroom>
+		</Facilities>
+	</Park>
+	<Park ID="16">
+		<Name>David Lam Park</Name>
+		<Official>1</Official>
+		<StreetNumber>1300</StreetNumber>
+		<StreetName>Pacific Boulevard</StreetName>
+		<EWStreet>Drake Street</EWStreet>
+		<NSStreet>Pacific Boulevard</NSStreet>
+		<GoogleMapDest>49.272569,-123.124145</GoogleMapDest>
+		<Hectare>4.34</Hectare>
+		<Neighbourhood>
+			<NeighbourhoodName>Downtown</NeighbourhoodName>
+			<NeighbourhoodURL>http://vancouver.ca/community_profiles/downtown/index.htm</NeighbourhoodURL>
+		</Neighbourhood>
+		<Advisories>
+			<Advisory>
+				<DateLast>2013-05-01 00:00:00</DateLast>
+				<AdvisoryText>Work is currently underway in David Lam Park on a new underground transmission line.&lt;br&gt;Please consult the BC Hydro project page for construction schedule information at &lt;a href=http://www.bchydro.com/planning_regulatory/transmission_projects/vcct/construction_schedule.html target=_blank&gt;http://www.bchydro.com/planning_regulatory/transmission_projects/vcct/construction_schedule.html&lt;/a&gt; &lt;img src="images/globe.gif" alt=""&gt;</AdvisoryText>
+				<URL></URL>
+			</Advisory>
+		</Advisories>
+		<Facilities>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Playgrounds</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Soccer Fields</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>2</FacilityCount>
+				<FacilityType>Basketball Courts</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<Facility>
+				<FacilityCount>2</FacilityCount>
+				<FacilityType>Tennis Courts</FacilityType>
+				<FacilityURL></FacilityURL>
+			</Facility>
+			<SpecialFeature>Seawall</SpecialFeature>
+			<Washroom>
+				<Location>West side</Location>
+				<Notes>test</Notes>
+				<SummerHours>10:00 am - Dusk</SummerHours>
+				<WinterHours>10:00 am - Dusk</WinterHours>
+			</Washroom>
+		</Facilities>
+	</Park>
+	<Park ID="18">
+		<Name>Devonian Harbour Park</Name>
+		<Official>1</Official>
+		<StreetNumber>1929</StreetNumber>
+		<StreetName>W Georgia Street</StreetName>
+		<EWStreet>W Georgia Street</EWStreet>
+		<NSStreet>Denman Street</NSStreet>
+		<GoogleMapDest>49.294353,-123.134654</GoogleMapDest>
+		<Hectare>4.42</Hectare>
+		<Neighbourhood>
+			<NeighbourhoodName>Downtown</NeighbourhoodName>
+			<NeighbourhoodURL>http://vancouver.ca/community_profiles/downtown/index.htm</NeighbourhoodURL>
+		</Neighbourhood>
+		<Advisories></Advisories>
+		<Facilities>
+			<Facility>
+				<FacilityCount>1</FacilityCount>
+				<FacilityType>Dogs Off-Leash Areas</FacilityType>
+				<FacilityURL>http://vancouver.ca/parks/info/dogparks/index.htm</FacilityURL>
+			</Facility>
+			<SpecialFeature>Seawall</SpecialFeature>
+			<Washroom></Washroom>
+		</Facilities>
+	</Park>		
+</COVParksFacilities>
