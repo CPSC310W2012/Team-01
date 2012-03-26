@@ -70,10 +70,12 @@ public class EventView extends Composite implements View{
 
     public EventView() {
         viewPanel.getElement().appendChild(nameSpan);
+		loadData();
         initWidget(viewPanel);
     }
     public EventView(int eventID){
     	viewPanel.getElement().appendChild(nameSpan);
+		loadData();
     	initWidget(viewPanel);
     	loadEvent(eventID);
     }
@@ -106,7 +108,6 @@ public class EventView extends Composite implements View{
 	 */
 	public void buildUI(){
 		loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
-		loadData();
 
 		// set up the Map
 		// TODO: Make the map relevant. Load markers of the location, etc.
@@ -197,7 +198,7 @@ public class EventView extends Composite implements View{
 						eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
 						eventLoc.setText("The event is at " + event.get("park_name") + ".");
 
-						eventMap.checkResizeAndCenter();
+						//eventMap.checkResizeAndCenter();
 						eventCategory.setText("This event is in the category: " + event.get("category"));
 						ArrayList<String> attendees = new ArrayList<String>(Arrays.asList(event.get("attending_names").split(",")));
 						members.clear();
@@ -211,6 +212,7 @@ public class EventView extends Composite implements View{
 				}
 
 			} catch (Exception e) {
+				e.printStackTrace();
 				Window.alert("There is no event " + eventID + ".");
 			}
 		}

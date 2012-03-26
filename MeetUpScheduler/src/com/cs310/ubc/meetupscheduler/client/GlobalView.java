@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
+import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -255,14 +258,34 @@ public class GlobalView extends Composite implements View{
 						final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
 						final String eventPasser = new String(parkEvents);
 						final HashMap<String, String> parkInfo = parks.get(i);
-
+						final HTML eventLink = new HTML(parkInfo.get("name"));
+						
+						final Integer id = new Integer(events.get(j).get("id"));
+						eventLink.addClickHandler(new ClickHandler(){
+							@Override
+							public void onClick(ClickEvent event) {
+								
+								Window.alert(id.toString());
+							}
+						     });
+						final Button eventButton = new Button(parkInfo.get("name"));
+						eventButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+									EventPlace eventPlace = new EventPlace("Event", id);
+									SharedData.getPlaceController().goTo(eventPlace);
+							}
+						});
+						
 						eventMarker.addMarkerClickHandler(new MarkerClickHandler() {
 							public void onClick(MarkerClickEvent event) {
 
 								InfoWindow info = map.getInfoWindow();
 								InfoWindowContent content = new InfoWindowContent(
-										"<font color=\"#4C674C\"><big><b> Events at " + parkInfo.get("name") + ": </b></big></font><br/>"
-										+ new HTML(eventPasser)
+										//"<font color=\"#4C674C\"><big><b> Events at " + parkInfo.get("name") + ": </b></big></font><br/>"
+										//+ eventLink
+										eventButton
+										
 								);
 								info.open(eventMarker, content);
 							}
