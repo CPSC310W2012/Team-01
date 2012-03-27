@@ -158,9 +158,9 @@ public class CreateEventView extends Composite implements View {
 	
 	private String getParkID(String parkName) {
 		String id = "";		
-		for (int i=0;i<allParks.size(); i++) {			
-			if (allParks.get(i).get("name") == parkName) {
-				id = allParks.get(i).get("pid");
+		for (int i=0;i<allParks.size(); i++) {
+			if (allParks.get(i).get("name").equals(parkName)) {
+				id = allParks.get(i).get("id");
 			}
 		}
 		

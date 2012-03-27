@@ -167,7 +167,7 @@ public class EventView extends Composite implements View{
 						attendeesBox.clear();
 						setUpAttendees();
 						joinButton.setEnabled(false);
-						Window.alert("You are attending the event with ID " + newEvent.get(0).get("id"));
+						Window.alert("You are attending this event!");
 					}
 				});
 			}
