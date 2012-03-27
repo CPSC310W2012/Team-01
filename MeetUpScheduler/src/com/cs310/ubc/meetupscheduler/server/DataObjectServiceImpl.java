@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -97,7 +98,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<HashMap<String, String>> update(String table, String query, String column, String newValue) throws ServerException {
+	public ArrayList<HashMap<String, String>> update(String table, String query, HashMap<String, String> valueMap) throws ServerException {
 		PersistenceManager pm = getPersistenceManager();
 		Class<? extends DataObject> tableClass = tableMap.get(table);
 		ArrayList<HashMap<String, String>> changedObjs = new ArrayList<HashMap<String, String>>();
@@ -109,8 +110,13 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 				q = pm.newQuery(tableClass, query);
 			List<DataObject> objects = (List<DataObject>) q.execute();
 			for (DataObject object: objects) {
-				object.setField(column, newValue);
-				JDOHelper.makeDirty(object, column);
+				HashMap<String, String> objectHash = object.formatForTable();
+				for (Entry<String, String> value: valueMap.entrySet()) {
+					if (!value.getValue().equals(object.getField(value.getKey()))) {
+						object.setField(value.getKey(), value.getValue());
+						JDOHelper.makeDirty(object, value.getKey());
+					}
+				}
 				changedObjs.add(object.formatForTable());
 			}
 		} catch (Exception e) {
@@ -131,8 +137,8 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	 * @throws ServerException
 	 * 
 	 */
-	public ArrayList<HashMap<String, String>> update(String table, String column, String newValue) throws ServerException {
-		return update(table, "*", column, newValue);
+	public ArrayList<HashMap<String, String>> update(String table, HashMap<String, String> newValues) throws ServerException {
+		return update(table, "*", newValues);
 	}
 	
 	/**

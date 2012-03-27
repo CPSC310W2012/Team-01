@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
+import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -158,9 +160,9 @@ public class CreateEventView extends Composite implements View {
 	
 	private String getParkID(String parkName) {
 		String id = "";		
-		for (int i=0;i<allParks.size(); i++) {			
-			if (allParks.get(i).get("name") == parkName) {
-				id = allParks.get(i).get("pid");
+		for (int i=0;i<allParks.size(); i++) {
+			if (allParks.get(i).get("name").equals(parkName)) {
+				id = allParks.get(i).get("id");
 			}
 		}
 		
@@ -213,6 +215,10 @@ public class CreateEventView extends Composite implements View {
 				//TODO: Add call to helper to scheduler to get event view based on event id
 				System.out.println(newEvent);
 				Window.alert("Event Created with ID " + newEvent.get("id"));
+				
+				MeetUpScheduler.addEvent(newEvent);
+				EventPlace eventPlace = new EventPlace("Event?id=" + newEvent.get("id"), new Integer(newEvent.get("id")));
+				SharedData.getPlaceController().goTo(eventPlace);
 			}
 		});
 		

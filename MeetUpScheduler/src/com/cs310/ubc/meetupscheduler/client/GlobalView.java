@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
+import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -256,14 +258,12 @@ public class GlobalView extends Composite implements View{
 		if(map != null && events != null && events.size() > 0 && parks != null && parks.size() > 0){
 
 			for(int i=0; i<parks.size(); i++){
-				StringBuffer parkEvents = new StringBuffer();
+				final String parkName = parks.get(i).get("name");
+				final VerticalPanel vertPan = new VerticalPanel();
+				final HorizontalPanel horPan = new HorizontalPanel();
 
 				for(int j=0; j<events.size(); j++){
 					if(parks.get(i).get("name").equals(events.get(j).get("park_name"))){
-
-						parkEvents.append("<a href=/#EventPlace:Event?id=" + events.get(j).get("id") + ">" +
-								events.get(j).get("name") + "</a> - " + events.get(j).get("category") + " - " + 
-								events.get(j).get("date") + "<br/>");
 
 						String latLong = parks.get(i).get("google_map_dest");
 						int index = latLong.indexOf(",");
@@ -272,16 +272,29 @@ public class GlobalView extends Composite implements View{
 
 						//this is to pass event info into the info window creation
 						final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
-						final String eventPasser = new String(parkEvents);
-						final HashMap<String, String> parkInfo = parks.get(i);
+						final Integer id = new Integer(events.get(j).get("id"));
+
+						Button eventButton = new Button(events.get(j).get("name"));
+						eventButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+									EventPlace eventPlace = new EventPlace("Event?id="+ id.toString(), id);
+									SharedData.getPlaceController().goTo(eventPlace);
+							}
+						});
+
+						horPan.add(eventButton);
 
 						eventMarker.addMarkerClickHandler(new MarkerClickHandler() {
 							public void onClick(MarkerClickEvent event) {
 
 								InfoWindow info = map.getInfoWindow();
+								vertPan.add(new HTML(parkName));
+								vertPan.add(horPan);
+
 								InfoWindowContent content = new InfoWindowContent(
-										"<font color=\"#4C674C\"><big><b> Events at " + parkInfo.get("name") + ": </b></big></font><br/>"
-										+ new HTML(eventPasser)
+										vertPan
+
 								);
 								info.open(eventMarker, content);
 							}
@@ -290,7 +303,7 @@ public class GlobalView extends Composite implements View{
 					}
 				}
 			}
-		}  
+		}
 	}
 
 	@Override
