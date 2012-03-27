@@ -53,7 +53,7 @@ public class GlobalView extends Composite implements View{
 	private FlexTable eventsTable = new FlexTable();
 	private FlexTable myEventsTable = new FlexTable();
 	private TabPanel eventTabPanel = new TabPanel();
-	private ListBox parkBox = new ListBox();
+	private ListBox mapParkBox = new ListBox();
 	SimplePanel viewPanel = new SimplePanel();
 	Element nameSpan = DOM.createSpan();
 
@@ -97,9 +97,9 @@ public class GlobalView extends Composite implements View{
 		//Zoom to park button
 		Button parkButton = new Button("Zoom to Park", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if(parkBox.getItemCount()>0 && parkBox != null && allParks != null){
-					int boxIndex = parkBox.getSelectedIndex();
-					String selectedPark = parkBox.getValue(boxIndex);
+				if(mapParkBox.getItemCount()>0 && mapParkBox != null && allParks != null){
+					int boxIndex = mapParkBox.getSelectedIndex();
+					String selectedPark = mapParkBox.getValue(boxIndex);
 
 					for(int i=0; i<allParks.size(); i++){
 						if(allParks.get(i).get("name").equals(selectedPark)){
@@ -118,7 +118,7 @@ public class GlobalView extends Composite implements View{
 
 		//Parks
 		addParksToListBox(allParks);
-		parkTable.add(parkBox);
+		parkTable.add(mapParkBox);
 		parkTable.add(parkButton);
 		parkTable.setWidth("500");
 		parkTable.add(map);
@@ -143,17 +143,19 @@ public class GlobalView extends Composite implements View{
 		myEventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
 		myEventsTable.setText(1, 2, "Park Name");
 		myEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
+		
 
 		//Add Tables to tabPanel
 		eventTabPanel.getTabBar().getElement().getStyle();
 		eventTabPanel.add(eventsTable, "Recent Events");
 		eventTabPanel.add(myEventsTable, "My Events");
+		eventTabPanel.add(new HTML("Directions"), "Directions");
 		eventTabPanel.add(advisoryTable, "Park Advisories");
 		eventTabPanel.selectTab(0);
 
 		//Add Events in tables and on map
-		addMyEvents(allEvents);
 		addRecentEvents(allEvents);
+		addMyEvents(allEvents);
 		addParkAdvisories(allAdvisories);
 		addEventMarkers(allEvents, allParks, map);
 
@@ -170,11 +172,14 @@ public class GlobalView extends Composite implements View{
 	 */
 	private void addMyEvents(ArrayList<HashMap<String, String>> events){
 		
+		String userEmail = currentUser.getEmailAddress();
+		
 		if(events != null && events.size()>0){
 			for(int i=0; i<events.size(); i++){
-				int row = eventsTable.getRowCount();
-				if(currentUser.getEmailAddress().equals(events.get(i).get("creator_email"))){
-
+				
+				if(userEmail.equals(events.get(i).get("creator_email"))){
+					int row = myEventsTable.getRowCount();
+					
 					myEventsTable.setText(row, 0, events.get(i).get("name"));
 					myEventsTable.setText(row, 1, events.get(i).get("category"));
 					myEventsTable.setText(row, 2, events.get(i).get("park_name"));
@@ -235,7 +240,7 @@ public class GlobalView extends Composite implements View{
 			Collections.sort(parkNames);
 
 			for(int i = 0; i<parks.size(); i++){
-				parkBox.addItem(parkNames.get(i));
+				mapParkBox.addItem(parkNames.get(i));
 			}
 		}
 	}
@@ -256,8 +261,9 @@ public class GlobalView extends Composite implements View{
 				for(int j=0; j<events.size(); j++){
 					if(parks.get(i).get("name").equals(events.get(j).get("park_name"))){
 
-						parkEvents.append("<a href=/MeetUpScheduler.html?#EventPlace:Event?id=" + events.get(j).get("id") + ">" +
-								events.get(j).get("name") + "</a> - " + events.get(j).get("category") + "<br/>");
+						parkEvents.append("<a href=/#EventPlace:Event?id=" + events.get(j).get("id") + ">" +
+								events.get(j).get("name") + "</a> - " + events.get(j).get("category") + " - " + 
+								events.get(j).get("date") + "<br/>");
 
 						String latLong = parks.get(i).get("google_map_dest");
 						int index = latLong.indexOf(",");
