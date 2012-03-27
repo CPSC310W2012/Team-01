@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapWidget;
@@ -20,6 +22,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -66,6 +69,7 @@ public class EventView extends Composite implements View{
     Element nameSpan = DOM.createSpan();
     private HashMap<String, String> event = new HashMap<String, String>();
     private LoginInfo loginInfo;
+    private int eventURLID;
 
 
     public EventView() {
@@ -105,9 +109,11 @@ public class EventView extends Composite implements View{
 	 * Constructs the UI elements of EventView
 	 */
 	public void buildUI(){
+		String eventStringID = com.google.gwt.user.client.Window.Location.getParameter("id");
+		eventURLID = Integer.parseInt(eventStringID);
 		loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		loadData();
-
+		
 		// set up the Map
 		// TODO: Make the map relevant. Load markers of the location, etc.
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
@@ -131,10 +137,12 @@ public class EventView extends Composite implements View{
 		//set up the shareButton
 		//TODO: Make this work with the proper URL
 
+		
 		shareButton.setText("Share on Google Plus.");
 		shareButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event){
-				com.google.gwt.user.client.Window.open("https://plus.google.com/share?url=vancitymeetupscheduler.appspot.com", "Share the Meetup Scheduler!", "");
+			public void onClick(ClickEvent click){
+				String shareURL = "https://plus.google.com/share?url=www.vancitymeetupscheduler.appspot.com?id=" + event.get("id") + "#EventPlace:Event";
+				com.google.gwt.user.client.Window.open(shareURL, "Share the Meetup Scheduler!", "");
 			}
 		});
 
@@ -166,14 +174,34 @@ public class EventView extends Composite implements View{
 		parkPanel.add(eventMap);
 		attendeePanel.add(attCountLabel);
 		attendeePanel.add(attendeesBox);
-		rootPanel.add(loadText);
-		rootPanel.add(loadButton);
+	//	rootPanel.add(loadText);
+//		rootPanel.add(loadButton);
 		rootPanel.add(infoPanel);
 		rootPanel.add(joinButton);
-		rootPanel.add(shareButton);
+	//	rootPanel.add(shareButton);
 		rootPanel.add(parkPanel);
+		loadEvent(eventURLID);
+		renderPlusButton();
+		
 
 	}
+	private void renderPlusButton() {
+	    //<!-- Place this tag in your head or just before your close body tag -->
+	    //<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+	    //<!-- Place this tag where you want the +1 button to render -->
+	    //<g:plusone></g:plusone>
+		String testURL = "http://vancitymeetupscheduler.appspot.com/MeetUpScheduler.html?id=" + event.get("id") + "#EventPlace:Event";
+	    String s = "<g:plusone href=\"" + testURL +"\"></g:plusone>";
+	    HTML h = new HTML(s);
+	    attendeePanel.add(h);
+	    
+	    Document doc = Document.get();
+	    ScriptElement script = doc.createScriptElement();
+	    script.setSrc("https://apis.google.com/js/plusone.js");
+	    script.setType("text/javascript");
+	    script.setLang("javascript");
+	    doc.getBody().appendChild(script);
+	  }
 
 	/**
 	 * This loads the specifics of the event into the info panel.
