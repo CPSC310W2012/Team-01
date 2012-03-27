@@ -134,17 +134,7 @@ public class EventView extends Composite implements View{
 			}
 		});
 
-		//set up the shareButton
-		//TODO: Make this work with the proper URL
-
 		
-		shareButton.setText("Share on Google Plus.");
-		shareButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent click){
-				String shareURL = "https://plus.google.com/share?url=www.vancitymeetupscheduler.appspot.com?id=" + event.get("id") + "#EventPlace:Event";
-				com.google.gwt.user.client.Window.open(shareURL, "Share the Meetup Scheduler!", "");
-			}
-		});
 
 		//set up the joinButton
 		joinButton.setText("Join event!");

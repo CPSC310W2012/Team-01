@@ -243,7 +243,7 @@ public class GlobalView extends Composite implements View{
 				StringBuffer parkEvents = new StringBuffer();
 				for(int j=0; j<events.size(); j++){
 					if(parks.get(i).get("name").equals(events.get(j).get("park_name"))){
-						parkEvents.append("<a href=/MeetUpScheduler.html?#EventPlace:Event?id=" + events.get(j).get("id") + ">" +
+						parkEvents.append("<a href=/MeetUpScheduler.html?id=" + events.get(j).get("id") + "#EventPlace:Event>" +
 								events.get(j).get("name") + "</a><br/>");
 
 						String latLong = parks.get(i).get("google_map_dest");

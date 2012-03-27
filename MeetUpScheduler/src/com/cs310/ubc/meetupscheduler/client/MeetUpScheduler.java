@@ -1,5 +1,8 @@
 package com.cs310.ubc.meetupscheduler.client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.cs310.ubc.meetupscheduler.client.places.AdminPlace;
 import com.cs310.ubc.meetupscheduler.client.places.CreateEventPlace;
 import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
@@ -8,39 +11,24 @@ import com.cs310.ubc.meetupscheduler.client.placeutil.MSActivityMapper;
 import com.cs310.ubc.meetupscheduler.client.placeutil.MSPlaceMapper;
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.google.gwt.core.client.EntryPoint;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
-import com.google.gwt.maps.client.MapWidget;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HeaderPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-
-
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

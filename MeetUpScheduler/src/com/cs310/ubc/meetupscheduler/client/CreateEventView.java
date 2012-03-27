@@ -210,9 +210,11 @@ public class CreateEventView extends Composite implements View {
 			}
 			
 			public void onSuccess(HashMap<String, String> newEvent) {
-				//TODO: Add call to helper to scheduler to get event view based on event id
-				System.out.println(newEvent);
-				Window.alert("Event Created with ID " + newEvent.get("id"));
+				//TODO: Find a method of either refreshing the events or adding the newly created event to the event list *before* going to the new URL.
+				// NOTE: This only works in the deployed version.
+				String newEventURL = "http://vancitymeetupscheduler.appspot.com?id=" + newEvent.get("id") + "#EventPlace:Event";
+				Window.Location.replace(newEventURL);
+				Window.alert("Your event with ID " + newEvent.get("id") + " was created.");
 			}
 		});
 		
