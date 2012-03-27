@@ -140,9 +140,6 @@ public class MeetUpScheduler implements EntryPoint {
 				else if (SharedData.placeController.getWhere().equals(Place.NOWHERE)) {
 					return;
 				}
-				else {
-					//TODO needs an update?
-				}
 				SharedData.getPlaceController().goTo(createEventPlace);
 					
 			}
@@ -154,8 +151,8 @@ public class MeetUpScheduler implements EntryPoint {
 				if (eventPlace == null) {
 					eventPlace = new EventPlace("Event");
 				}
-				else {
-					//TODO needs an update?
+				else if (SharedData.placeController.getWhere().equals(Place.NOWHERE)) {
+					return;
 				}
 				SharedData.getPlaceController().goTo(eventPlace);
 					
@@ -169,9 +166,6 @@ public class MeetUpScheduler implements EntryPoint {
 				}
 				else if (SharedData.placeController.getWhere().equals(Place.NOWHERE)) {
 					return;
-				}
-				else {
-					//TODO needs an update?
 				}
 				SharedData.getPlaceController().goTo(adminPlace);
 					
@@ -200,6 +194,19 @@ public class MeetUpScheduler implements EntryPoint {
 	    // Set up sign out hyperlink.
 	    signOutLink.setHref(loginInfo.getLogoutUrl());
 	    RootPanel.get().add(signOutLink);
+	    		
+		checkURLForEventParam();
+	}
+
+	/**
+	 * forwards the user to the event with the id in the url
+	 */
+	private void checkURLForEventParam() {
+		String id = com.google.gwt.user.client.Window.Location.getParameter("id");
+		if (id != null && !id.isEmpty()) {
+			EventPlace eventWithID = new EventPlace("Event?id=" + id, new Integer(id));
+			SharedData.placeController.goTo(eventWithID);
+		}
 	}
 
 	public void createTab(Widget w, String name) {
