@@ -142,8 +142,8 @@ public class MeetUpScheduler implements EntryPoint {
 				if (eventPlace == null) {
 					eventPlace = new EventPlace("Event");
 				}
-				else {
-					//TODO needs an update?
+				else if (SharedData.placeController.getWhere().equals(Place.NOWHERE)) {
+					return;
 				}
 				SharedData.getPlaceController().goTo(eventPlace);
 					
@@ -157,9 +157,6 @@ public class MeetUpScheduler implements EntryPoint {
 				}
 				else if (SharedData.placeController.getWhere().equals(Place.NOWHERE)) {
 					return;
-				}
-				else {
-					//TODO needs an update?
 				}
 				SharedData.getPlaceController().goTo(adminPlace);
 					
@@ -267,6 +264,10 @@ public class MeetUpScheduler implements EntryPoint {
 		//loadEvents();
 	}
 
+
+	public static void addEvent(HashMap<String, String> event) {
+	 	    allEvents.add(event);
+	 }
 	/**
 	 * 
 	 * @author Caroline

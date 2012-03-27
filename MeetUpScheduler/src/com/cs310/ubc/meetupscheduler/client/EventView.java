@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
@@ -64,23 +65,24 @@ public class EventView extends Composite implements View{
 	private Integer attendeeCount = 0;
 	private Label attCountLabel = new Label();
 	private ArrayList<HashMap<String, String>> allEvents;
-    private SimplePanel viewPanel = new SimplePanel();
-    private ArrayList<HashMap<String, String>> allParks;
-    Element nameSpan = DOM.createSpan();
-    private HashMap<String, String> event = new HashMap<String, String>();
-    private LoginInfo loginInfo;
-    private int eventURLID;
+	private SimplePanel viewPanel = new SimplePanel();
+	private ArrayList<HashMap<String, String>> allParks;
+	Element nameSpan = DOM.createSpan();
+	private HashMap<String, String> event = new HashMap<String, String>();
+	private LoginInfo loginInfo;
+	private int eventURLID;
+	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);
 
 
-    public EventView() {
-        viewPanel.getElement().appendChild(nameSpan);
-        initWidget(viewPanel);
-    }
-    public EventView(int eventID){
-    	viewPanel.getElement().appendChild(nameSpan);
-    	initWidget(viewPanel);
-    	loadEvent(eventID);
-    }
+	public EventView() {
+		viewPanel.getElement().appendChild(nameSpan);
+		initWidget(viewPanel);
+	}
+	public EventView(int eventID){
+		viewPanel.getElement().appendChild(nameSpan);
+		initWidget(viewPanel);
+		loadEvent(eventID);
+	}
 
 	// TODO: Make this into a working constructor that takes an eventID string
 	//	public Widget createPage (String eventID) {
@@ -110,10 +112,12 @@ public class EventView extends Composite implements View{
 	 */
 	public void buildUI(){
 		String eventStringID = com.google.gwt.user.client.Window.Location.getParameter("id");
-		eventURLID = Integer.parseInt(eventStringID);
+		if(eventStringID != null && !eventStringID.isEmpty() ){
+			eventURLID = Integer.parseInt(eventStringID);
+		}
 		loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		loadData();
-		
+
 		// set up the Map
 		// TODO: Make the map relevant. Load markers of the location, etc.
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
@@ -134,15 +138,13 @@ public class EventView extends Composite implements View{
 			}
 		});
 
-		
+
 
 		//set up the joinButton
 		joinButton.setText("Join event!");
 		joinButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent clickEvent) {
 				members.add(loginInfo.getNickname());
-				attendeesBox.clear();
-				setUpAttendees();
 				//Add username to event
 				String newNames = event.get("attending_names") + "," + loginInfo.getNickname();
 				event.put("attending_names", newNames);
@@ -153,45 +155,54 @@ public class EventView extends Composite implements View{
 				Integer numAttending = Integer.parseInt(event.get("num_attending"));
 				numAttending++;
 				event.put("num_attending", numAttending.toString());
-				
-				//TODO: Make async call to update event. This async call needs to be changed to make it more convenient.
+				objectService.update("Event", "id=="+event.get("id"), event, new AsyncCallback<ArrayList<HashMap<String, String>>>() {
+					public void onFailure(Throwable error) {
+						System.out.println("Joining the event failed!");
+					}
+					public void onSuccess(ArrayList<HashMap<String, String>> newEvent) {
+						attendeesBox.clear();
+						setUpAttendees();
+						joinButton.setEnabled(false);
+						Window.alert("You are attending this event!");
+					}
+				});
 			}
 		});
-		
+
 		setUpInfoPanel();
-		
+
 		// Add items to panels
 		parkPanel.add(eventMap);
 		attendeePanel.add(attCountLabel);
 		attendeePanel.add(attendeesBox);
-	//	rootPanel.add(loadText);
-//		rootPanel.add(loadButton);
+		//	rootPanel.add(loadText);
+		//		rootPanel.add(loadButton);
 		rootPanel.add(infoPanel);
 		rootPanel.add(joinButton);
-	//	rootPanel.add(shareButton);
+		//	rootPanel.add(shareButton);
 		rootPanel.add(parkPanel);
 		loadEvent(eventURLID);
 		renderPlusButton();
-		
+
 
 	}
 	private void renderPlusButton() {
-	    //<!-- Place this tag in your head or just before your close body tag -->
-	    //<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-	    //<!-- Place this tag where you want the +1 button to render -->
-	    //<g:plusone></g:plusone>
-		String testURL = "http://vancitymeetupscheduler.appspot.com/MeetUpScheduler.html?id=" + event.get("id") + "#EventPlace:Event";
-	    String s = "<g:plusone href=\"" + testURL +"\"></g:plusone>";
-	    HTML h = new HTML(s);
-	    attendeePanel.add(h);
-	    
-	    Document doc = Document.get();
-	    ScriptElement script = doc.createScriptElement();
-	    script.setSrc("https://apis.google.com/js/plusone.js");
-	    script.setType("text/javascript");
-	    script.setLang("javascript");
-	    doc.getBody().appendChild(script);
-	  }
+		//<!-- Place this tag in your head or just before your close body tag -->
+		//<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+		//<!-- Place this tag where you want the +1 button to render -->
+		//<g:plusone></g:plusone>
+		String testURL = "http://vancitymeetupscheduler.appspot.com?id=" + event.get("id") + "#EventPlace:Event";
+		String s = "<g:plusone href=\"" + testURL +"\"></g:plusone>";
+		HTML h = new HTML(s);
+		attendeePanel.add(h);
+
+		Document doc = Document.get();
+		ScriptElement script = doc.createScriptElement();
+		script.setSrc("https://apis.google.com/js/plusone.js");
+		script.setType("text/javascript");
+		script.setLang("javascript");
+		doc.getBody().appendChild(script);
+	}
 
 	/**
 	 * This loads the specifics of the event into the info panel.
@@ -225,6 +236,12 @@ public class EventView extends Composite implements View{
 						attendeesBox.clear();
 						setUpAttendees();
 						zoomMap();
+
+						ArrayList<String> attendingEmails = new ArrayList<String>(Arrays.asList(event.get("attending_emails").split(",")));
+						if (attendingEmails.contains(loginInfo.getEmailAddress()))
+							joinButton.setEnabled(false);
+						else
+							joinButton.setEnabled(true);
 					}
 				}
 
@@ -246,12 +263,12 @@ public class EventView extends Composite implements View{
 				eventMap.setCenter(LatLng.newInstance(lat, lon), 17);
 				final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
 				eventMap.addOverlay(eventMarker);
-				
+
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Loads all existing Events into a list.
 	 */
@@ -295,8 +312,6 @@ public class EventView extends Composite implements View{
 	/**
 	 *  Add styling with CSS
 	 *  Fix up the interface to make it look nice
-	 * make Attendees a JDO, and persistent
-	 * Catch exceptions from creating jdo objects, etc.
 	 * 
 	 */
 }

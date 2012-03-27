@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +26,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	private static final long serialVersionUID = 4058514716973575670L;
 	private static final Logger LOG = Logger.getLogger(DataObjectServiceImpl.class.getName());
 	private static final Map<String, Class<? extends DataObject>> tableMap = getTables();
-	
+
 	/**
 	 * A method to add a new persistent object.
 	 * @param table The table to add the new object to.
@@ -77,7 +78,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 			pm.close();
 		}
 	}
-	
+
 	/**
 	 * Method to remove all persistent objects of a type.
 	 * @param table The type of object to remove.
@@ -85,7 +86,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	public void remove(String table) {
 		remove(table, "*");
 	}
-	
+
 	/**
 	 * Updates the value a field of one or more objects.
 	 * @param table The type of object to update.
@@ -97,7 +98,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<HashMap<String, String>> update(String table, String query, String column, String newValue) throws ServerException {
+	public ArrayList<HashMap<String, String>> update(String table, String query, HashMap<String, String> valueMap) throws ServerException {
 		PersistenceManager pm = getPersistenceManager();
 		Class<? extends DataObject> tableClass = tableMap.get(table);
 		ArrayList<HashMap<String, String>> changedObjs = new ArrayList<HashMap<String, String>>();
@@ -109,8 +110,13 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 				q = pm.newQuery(tableClass, query);
 			List<DataObject> objects = (List<DataObject>) q.execute();
 			for (DataObject object: objects) {
-				object.setField(column, newValue);
-				JDOHelper.makeDirty(object, column);
+				HashMap<String, String> objectHash = object.formatForTable();
+				for (Entry<String, String> value: valueMap.entrySet()) {
+					if (!value.getValue().equals(object.getField(value.getKey()))) {
+						object.setField(value.getKey(), value.getValue());
+						JDOHelper.makeDirty(object, value.getKey());
+					}
+				}
 				changedObjs.add(object.formatForTable());
 			}
 		} catch (Exception e) {
@@ -121,7 +127,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 		}
 		return changedObjs;
 	}
-	
+
 	/**
 	 * Updates the value a field of all objects.
 	 * @param table The type of object to update.
@@ -131,10 +137,10 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	 * @throws ServerException
 	 * 
 	 */
-	public ArrayList<HashMap<String, String>> update(String table, String column, String newValue) throws ServerException {
-		return update(table, "*", column, newValue);
+	public ArrayList<HashMap<String, String>> update(String table, HashMap<String, String> newValues) throws ServerException {
+		return update(table, "*", newValues);
 	}
-	
+
 	/**
 	 * A method to get the fields of one or more objects specified by a query.
 	 * @param table The type of object to get.
@@ -167,7 +173,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 		}
 		return retObjs;
 	}
-	
+
 	/**
 	 * A method to get the fields of one or more objects specified by a query.
 	 * @param table The type of object to get.
@@ -178,7 +184,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	public ArrayList<HashMap<String, String>> get(String table) throws ServerException {
 		return get(table, "*");
 	}
-	
+
 	/**
 	 * Helper method to get a persistence manager.
 	 * @return A persistence manager.
@@ -186,7 +192,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	private PersistenceManager getPersistenceManager() {
 		return PersistenceManagerSingleton.getInstance();
 	}
-	
+
 	/**
 	 * Helper method to retrieve the appropriate class given the table specification.
 	 * @return The class corresponding to a table String.
