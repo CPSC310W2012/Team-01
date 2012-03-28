@@ -85,29 +85,29 @@ public class EventView extends Composite implements View{
 	private int eventURLID;
 	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);
 
-
+	/**
+	 * The constructor for an EventView object
+	 */
 	public EventView() {
 		viewPanel.getElement().appendChild(nameSpan);
 		initWidget(viewPanel);
 	}
+	
+	/**
+	 * This shouldn't really be necessary anymore.
+	 * @param eventID - The ID of the event you want to load.
+	 */
 	public EventView(int eventID){
 		viewPanel.getElement().appendChild(nameSpan);
 		initWidget(viewPanel);
 		loadEvent(eventID);
 	}
 
-	// TODO: Make this into a working constructor that takes an eventID string
-	//	public Widget createPage (String eventID) {
-	//		currentEvent = event;
-	//		//Initialize Map, needs a key before it can be deployed
-	//		Maps.loadMapsApi("", "2", false, new Runnable() {
-	//			public void run() {
-	//				buildUI();
-	//			}
-	//		});
-	//		return panel;
-	//	}
 
+	/**
+	 * Loads the map and initializes the page. 
+	 * @return Returns the rootPanel for the page.
+	 */
 	@Override
 	public Widget asWidget() {
 		//Initialize Map, needs a key before it can be deployed
@@ -129,27 +129,15 @@ public class EventView extends Composite implements View{
 		}
 		loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		loadData();
-
-		// set up the Map
-		// TODO: Make the map relevant. Load markers of the location, etc.
+		
+		// Set up the map
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
 		eventMap = new MapWidget(vancouver, 11);
-
 		eventMap.setPixelSize(MAP_WIDTH, MAP_HEIGHT);
 		eventMap.setScrollWheelZoomEnabled(true);
 		eventMap.addControl(new LargeMapControl3D());
 		eventMap.checkResizeAndCenter();
 		eventMap.addControl(new MapTypeControl());
-		// Sets the eventLoad button to load the events
-
-		loadText.setText("Enter the number of the event to load");
-		loadButton.setText("Click to load an event");
-		loadButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				loadEvent(Integer.parseInt(loadText.getText()));
-			}
-		});
-
 
 
 		//set up the joinButton
@@ -188,11 +176,8 @@ public class EventView extends Composite implements View{
 		parkPanel.add(eventMap);
 		attendeePanel.add(attCountLabel);
 		attendeePanel.add(attendeesBox);
-		//	rootPanel.add(loadText);
-		//		rootPanel.add(loadButton);
 		topPanel.add(infoPanel);
 		topPanel.add(joinButton);
-		//	rootPanel.add(shareButton);
 		topPanel.add(parkPanel);
 		rootPanel.add(topPanel);
 		rootPanel.add(bottomPanel);
@@ -201,6 +186,12 @@ public class EventView extends Composite implements View{
 
 
 	}
+	
+	/**
+	 * This creates the button that shares to Google Plus. It uses the Plus APIs.
+	 * Basically creates an object out of the Javascript, and runs on click.
+	 * 
+	 */
 	private void renderPlusButton() {
 		//<!-- Place this tag in your head or just before your close body tag -->
 		//<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
@@ -268,6 +259,9 @@ public class EventView extends Composite implements View{
 		else Window.alert("No events!");
 	}
 
+	/**
+	 * This zooms the map to the event the page is set to.
+	 */
 	private void zoomMap(){
 		for(int i=0; i<allParks.size(); i++){
 			if(allParks.get(i).get("name").equals(event.get("park_name"))){
@@ -320,6 +314,9 @@ public class EventView extends Composite implements View{
 
 	}
 	
+	/**
+	 * Sets up all the pieces of the search panel.
+	 */
 	private void setUpSearchPanel() {
 		getParks(parksBox);
 		queryPanel.add(parksLabel);
@@ -331,6 +328,7 @@ public class EventView extends Composite implements View{
 		bottomPanel.add(queryPanel);
 		bottomPanel.add(resultsPanel);
 	}
+	
 	
 	private void getParks(final ListBox parksList) {
 		allParks = MeetUpScheduler.getParks();
