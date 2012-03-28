@@ -21,6 +21,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -41,26 +42,23 @@ public class EventView extends Composite implements View{
 	private final int MAP_WIDTH = 500;	
 
 
-	private TextBox loadText = new TextBox();
+	private VerticalPanel rightPanel = new VerticalPanel();
+	private VerticalPanel leftPanel = new VerticalPanel();
 	private HorizontalPanel rootPanel = new HorizontalPanel();
-	private Label eventName = new Label();
+	private HTML eventName = new HTML();
 	private Button joinButton = new Button();
-	private TextBox joinName = new TextBox();
-	private Button loadButton = new Button();
-	private VerticalPanel parkPanel = new VerticalPanel();
 	private ListBox attendeesBox = new ListBox();
 	private VerticalPanel attendeePanel = new VerticalPanel();
 	private VerticalPanel infoPanel = new VerticalPanel();
-	private Label eventCreator = new Label();
-	private Label eventLoc = new Label();
-	private Label eventTime = new Label();
-	private Label eventNotes = new Label();
-	private Label eventCategory = new Label();
+	private HTML eventCreator = new HTML();
+	private HTML eventLoc = new HTML();
+	private HTML eventTime = new HTML();
+	private HTML eventCategory = new HTML();
 	private Button shareButton = new Button();
 	private MapWidget eventMap;
 	private ArrayList<String> members = new ArrayList<String>();
 	private Integer attendeeCount = 0;
-	private Label attCountLabel = new Label();
+	private HTML attCountLabel = new HTML();
 	private ArrayList<HashMap<String, String>> allEvents;
     private SimplePanel viewPanel = new SimplePanel();
     private ArrayList<HashMap<String, String>> allParks;
@@ -76,6 +74,7 @@ public class EventView extends Composite implements View{
 		loadData();
         initWidget(viewPanel);
     }
+    
     public EventView(int eventID){
     	viewPanel.getElement().appendChild(nameSpan);
 		loadData();
@@ -124,14 +123,6 @@ public class EventView extends Composite implements View{
 		eventMap.addControl(new MapTypeControl());
 		// Sets the eventLoad button to load the events
 
-		loadText.setText("Enter the number of the event to load");
-		loadButton.setText("Click to load an event");
-		loadButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				loadEvent(Integer.parseInt(loadText.getText()));
-			}
-		});
-
 		//set up the shareButton
 		//TODO: Make this work with the proper URL
 
@@ -176,16 +167,15 @@ public class EventView extends Composite implements View{
 		setUpInfoPanel();
 		
 		// Add items to panels
-		parkPanel.add(eventMap);
+		rightPanel.add(eventMap);
 		attendeePanel.add(attCountLabel);
 		attendeePanel.add(attendeesBox);
-		rootPanel.add(loadText);
-		rootPanel.add(loadButton);
-		rootPanel.add(infoPanel);
-		rootPanel.add(joinButton);
-		rootPanel.add(shareButton);
-		rootPanel.add(parkPanel);
-
+		leftPanel.add(infoPanel);
+		leftPanel.add(attendeePanel);
+		leftPanel.add(joinButton);
+		leftPanel.add(shareButton);
+		rootPanel.add(leftPanel);
+		rootPanel.add(rightPanel);
 	}
 
 	/**
@@ -204,13 +194,13 @@ public class EventView extends Composite implements View{
 				for (int i = 0; i < allEvents.size(); i++){
 					if (Integer.parseInt(allEvents.get(i).get("id")) == eventID){
 						event = allEvents.get(i);
-						eventCreator.setText("Welcome to " + event.get("creator_name") + "'s event.");
-						eventName.setText("The name of the event is " + event.get("name")); 
-						eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
-						eventLoc.setText("The event is at " + event.get("park_name") + ".");
+						eventName.setHTML("<h1>" + event.get("name") + "</h1><br/>"); 
+						eventCreator.setHTML("<b>Creator:</b> " + event.get("creator_name") + "<br/>");
+						eventTime.setHTML("<b>Time</b>: " + event.get("date") + " from " + event.get("start_time") + " to " + event.get("end_time") + "<br/>");
+						eventLoc.setHTML("<b>Location</b> " + event.get("park_name") + "<br/>");
 
 						//eventMap.checkResizeAndCenter();
-						eventCategory.setText("This event is in the category: " + event.get("category"));
+						eventCategory.setHTML("<b>Category:</b> " + event.get("category") + "<br/>");
 						ArrayList<String> attendees = new ArrayList<String>(Arrays.asList(event.get("attending_names").split(",")));
 						members.clear();
 						for (String attendee : attendees){
@@ -264,13 +254,12 @@ public class EventView extends Composite implements View{
 	 * This creates the panel with the relevant information of the event.
 	 */
 	private void setUpInfoPanel() {
+		infoPanel.add(eventName);
 		infoPanel.add(eventCreator);
 		infoPanel.add(eventCategory);
 		infoPanel.add(eventLoc);
 		infoPanel.add(eventTime);
 		infoPanel.add(attendeePanel);
-		infoPanel.add(eventNotes);
-		eventNotes.setText("This is the information for the event. Needs to be persistent.");
 	}
 
 	/**
@@ -282,7 +271,7 @@ public class EventView extends Composite implements View{
 		}
 		attendeesBox.setVisibleItemCount(members.size());
 		attendeeCount = members.size();
-		attCountLabel.setText(attendeeCount + " people are attending.");
+		attCountLabel.setHTML("<b>" + attendeeCount + "</b> people are attending.");
 
 	}
 
