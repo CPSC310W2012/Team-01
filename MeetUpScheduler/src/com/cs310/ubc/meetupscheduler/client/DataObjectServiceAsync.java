@@ -17,4 +17,3 @@ public interface DataObjectServiceAsync {
 	public void remove(String table, AsyncCallback<Void> callback);
 	public void update(String table, String query, HashMap<String, String> newValues, AsyncCallback<ArrayList<HashMap<String, String>>> callback);
 	public void update(String table, HashMap<String, String> newValues, AsyncCallback<ArrayList<HashMap<String, String>>> callback);
-}

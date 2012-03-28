@@ -11,6 +11,7 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 public class EventPlace extends Place {
 
 	private String name;
+	private Integer id = null;
 	
 	/**
 	 * constructor
@@ -23,11 +24,26 @@ public class EventPlace extends Place {
     }
 	
 	/**
+	 * constructor
+	 * @param token url token
+	 */
+	public EventPlace(String token, Integer id)
+    {
+        super();
+		name = token;
+		this.id = id;
+    }
+	
+	/**
 	 * get the url token
 	 * @return the url token
 	 */
 	public String getName() {
 	    return name;
+	}
+	
+	public Integer getID() {
+		return id;
 	}
 	
 	/**

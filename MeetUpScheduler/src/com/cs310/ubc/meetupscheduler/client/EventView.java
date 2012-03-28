@@ -20,6 +20,7 @@ import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -211,7 +212,6 @@ public class EventView extends Composite implements View{
 	 * 
 	 * TODO: - Add event positions to map
 	 * 		 - Get the park information loaded into a parks page
-	 * 		 - Set real attendees list.
 	 */
 	private void loadEvent(int eventID) {
 
@@ -226,7 +226,7 @@ public class EventView extends Composite implements View{
 						eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
 						eventLoc.setText("The event is at " + event.get("park_name") + ".");
 
-						eventMap.checkResizeAndCenter();
+						//eventMap.checkResizeAndCenter();
 						eventCategory.setText("This event is in the category: " + event.get("category"));
 						ArrayList<String> attendees = new ArrayList<String>(Arrays.asList(event.get("attending_names").split(",")));
 						members.clear();
@@ -246,6 +246,7 @@ public class EventView extends Composite implements View{
 				}
 
 			} catch (Exception e) {
+				e.printStackTrace();
 				Window.alert("There is no event " + eventID + ".");
 			}
 		}
