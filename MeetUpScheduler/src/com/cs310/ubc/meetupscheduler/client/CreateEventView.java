@@ -212,7 +212,7 @@ public class CreateEventView extends Composite implements View {
 			}
 
 			public void onSuccess(HashMap<String, String> newEvent) {
-				
+				//TODO: Find a method of either refreshing the events or adding the newly created event to the event list *before* going to the new URL.
 				// NOTE: This only works in the deployed version.
 				Window.alert("Your event with ID " + newEvent.get("id") + " was created.");
 				MeetUpScheduler.addEvent(newEvent);
