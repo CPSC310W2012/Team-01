@@ -33,15 +33,15 @@ public class ParkDataParser {
 	private Document doc;
 	private ArrayList<DataObject> createdObjects;
 	private ServletOutputStream out;
-	
+
 	private Map<String, String> parkDataMap;
 	private Map<String, String> facilityDataMap;
 	private Map<String, String> washroomDataMap;
 	private Map<String, String> advisoryDataMap;
-	
+
 	//Data for testing
 	private List<Map> testData = new ArrayList<Map>();
-	
+
 
 	/**
 	 * Sets the output stream to display results
@@ -57,7 +57,7 @@ public class ParkDataParser {
 			throw new ServerException(e.getMessage(), e.getStackTrace());
 		}
 	}
-	
+
 	/**
 	 * this method is used only to access the data created by this class for testing purposes
 	 * @return ArrayList of data maps created during parsing
@@ -65,7 +65,7 @@ public class ParkDataParser {
 	public List<Map> getTestData() {
 		return testData;
 	}
-	
+
 
 	/**
 	 * Parses an XML file containing parks data and saves objects contained in
@@ -161,20 +161,20 @@ public class ParkDataParser {
 
 					if (elementName == null) {
 						throw new ServerException("Invalid XML: null element name");
-						
+
 					} else if (elementName.equals("Name")) {
 						parkDataMap.put(ParkField.NAME.toString(), parkElement.getTextContent());
 					}
 
 					else if (elementName.equals("StreetNumber")) {
 						parkDataMap.put(ParkField.STRTNUM.toString(), parkElement.getTextContent());
-					
+
 					} else if (elementName.equals("StreetName")) {
 						parkDataMap.put(ParkField.STRTNAME.toString(), parkElement.getTextContent());
-					
+
 					} else if (elementName.equals("EWStreet")) {
 						parkDataMap.put(ParkField.EWST.toString(), parkElement.getTextContent());
-					
+
 					} else if (elementName.equals("NSStreet")) {
 						parkDataMap.put(ParkField.NSST.toString(), parkElement.getTextContent());
 					}
@@ -182,42 +182,42 @@ public class ParkDataParser {
 					// from this string
 					else if (elementName.equals("GoogleMapDest")) {
 						parkDataMap.put(ParkField.MAPSTR.toString(), parkElement.getTextContent());
-					
+
 					} else if (elementName.equals("Hectare")) {
 						parkDataMap.put(ParkField.HECT.toString(), parkElement.getTextContent());
-					
+
 					} else if (elementName.equals("NeighbourhoodName")) {
 						parkDataMap.put(ParkField.NNAME.toString(), parkElement.getTextContent());
-					
+
 					} else if (elementName.equals("NeighbourhoodURL")) {
 						parkDataMap.put(ParkField.NURL.toString(), parkElement.getTextContent());
-					
+
 					} else if (elementName.equals("Advisories") && parkElement.hasChildNodes()) {
 						parkDataMap.put(ParkField.HASADVS.toString(), "Y");
-					
+
 					} else if (elementName.equals("Advisories") && !parkElement.hasChildNodes()) {
 						parkDataMap.put(ParkField.HASADVS.toString(), "N");
-					
+
 					} else if (elementName.equals("Advisory")) { 
 						createAdvisory(parkElement, ID);
 					} 
 					else if (elementName.equals("Facilities") && parkElement.hasChildNodes()) {
 						parkDataMap.put(ParkField.HASFAC.toString(), "Y");
-					
+
 					} else if (elementName.equals("Facilities") && !parkElement.hasChildNodes()) {
-						
+
 						parkDataMap.put(ParkField.HASFAC.toString(), "N");
-					
+
 					} else if (elementName.equals("SpecialFeature")) {
 						if (specialFeatures.isEmpty())
 							specialFeatures = parkElement.getTextContent();
 						else
 							specialFeatures += (", " + parkElement
 									.getTextContent());
-					
+
 					} else if (elementName.equals("Facility")) {
 						createFacility(parkElement, ID);
-					
+
 					} else if (elementName.equals("Washroom") && parkElement.hasChildNodes()) {
 						createWashroom(parkElement, ID);
 					}
@@ -259,13 +259,13 @@ public class ParkDataParser {
 							"Invalid XML: null washroom field for park " + pID);
 				} else if (elementName.equals("Location")) {
 					washroomDataMap.put(WashroomField.LOC.toString(),wshElement.getTextContent());
-					
+
 				} else if (elementName.equals("Notes")) {
 					washroomDataMap.put(WashroomField.NOTES.toString(), wshElement.getTextContent());
-					
+
 				} else if (elementName.equals("SummerHours")) {
 					washroomDataMap.put(WashroomField.SUMHR.toString(), wshElement.getTextContent());
-					
+
 				} else if (elementName.equals("WinterHours")) {
 					washroomDataMap.put(WashroomField.WINHR.toString(),wshElement.getTextContent());
 				}
@@ -293,7 +293,7 @@ public class ParkDataParser {
 	private void createAdvisory(Element advisoryElement, String iD) throws ServerException {
 		advisoryDataMap = new HashMap<String, String>();
 		advisoryDataMap.put(AdvisoryField.PID.toString(), iD);
-		
+
 		NodeList children = advisoryElement.getElementsByTagName("*");
 		try {
 		if (children != null) {
@@ -304,16 +304,16 @@ public class ParkDataParser {
 				if (elementName == null) {
 					out.println("Invalid XML: null advisory field for park " + iD + "advisory not created");
 					return;
-					
+
 				} else if (elementName.equals("DateLast")) {
 					advisoryDataMap.put(AdvisoryField.DATE.toString(), advElement.getTextContent());
-					
+
 				} else if (elementName.equals("AdvisoryText")) {
 					advisoryDataMap.put(AdvisoryField.TEXT.toString(), advElement.getTextContent());
-					
+
 				} else if (elementName.equals("URL")) {
 					advisoryDataMap.put(AdvisoryField.URL.toString(), advElement.getTextContent());
-					
+
 				}
 			}
 				createdObjects.add(new Advisory(advisoryDataMap));
@@ -323,7 +323,7 @@ public class ParkDataParser {
 			} catch (Exception e) {
 				throw new ServerException(e.getMessage(), e.getStackTrace());
 			}
-		
+
 	}
 
 	/**
@@ -342,7 +342,7 @@ public class ParkDataParser {
 		facilityDataMap.put(FacilityField.PID.toString(), iD);
 
 		NodeList children = facilityElement.getElementsByTagName("*");
-		
+
 		try {
 		if (children != null) {
 			for (int i = 0; i < children.getLength(); i++) {
@@ -354,10 +354,10 @@ public class ParkDataParser {
 					return;
 				} else if (elementName.equals("FacilityCount")) {
 					facilityDataMap.put(FacilityField.COUNT.toString(), facElement.getTextContent());
-					
+
 				} else if (elementName.equals("FacilityType")) {
 					facilityDataMap.put(FacilityField.TYPE.toString(), facElement.getTextContent());
-					
+
 				} else if (elementName.equals("FacilityURL")) {
 					facilityDataMap.put(FacilityField.URL.toString(), facElement.getTextContent());
 				}
@@ -395,5 +395,5 @@ public class ParkDataParser {
 
 		return delClasses;
 	}
-	
+
 }

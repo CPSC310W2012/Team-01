@@ -31,13 +31,7 @@ public class MSActivityMapper implements ActivityMapper {
         else if (place instanceof CreateEventPlace)
         	return new CreateEventActivity((CreateEventPlace) place);
         else if (place instanceof EventPlace) {
-        	EventPlace eventPlace = (EventPlace)place;
-        	Integer id = eventPlace.getID();
-        	if (id == null) {
-        		return new EventActivity(eventPlace);
-        	}
-        	else
-        		return new EventActivity(eventPlace, id);
+        	return new EventActivity((EventPlace) place);
         }
         else if (place instanceof GlobalPlace) {
         	return new GlobalActivity((GlobalPlace) place);
