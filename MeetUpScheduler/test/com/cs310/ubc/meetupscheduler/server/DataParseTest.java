@@ -33,7 +33,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
  */
 public class DataParseTest {
 	static MockHttpServletResponse response;
-	
+
     private final static LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
     private static List<Map> data;
     private static List<Map> parkData = new ArrayList<Map>();
@@ -52,33 +52,33 @@ public class DataParseTest {
 		helper.setUp();
 		response = new MockHttpServletResponse();
 		FileInputStream xml = new FileInputStream("testdata.xml"); 
-		
+
 		ParkDataParser parser = new ParkDataParser(response);
 		parser.parseXML(xml);
 		data = parser.getTestData();
-		
+
 		for (Map dataMap : data) {
 			if (dataMap.get(ParkField.NAME.toString()) != null) {
 				parkData.add(dataMap);
 			}
-			
+
 			else if (dataMap.get(FacilityField.COUNT.toString()) != null) {
 				facilityData.add(dataMap);
 			}
-			
+
 			else if (dataMap.get(AdvisoryField.TEXT.toString()) != null) {
 				advisoryData.add(dataMap);
 			}
-			
+
 			else if (dataMap.get(WashroomField.LOC.toString()) != null ) {
 				washroomData.add(dataMap);
 			}
 			else 
 				isUnclassified = true;
-			
+
 		}
 	}
-	
+
 
 	@Test
 	public void correctAmountTest() {
@@ -89,7 +89,7 @@ public class DataParseTest {
 			e.printStackTrace();
 			fail("http response error");
 		}
-		
+
 		assertTrue(data.size() == 20);
 		assertFalse(isUnclassified);
 		assertTrue(parkData.size() == 4);
@@ -98,7 +98,7 @@ public class DataParseTest {
 		assertTrue(washroomData.size() == 2);
 
 	}
-	
+
 	@Test
 	public void parkDataTest() {
 		for (Map park : parkData) {
@@ -115,7 +115,7 @@ public class DataParseTest {
 				assertTrue(park.get(ParkField.HASADVS.toString()).equals("N"));
 				assertTrue(park.get(ParkField.HASFAC.toString()).equals("Y"));
 				assertTrue(park.get(ParkField.SPECIALFEAT.toString()).equals(""));
-			
+
 			}
 			else if(park.get(Park.ParkField.ID.toString()).equals("3")) {
 				assertTrue(park.get(ParkField.NAME.toString()).equals("Prince of Wales Park"));
@@ -131,7 +131,7 @@ public class DataParseTest {
 				assertTrue(park.get(ParkField.HASFAC.toString()).equals("Y"));
 				assertTrue(park.get(ParkField.SPECIALFEAT.toString()).equals(""));
 			}
-			
+
 			else if(park.get(Park.ParkField.ID.toString()).equals("16")) {
 				assertTrue(park.get(ParkField.NAME.toString()).equals("David Lam Park"));
 				assertTrue(park.get(ParkField.STRTNUM.toString()).equals("1300"));
@@ -146,7 +146,7 @@ public class DataParseTest {
 				assertTrue(park.get(ParkField.HASFAC.toString()).equals("Y"));
 				assertTrue(park.get(ParkField.SPECIALFEAT.toString()).equals("Seawall"));
 			}
-			
+
 			else if(park.get(Park.ParkField.ID.toString()).equals("18")) {
 				assertTrue(park.get(ParkField.NAME.toString()).equals("Devonian Harbour Park"));
 				assertTrue(park.get(ParkField.STRTNUM.toString()).equals("1929"));
@@ -161,7 +161,7 @@ public class DataParseTest {
 				assertTrue(park.get(ParkField.HASFAC.toString()).equals("Y"));
 				assertTrue(park.get(ParkField.SPECIALFEAT.toString()).equals("Seawall"));
 			}
-			
+
 			else
 				fail("unexpected park ID");
 		}
@@ -170,7 +170,7 @@ public class DataParseTest {
 	public void parkFacilityTest() {
 		int fac2, fac3, fac16, fac18;
 		fac2 = fac3 = fac16 = fac18 = 0;
-		
+
 		for(Map facility : facilityData) {
 			if(facility.get(FacilityField.PID.toString()).equals("2")) {
 				fac2++;
@@ -189,7 +189,7 @@ public class DataParseTest {
 				assertTrue(facility.get(FacilityField.COUNT.toString()).equals("1"));
 				assertTrue(facility.get(FacilityField.URL.toString()).equals("http://vancouver.ca/parks/info/dogparks/index.htm"));
 				fac18++;
-				
+
 			}
 			else
 				fail("facility with incorrect ID");
@@ -198,22 +198,22 @@ public class DataParseTest {
 		assertTrue(fac3 == 2);
 		assertTrue(fac16 == 4);
 		assertTrue(fac18 == 1);
-		
+
 	}
-	
+
 	@Test
 	public void parkAdvisoryTest() {
 		//because there is only one
 		Map advisory = advisoryData.get(0);
-		
+
 		assertTrue(advisory.get(AdvisoryField.PID.toString()).equals("16"));
 		assertTrue(advisory.get(AdvisoryField.DATE.toString()).equals("2013-05-01 00:00:00"));
-		
+
 		//cannot check the whole string because some of the original chars are being converted to html tags by the parsing API
 		assertTrue(((String) (advisory.get(AdvisoryField.TEXT.toString()))).contains("Work is currently underway in David Lam Park on a new underground transmission"));
 		assertTrue(advisory.get(AdvisoryField.URL.toString()).equals(""));
 	}
-	
+
 	@Test
 	public void parkWashroomTest() {
 		for (Map washroom : washroomData) {
