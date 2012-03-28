@@ -43,6 +43,8 @@
 <part id="6"/>
 <part id="7"/>
 <part id="8"/>
+<part id="9"/>
+<part id="10"/>
 </presentation>
 </folder>
 </info>
@@ -55,9 +57,9 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/GlobalView.java"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="440" selectionTopPixel="3678"/>
 </editor>
-<editor id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="EventPlace.java" partName="EventPlace.java" path="C:/Workspaces/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/places/EventPlace.java" title="EventPlace.java" tooltip="MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/places/EventPlace.java" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="EventPlace.java" partName="EventPlace.java" path="C:/Workspaces/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/places/EventPlace.java" title="EventPlace.java" tooltip="MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/places/EventPlace.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/places/EventPlace.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="445" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="394" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MSActivityMapper.java" partName="MSActivityMapper.java" path="C:/Workspaces/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/placeutil/MSActivityMapper.java" title="MSActivityMapper.java" tooltip="MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/placeutil/MSActivityMapper.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/placeutil/MSActivityMapper.java"/>
@@ -79,18 +81,25 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/server/DataObjectServiceImpl.java"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6455" selectionTopPixel="2415"/>
 </editor>
-<editor activePart="true" focus="true" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="DataObjectServiceAsync.java" partName="DataObjectServiceAsync.java" path="C:/Workspaces/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectServiceAsync.java" title="DataObjectServiceAsync.java" tooltip="MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectServiceAsync.java" workbook="DefaultEditorWorkbook">
+<editor id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="DataObjectServiceAsync.java" partName="DataObjectServiceAsync.java" path="C:/Workspaces/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectServiceAsync.java" title="DataObjectServiceAsync.java" tooltip="MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectServiceAsync.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectServiceAsync.java"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1114" selectionTopPixel="0"/>
+</editor>
+<editor id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="DataParseTest.java" partName="DataParseTest.java" path="C:/Workspaces/MeetUpScheduler/test/com/cs310/ubc/meetupscheduler/server/DataParseTest.java" title="DataParseTest.java" tooltip="MeetUpScheduler/test/com/cs310/ubc/meetupscheduler/server/DataParseTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MeetUpScheduler/test/com/cs310/ubc/meetupscheduler/server/DataParseTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="510" selectionTopPixel="240"/>
+</editor>
+<editor id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="ParkDataParser.java" partName="ParkDataParser.java" path="C:/Workspaces/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/server/ParkDataParser.java" title="ParkDataParser.java" tooltip="MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/server/ParkDataParser.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/server/ParkDataParser.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="13528" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
-<expanded>&#x0A;<category IMemento.internal.id="Warnings"/>
-<category IMemento.internal.id="Errors"/>
+<expanded>&#x0A;<category IMemento.internal.id="Errors"/>
 </expanded>
-<columnWidths org.eclipse.ui.ide.locationField="0" org.eclipse.ui.ide.markerType="0" org.eclipse.ui.ide.pathField="0" org.eclipse.ui.ide.resourceField="0" org.eclipse.ui.ide.severityAndDescriptionField="0"/>
+<columnWidths org.eclipse.ui.ide.locationField="64" org.eclipse.ui.ide.markerType="94" org.eclipse.ui.ide.pathField="124" org.eclipse.ui.ide.resourceField="94" org.eclipse.ui.ide.severityAndDescriptionField="300"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.pathField"/>
@@ -216,10 +225,10 @@
 <fastViewBars>
 <fastViewBar fastViewLocation="1024" id="bottom" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="1">
 <fastViews>
-<view id="org.eclipse.ui.views.ProblemView" ratio="0.3"/>
+<view id="org.eclipse.ui.views.ProblemView" ratio="0.2994709"/>
 <view id="org.eclipse.jdt.ui.JavadocView" ratio="0.3"/>
 <view id="org.eclipse.jdt.ui.SourceView" ratio="0.3"/>
-<view id="com.google.gwt.eclipse.DevModeView" ratio="0.19590957"/>
+<view id="com.google.gwt.eclipse.DevModeView" ratio="0.1957672"/>
 <view id="org.eclipse.ui.console.ConsoleView" ratio="0.44973546"/>
 </fastViews>
 </fastViewBar>
@@ -293,7 +302,6 @@
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/EventView.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/CreateEventView.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/places/EventPlace.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/MeetUpScheduler.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/GlobalView.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectService.java"/>
@@ -306,44 +314,29 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/MeetUpScheduler.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/server/DataObjectServiceImpl.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectServiceAsync.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/test/com/cs310/ubc/meetupscheduler/server/DataParseTest.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/server/ParkDataParser.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/places/EventPlace.java"/>
 </editors>
-<item historyLabel="EventView.java" index="0">
-<position info="not_deleted" x="6408" y="0"/>
-</item>
-<item historyLabel="EventView.java" index="0">
+<item historyLabel="MeetUpScheduler.java" index="2">
 <position/>
 </item>
-<item historyLabel="EventView.java" index="0">
-<position/>
-</item>
-<item historyLabel="CreateEventView.java" index="1">
-<position info="not_deleted" x="8461" y="0"/>
-</item>
-<item historyLabel="EventPlace.java" index="2">
-<position info="not_deleted" x="890" y="0"/>
-</item>
-<item historyLabel="EventView.java" index="0">
-<position info="not_deleted" x="5855" y="0"/>
-</item>
-<item historyLabel="MeetUpScheduler.java" index="3">
-<position/>
-</item>
-<item historyLabel="MeetUpScheduler.java" index="3">
+<item historyLabel="MeetUpScheduler.java" index="2">
 <position info="not_deleted" x="1064" y="0"/>
 </item>
-<item historyLabel="MeetUpScheduler.java" index="3">
+<item historyLabel="MeetUpScheduler.java" index="2">
 <position/>
 </item>
-<item historyLabel="GlobalView.java" index="4">
+<item historyLabel="GlobalView.java" index="3">
 <position info="not_deleted" x="8686" y="0"/>
 </item>
 <item historyLabel="EventView.java" index="0">
 <position info="not_deleted" x="4795" y="0"/>
 </item>
-<item historyLabel="GlobalView.java" index="4">
+<item historyLabel="GlobalView.java" index="3">
 <position info="not_deleted" x="8686" y="0"/>
 </item>
-<item historyLabel="MeetUpScheduler.java" index="3">
+<item historyLabel="MeetUpScheduler.java" index="2">
 <position info="not_deleted" x="3716" y="0"/>
 </item>
 <item historyLabel="EventView.java" index="0">
@@ -352,52 +345,52 @@
 <item historyLabel="CreateEventView.java" index="1">
 <position info="not_deleted" x="7619" y="0"/>
 </item>
-<item historyLabel="MeetUpScheduler.java" index="3">
+<item historyLabel="MeetUpScheduler.java" index="2">
 <position info="not_deleted" x="5430" y="0"/>
 </item>
 <item historyLabel="EventView.java" index="0">
 <position info="not_deleted" x="6430" y="108"/>
 </item>
-<item historyLabel="MeetUpScheduler.java" index="3">
+<item historyLabel="MeetUpScheduler.java" index="2">
 <position info="not_deleted" x="5430" y="0"/>
 </item>
 <item historyLabel="CreateEventView.java" index="1">
 <position info="not_deleted" x="7619" y="0"/>
 </item>
-<item historyLabel="DataObjectService.java" index="5">
+<item historyLabel="DataObjectService.java" index="4">
 <position info="not_deleted" x="690" y="0"/>
 </item>
-<item historyLabel="DataObjectServiceAsync.java" index="6">
+<item historyLabel="DataObjectServiceAsync.java" index="5">
 <position info="not_deleted" x="1114" y="0"/>
 </item>
-<item historyLabel="DataObjectServiceImpl.java" index="7">
+<item historyLabel="DataObjectServiceImpl.java" index="6">
 <position info="not_deleted" x="7675" y="0"/>
 </item>
-<item historyLabel="DataObjectServiceTest.java" index="8">
+<item historyLabel="DataObjectServiceTest.java" index="7">
 <position info="not_deleted" x="1114" y="0"/>
 </item>
-<item historyLabel="DataObjectServiceImpl.java" index="7">
+<item historyLabel="DataObjectServiceImpl.java" index="6">
 <position info="not_deleted" x="7675" y="0"/>
 </item>
-<item historyLabel="DataObjectServiceAsync.java" index="6">
+<item historyLabel="DataObjectServiceAsync.java" index="5">
 <position info="not_deleted" x="1114" y="0"/>
 </item>
-<item historyLabel="DataObjectService.java" index="5">
+<item historyLabel="DataObjectService.java" index="4">
 <position info="not_deleted" x="690" y="0"/>
 </item>
 <item historyLabel="CreateEventView.java" index="1">
 <position info="not_deleted" x="0" y="8388"/>
 </item>
-<item historyLabel="EventPlace.java" index="9">
+<item historyLabel="EventPlace.java" index="8">
 <position info="not_deleted" x="890" y="0"/>
 </item>
-<item historyLabel="GlobalView.java" index="10">
+<item historyLabel="GlobalView.java" index="9">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="GlobalView.java" index="10">
+<item historyLabel="GlobalView.java" index="9">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="6878" y="87"/>
 </item>
 <item historyLabel="CreateEventView.java" index="1">
@@ -406,56 +399,74 @@
 <item historyLabel="CreateEventView.java" index="1">
 <position info="not_deleted" x="6331" y="0"/>
 </item>
-<item historyLabel="MeetUpScheduler.java" index="12">
+<item historyLabel="MeetUpScheduler.java" index="11">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="MeetUpScheduler.java" index="12">
+<item historyLabel="MeetUpScheduler.java" index="11">
 <position info="not_deleted" x="7059" y="0"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="6878" y="87"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="4059" y="0"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="4393" y="0"/>
 </item>
-<item historyLabel="MeetUpScheduler.java" index="12">
+<item historyLabel="MeetUpScheduler.java" index="11">
 <position info="not_deleted" x="5534" y="0"/>
 </item>
-<item historyLabel="GlobalView.java" index="10">
+<item historyLabel="GlobalView.java" index="9">
 <position info="not_deleted" x="440" y="0"/>
 </item>
 <item historyLabel="CreateEventView.java" index="1">
 <position info="not_deleted" x="5377" y="0"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="8956" y="0"/>
 </item>
-<item historyLabel="DataObjectServiceImpl.java" index="13">
+<item historyLabel="DataObjectServiceImpl.java" index="12">
 <position info="not_deleted" x="6455" y="0"/>
 </item>
-<item historyLabel="EventPlace.java" index="9">
+<item historyLabel="EventPlace.java" index="8">
 <position info="not_deleted" x="445" y="0"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="8956" y="0"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="6036" y="0"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="10349" y="14"/>
 </item>
-<item historyLabel="EventView.java" index="11">
+<item historyLabel="EventView.java" index="10">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="DataObjectServiceAsync.java" index="14">
+<item historyLabel="DataObjectServiceAsync.java" index="13">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item active="true" historyLabel="DataObjectServiceAsync.java" index="14">
+<item historyLabel="DataObjectServiceAsync.java" index="13">
 <position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="DataParseTest.java" index="14">
+<position info="not_deleted" x="0" y="9966"/>
+</item>
+<item historyLabel="DataParseTest.java" index="14">
+<position info="not_deleted" x="1904" y="0"/>
+</item>
+<item historyLabel="DataParseTest.java" index="14">
+<position info="not_deleted" x="1823" y="0"/>
+</item>
+<item historyLabel="ParkDataParser.java" index="15">
+<position info="not_deleted" x="13528" y="0"/>
+</item>
+<item historyLabel="DataParseTest.java" index="14">
+<position info="not_deleted" x="1823" y="0"/>
+</item>
+<item active="true" historyLabel="EventPlace.java" index="16">
+<position info="not_deleted" x="445" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -482,6 +493,12 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="ParkDataParser.java" tooltip="MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/server/ParkDataParser.java">
+<persistable path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/server/ParkDataParser.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="DataParseTest.java" tooltip="MeetUpScheduler/test/com/cs310/ubc/meetupscheduler/server/DataParseTest.java">
+<persistable path="/MeetUpScheduler/test/com/cs310/ubc/meetupscheduler/server/DataParseTest.java"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.google.gwt.eclipse.core.editors.gwtJavaEditor" name="DataObjectServiceAsync.java" tooltip="MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectServiceAsync.java">
 <persistable path="/MeetUpScheduler/src/com/cs310/ubc/meetupscheduler/client/DataObjectServiceAsync.java"/>
 </file>
