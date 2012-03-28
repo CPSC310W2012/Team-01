@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
+
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -167,7 +167,8 @@ public class GlobalView extends Composite implements View{
 				if(userEmail.equals(events.get(i).get("creator_email")) || events.get(i).get("attending_emails").contains(userEmail)){
 					int row = myEventsTable.getRowCount();
 
-					myEventsTable.setText(row, 0, events.get(i).get("name"));
+					myEventsTable.setWidget(row, 0, new HTML("<a href=/?id=" + events.get(i).get("id") + "#EventPlace:Event" + ">" +
+							events.get(i).get("name") + "</a>"));
 					myEventsTable.setText(row, 1, events.get(i).get("category"));
 					myEventsTable.setText(row, 2, events.get(i).get("park_name"));
 				}
@@ -189,7 +190,8 @@ public class GlobalView extends Composite implements View{
 			for(int i=0; i<tableLength; i++){
 				int row = eventsTable.getRowCount();
 
-				eventsTable.setText(row, 0, events.get(i).get("name"));
+				eventsTable.setWidget(row, 0, new HTML("<a href=/?id=" + events.get(i).get("id") + "#EventPlace:Event" + ">" +
+						events.get(i).get("name") + "</a>"));
 				eventsTable.setText(row, 1, events.get(i).get("category"));
 				eventsTable.setText(row, 2, events.get(i).get("park_name"));
 			}
@@ -306,7 +308,6 @@ public class GlobalView extends Composite implements View{
 	 * Creates a the info window content for parks receiving event markers
 	 * 
 	 * @param parkEvents the park events receiving a marker
-	 * 
 	 * @return info window content wrapped in a vertical panel
 	 */
 	public VerticalPanel createInfoWindowContent(ArrayList<HashMap<String, String>> parkEvents){

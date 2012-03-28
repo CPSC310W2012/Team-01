@@ -64,6 +64,7 @@ public class EventView extends Composite implements View{
 	private Integer attendeeCount = 0;
 	private Label attCountLabel = new Label();
 	private ArrayList<HashMap<String, String>> allEvents;
+
 	private SimplePanel viewPanel = new SimplePanel();
 	private ArrayList<HashMap<String, String>> allParks;
 	Element nameSpan = DOM.createSpan();
@@ -273,6 +274,7 @@ public class EventView extends Composite implements View{
 	 * Loads all existing Events into a list.
 	 */
 	private void loadData(){
+		System.out.println(com.google.gwt.user.client.Window.Location.getParameter("id"));
 		allEvents = MeetUpScheduler.getEvents();
 		allParks = MeetUpScheduler.getParks();
 	}
