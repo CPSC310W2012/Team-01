@@ -113,7 +113,7 @@ public class GlobalView extends Composite implements View{
 		parkTable.add(map);
 
 		//Recent Events
-		eventsTable.setCellPadding(4);
+		eventsTable.setCellPadding(1);
 		eventsTable.setCellSpacing(3);
 		eventsTable.setText(1, 0, "Event Title");
 		eventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
@@ -123,7 +123,7 @@ public class GlobalView extends Composite implements View{
 		eventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
 
 		//My Events
-		myEventsTable.setCellPadding(4);
+		myEventsTable.setCellPadding(1);
 		myEventsTable.setCellSpacing(3);
 
 		myEventsTable.setText(1, 0, "My Events");
