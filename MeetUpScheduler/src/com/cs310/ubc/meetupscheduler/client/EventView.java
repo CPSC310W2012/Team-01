@@ -48,7 +48,6 @@ public class EventView extends Composite implements View{
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private Label eventName = new Label();
 	private Button joinButton = new Button();
-	private TextBox joinName = new TextBox();
 	private Button loadButton = new Button();
 	private VerticalPanel parkPanel = new VerticalPanel();
 	private ListBox attendeesBox = new ListBox();
@@ -221,6 +220,11 @@ public class EventView extends Composite implements View{
 						eventName.setText(event.get("name")); 
 						eventTime.setText("Time: " + event.get("date") + " from " + event.get("start_time") + " to " + event.get("end_time"));
 						eventLoc.setText("Location: " + event.get("park_name"));
+						if (event.get("notes") != null) {
+							eventNotes.setText("Notes: \n" + event.get("notes"));
+							eventNotes.setWordWrap(true);
+							eventNotes.setWidth("250px");
+						}
 
 						eventMap.checkResizeAndCenter();
 						eventCategory.setText("Category: " + event.get("category"));
@@ -283,7 +287,6 @@ public class EventView extends Composite implements View{
 		infoPanel.add(eventTime);
 		infoPanel.add(attendeePanel);
 		infoPanel.add(eventNotes);
-		eventNotes.setText("This is the information for the event. Needs to be persistent.");
 	}
 
 	/**

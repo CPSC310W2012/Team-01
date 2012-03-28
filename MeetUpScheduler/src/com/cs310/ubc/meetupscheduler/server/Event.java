@@ -89,6 +89,11 @@ public class Event extends DataObject {
 			public String toString() {
 				return "end_time";
 			}
+		},
+		NOTES {
+			public String toString() {
+				return "notes";
+			}
 		}
 	}
 	
@@ -117,11 +122,13 @@ public class Event extends DataObject {
 	protected String end_time;
 	//TODO: Easy way to associate emails and names?
 	@Persistent
-	public ArrayList<String> attending_emails;
+	protected ArrayList<String> attending_emails;
 	@Persistent
-	public ArrayList<String> attending_names;
+	protected ArrayList<String> attending_names;
 	@Persistent
 	protected Date creation_date;
+	@Persistent
+	protected String notes;
 	
 	public static String getDefaultOrdering() {
 		return "creation_date descending";

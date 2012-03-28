@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -42,6 +43,7 @@ public class CreateEventView extends Composite implements View {
 	private String date;
 	private String startTime;
 	private String endTime;
+	private String notes;
 
 	//Panel to hold Create Event Components
 	private VerticalPanel rightPanel = new VerticalPanel();
@@ -50,6 +52,7 @@ public class CreateEventView extends Composite implements View {
 	//Name boxes	
 	private TextBox eventNameBox = new TextBox();
 	private Label eventNameLabel = new Label("Event Name");
+	private Label notesLabel = new Label("Notes");
 	//Date Selector for Event
 	private DatePicker eventDatePicker = new DatePicker();
 	private Label eventDatePickerLabel = new Label();
@@ -62,6 +65,8 @@ public class CreateEventView extends Composite implements View {
 	private ListBox parksListBox = new ListBox();
 	private SimplePanel viewPanel = new SimplePanel();
 	private Element nameSpan = DOM.createSpan();
+	//Notes field
+	private TextArea notesField = new TextArea();
 
 	//TODO Have to figure this out
 	public CreateEventView() {
@@ -104,7 +109,6 @@ public class CreateEventView extends Composite implements View {
 
 		Button submitButton = new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-
 				//TODO: Implement verifier call, submit call, and route to event view tab
 				setEventFields();				
 
@@ -112,17 +116,23 @@ public class CreateEventView extends Composite implements View {
 					createEvent();					
 				}
 				else {
-					Window.alert("Please ensure all event fields are filled out");
+					Window.alert("Please ensure all event fields are filled out and that the notes field is under 500 characters.");
 				}
 			}
 		});
 
+		//Setup notes field
+		notesField.getElement().getStyle().setProperty("resize", "none");
+		notesField.setWidth("250px");
+		notesField.setHeight("100px");
 		//Add items to panel
 		//TODO: fix appearance through sub-panels
 		leftPanel.add(eventNameLabel);
 		leftPanel.add(eventNameBox);
 		leftPanel.add(parksListBox);
 		leftPanel.add(categoriesListBox);
+		leftPanel.add(notesLabel);
+		leftPanel.add(notesField);
 		leftPanel.add(submitButton);
 
 		rightPanel.add(eventDatePickerLabel);
@@ -180,12 +190,13 @@ public class CreateEventView extends Composite implements View {
 		eventType = categoriesListBox.getValue(categoriesListBox.getSelectedIndex());
 		date = DateTimeFormat.getMediumDateFormat().format(eventDatePicker.getValue());
 		startTime = startTimeList.getValue(startTimeList.getSelectedIndex());
-		endTime = endTimeList.getValue(endTimeList.getSelectedIndex());		
+		endTime = endTimeList.getValue(endTimeList.getSelectedIndex());
+		notes = notesField.getText();
 	}
 
 	private boolean verifyFields() {
 		//TODO: specify conditions for field verification, add field specific errors
-		if (eventName == null || userName == null || park_name == null || date == null || startTime == null || endTime == null) return false;
+		if (eventName == null || userName == null || park_name == null || date == null || startTime == null || endTime == null || notes.length() > 500) return false;
 		return true;
 	}
 
@@ -204,6 +215,7 @@ public class CreateEventView extends Composite implements View {
 		event.put("num_attending", "1");
 		event.put("attending_names", userName);
 		event.put("attending_emails", userEmail);
+		event.put("notes", notes);
 
 		//TODO: move to static data object? Make call to reload method to re get events and load views
 		objectService.add("Event", event, new AsyncCallback<HashMap<String, String>>() {
