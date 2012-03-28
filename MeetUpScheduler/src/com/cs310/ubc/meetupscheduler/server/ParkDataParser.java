@@ -33,15 +33,6 @@ public class ParkDataParser {
 	private Document doc;
 	private ArrayList<DataObject> createdObjects;
 	private ServletOutputStream out;
-	
-	private Map<String, String> parkDataMap;
-	private Map<String, String> facilityDataMap;
-	private Map<String, String> washroomDataMap;
-	private Map<String, String> advisoryDataMap;
-	
-	//Data for testing
-	private List<Map> testData = new ArrayList<Map>();
-	
 
 	/**
 	 * Sets the output stream to display results
@@ -57,15 +48,6 @@ public class ParkDataParser {
 			throw new ServerException(e.getMessage(), e.getStackTrace());
 		}
 	}
-	
-	/**
-	 * this method is used only to access the data created by this class for testing purposes
-	 * @return ArrayList of data maps created during parsing
-	 */
-	public List<Map> getTestData() {
-		return testData;
-	}
-	
 
 	/**
 	 * Parses an XML file containing parks data and saves objects contained in
@@ -142,7 +124,7 @@ public class ParkDataParser {
 	 * @throws IOException
 	 */
 	private void createPark(Element element) throws ServerException {
-		parkDataMap = new HashMap<String, String>();
+		Map<String, String> parkDataMap = new HashMap<String, String>();
 		try {
 			String ID = element.getAttribute("ID");
 			if (ID == null || ID.isEmpty()) {
@@ -165,7 +147,11 @@ public class ParkDataParser {
 					} else if (elementName.equals("Name")) {
 						parkDataMap.put(ParkField.NAME.toString(), parkElement.getTextContent());
 					}
-
+					/**
+					 * Do nothing? else if (elementName.equals("Official")) {
+					 * parkDataMap.put("Official", new
+					 * Integer(parkElement.getTextContent())); }
+					 **/
 					else if (elementName.equals("StreetNumber")) {
 						parkDataMap.put(ParkField.STRTNUM.toString(), parkElement.getTextContent());
 					
@@ -205,7 +191,6 @@ public class ParkDataParser {
 						parkDataMap.put(ParkField.HASFAC.toString(), "Y");
 					
 					} else if (elementName.equals("Facilities") && !parkElement.hasChildNodes()) {
-						
 						parkDataMap.put(ParkField.HASFAC.toString(), "N");
 					
 					} else if (elementName.equals("SpecialFeature")) {
@@ -224,8 +209,8 @@ public class ParkDataParser {
 				}
 				parkDataMap.put(ParkField.SPECIALFEAT.toString(), specialFeatures);
 			}
+
 			createdObjects.add(new Park(parkDataMap));
-			testData.add(parkDataMap);
 			out.println("Park ID: " + ID + " created/updated");
 		} catch (Exception e) {
 			throw new ServerException(e.getMessage(), e.getStackTrace());
@@ -245,7 +230,7 @@ public class ParkDataParser {
 	 */
 	private void createWashroom(Element washroomElement, String pID)
 			throws ServerException {
-		washroomDataMap = new HashMap<String, String>();
+		Map<String, String> washroomDataMap = new HashMap<String, String>();
 		washroomDataMap.put(WashroomField.PID.toString(), pID);
 
 		NodeList children = washroomElement.getElementsByTagName("*");
@@ -272,7 +257,6 @@ public class ParkDataParser {
 			}
 			try {
 				createdObjects.add(new Washroom(washroomDataMap));
-				testData.add(washroomDataMap);
 				out.println("Washroom with PID: " + pID + " created");
 			} catch (Exception e) {
 				throw new ServerException(e.getMessage(), e.getStackTrace());
@@ -291,9 +275,9 @@ public class ParkDataParser {
 	 * @throws ServerException
 	 */
 	private void createAdvisory(Element advisoryElement, String iD) throws ServerException {
-		advisoryDataMap = new HashMap<String, String>();
+		Map<String, String> advisoryDataMap = new HashMap<String, String>();
 		advisoryDataMap.put(AdvisoryField.PID.toString(), iD);
-		
+
 		NodeList children = advisoryElement.getElementsByTagName("*");
 		try {
 		if (children != null) {
@@ -317,7 +301,6 @@ public class ParkDataParser {
 				}
 			}
 				createdObjects.add(new Advisory(advisoryDataMap));
-			 	testData.add(advisoryDataMap);
 				out.println("Advisory with PID: " + iD + " created");
 		}
 			} catch (Exception e) {
@@ -338,7 +321,7 @@ public class ParkDataParser {
 	 */
 	private void createFacility(Element facilityElement, String iD)
 			throws ServerException {
-		facilityDataMap = new HashMap<String, String>();
+		Map<String, String> facilityDataMap = new HashMap<String, String>();
 		facilityDataMap.put(FacilityField.PID.toString(), iD);
 
 		NodeList children = facilityElement.getElementsByTagName("*");
@@ -363,7 +346,6 @@ public class ParkDataParser {
 				}
 			}
 				createdObjects.add(new Facility(facilityDataMap));
-				testData.add(facilityDataMap);
 				out.println("Facility with PID: " + iD + " created");
 		}
 			} catch (Exception e) {
@@ -395,5 +377,4 @@ public class ParkDataParser {
 
 		return delClasses;
 	}
-	
 }

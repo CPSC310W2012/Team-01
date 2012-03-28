@@ -23,7 +23,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class DataObjectServiceTest extends GWTTestCase {
 	private DataObjectServiceAsync dataObjectService;
 	private HashMap<String, String> parkRow;
-	
+
 	@Before
 	public void gwtSetUp() {
 		dataObjectService = GWT.create(DataObjectService.class);
@@ -43,7 +43,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 		parkRow.put("special_features", "Y");
 		parkRow.put("washrooms", "N");
 	}
-	
+
 	@Test
 	public void testAddPark() {
 		Timer timer = new Timer() {
@@ -53,7 +53,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 						System.out.println(caught.getMessage());
 						finishTest();
 					}
-					
+
 					public void onSuccess(HashMap<String, String> results) {
 						assertEquals(results, parkRow);
 						finishTest();
@@ -65,7 +65,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 		delayTestFinish(5000);
 		timer.schedule(100);
 	}
-	
+
 	@Test
 	public void testQueryAllParks() {
 		Timer timer = new Timer() {
@@ -75,7 +75,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 						System.out.println(caught.getMessage());
 						finishTest();
 					}
-					
+
 					public void onSuccess(ArrayList<HashMap<String, String>> result) {
 						assertEquals(result, parkRow);
 						finishTest();
@@ -87,7 +87,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 		delayTestFinish(5000);
 		timer.schedule(100);
 	}
-	
+
 	@Test
 	public void testQueryOnePark() {
 		Timer timer = new Timer() {
@@ -97,7 +97,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 						System.out.println(caught.getMessage());
 						finishTest();
 					}
-					
+
 					public void onSuccess(ArrayList<HashMap<String, String>> result) {
 						assertEquals(result, parkRow);
 						finishTest();
@@ -109,7 +109,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 		delayTestFinish(5000);
 		timer.schedule(100);
 	}
-	
+
 	@Test
 	public void testUpdatePark() {
 		Timer timer = new Timer() {
@@ -119,7 +119,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 						System.out.println(caught.getMessage());
 						finishTest();
 					}
-					
+
 					public void onSuccess(ArrayList<HashMap<String, String>> result) {
 						assertEquals(result.get(0).get("name"), "Party Park");
 						finishTest();
@@ -143,7 +143,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 							System.out.println(caught.getMessage());
 							finishTest();
 						}
-						
+
 						public void onSuccess(Void ignore) {
 							finishTest();
 						}
@@ -154,7 +154,7 @@ public class DataObjectServiceTest extends GWTTestCase {
 			delayTestFinish(5000);
 			timer.schedule(100);
 	}
-	
+
 	@Override
 	public String getModuleName() {
 		return "com.cs310.ubc.meetupscheduler.MeetUpScheduler";

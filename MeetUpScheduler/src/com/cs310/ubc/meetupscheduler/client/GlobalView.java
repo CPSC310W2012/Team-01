@@ -6,9 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
-import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -27,10 +26,12 @@ import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.geom.Size;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
 import com.google.gwt.maps.client.control.MapTypeControl;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
+
 
 /**
  * view for the parks and events summary page
@@ -44,9 +45,10 @@ public class GlobalView extends Composite implements View{
 	private static final int MAP_WIDTH = 700;
 	private static final int EVENT_TABLE_LENGTH = 15;
 
-	private ArrayList<HashMap<String, String>> allEvents;
-	private ArrayList<HashMap<String, String>> allParks;
-	private ArrayList<HashMap<String, String>> allAdvisories;
+	private static ArrayList<HashMap<String, String>> allEvents;
+	private static ArrayList<HashMap<String, String>> allParks;
+	private static ArrayList<HashMap<String, String>> allAdvisories;
+	private final LoginInfo currentUser = SharedData.getLoginInfo();
 
 	private HorizontalPanel rootPanel = new HorizontalPanel();
 	private VerticalPanel parkTable = new VerticalPanel();
@@ -55,7 +57,7 @@ public class GlobalView extends Composite implements View{
 	private FlexTable myEventsTable = new FlexTable();
 	private TabPanel eventTabPanel = new TabPanel();
 	private ListBox parkBox = new ListBox();
-	SimplePanel viewPanel = new SimplePanel();
+	Widget viewPanel = new SimplePanel();
 	Element nameSpan = DOM.createSpan();
 
 	public GlobalView() {
@@ -86,9 +88,10 @@ public class GlobalView extends Composite implements View{
 	 * in the rootPanel field
 	 */
 	public void buildUi() {
-		//TODO: pull this out for all classes to use
+
 		//Map
 		LatLng vancouver = LatLng.newInstance(49.258480, -123.094574);
+
 		final MapWidget map = new MapWidget(vancouver, 11);
 		map.setPixelSize(MAP_WIDTH, MAP_HEIGHT);
 		map.setScrollWheelZoomEnabled(true);
@@ -98,22 +101,7 @@ public class GlobalView extends Composite implements View{
 		//Zoom to park button
 		Button parkButton = new Button("Zoom to Park", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if(parkBox.getItemCount()>0 && parkBox != null && allParks != null){
-					int boxIndex = parkBox.getSelectedIndex();
-					String selectedPark = parkBox.getValue(boxIndex);
-
-					for(int i=0; i<allParks.size(); i++){
-						if(allParks.get(i).get("name").equals(selectedPark)){
-							String latLong = allParks.get(i).get("google_map_dest");
-
-							int index = latLong.indexOf(",");
-							double lat = Double.parseDouble(latLong.substring(0, index));
-							double lon = Double.parseDouble(latLong.substring(index+1));
-
-							map.setCenter(LatLng.newInstance(lat, lon), 17);
-						}
-					}
-				}
+				zoomToPark(map);
 			}
 		});
 
@@ -125,8 +113,8 @@ public class GlobalView extends Composite implements View{
 		parkTable.add(map);
 
 		//Recent Events
-		eventsTable.setCellPadding(2);
-		eventsTable.setCellSpacing(0);
+		eventsTable.setCellPadding(4);
+		eventsTable.setCellSpacing(3);
 		eventsTable.setText(1, 0, "Event Title");
 		eventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
 		eventsTable.setText(1, 1, "Event Type");
@@ -135,8 +123,8 @@ public class GlobalView extends Composite implements View{
 		eventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
 
 		//My Events
-		myEventsTable.setCellPadding(2);
-		myEventsTable.setCellSpacing(0);
+		myEventsTable.setCellPadding(4);
+		myEventsTable.setCellSpacing(3);
 
 		myEventsTable.setText(1, 0, "My Events");
 		myEventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
@@ -144,10 +132,6 @@ public class GlobalView extends Composite implements View{
 		myEventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
 		myEventsTable.setText(1, 2, "Park Name");
 		myEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
-
-		//Advisories
-		advisoryTable.setCellPadding(2);
-		advisoryTable.setCellSpacing(0);
 
 		//Add Tables to tabPanel
 		eventTabPanel.getTabBar().getElement().getStyle();
@@ -158,6 +142,7 @@ public class GlobalView extends Composite implements View{
 
 		//Add Events in tables and on map
 		addRecentEvents(allEvents);
+		addMyEvents(allEvents);
 		addParkAdvisories(allAdvisories);
 		addEventMarkers(allEvents, allParks, map);
 
@@ -165,18 +150,27 @@ public class GlobalView extends Composite implements View{
 		rootPanel.add(parkTable);
 		rootPanel.add(eventTabPanel);
 	}
-	
+
+	/**
+	 * Adds events to the my events table. Only events belonging to
+	 * the current logged in user will be added
+	 * 
+	 * @param events The events to be added to the "My Events" table
+	 */
 	private void addMyEvents(ArrayList<HashMap<String, String>> events){
-		if(events != null && events.size() >0){
-			// If there are less events than our max table length, use the number of events for the length
-			int tableLength = (events.size() < EVENT_TABLE_LENGTH) ? events.size(): EVENT_TABLE_LENGTH;
 
-			for(int i=0; i<tableLength; i++){
-				int row = eventsTable.getRowCount();
+		String userEmail = currentUser.getEmailAddress();
 
-				eventsTable.setText(row, 0, events.get(i).get("name"));
-				eventsTable.setText(row, 1, events.get(i).get("category"));
-				eventsTable.setText(row, 2, events.get(i).get("park_name"));
+		if(events != null && events.size()>0){
+			for(int i=0; i<events.size(); i++){
+
+				if(userEmail.equals(events.get(i).get("creator_email")) || events.get(i).get("attending_emails").contains(userEmail)){
+					int row = myEventsTable.getRowCount();
+
+					myEventsTable.setText(row, 0, events.get(i).get("name"));
+					myEventsTable.setText(row, 1, events.get(i).get("category"));
+					myEventsTable.setText(row, 2, events.get(i).get("park_name"));
+				}
 			}
 		}
 	}
@@ -237,55 +231,123 @@ public class GlobalView extends Composite implements View{
 			}
 		}
 	}
-
-	private void addEventMarkers(ArrayList<HashMap<String, String>> events, ArrayList<HashMap<String, String>> parks, final MapWidget map){
+	/**
+	 * Adds events markers that have info popups containing event titles and category
+	 * 
+	 * @param events All events to consider for markers
+	 * @param parks All parks these events may take place in
+	 * @param map	Map to display markers on
+	 */
+	private void addEventMarkers(ArrayList<HashMap<String, String>> events, ArrayList<HashMap<String, String>> parks, MapWidget map){
 
 		if(map != null && events != null && events.size() > 0 && parks != null && parks.size() > 0){
+			String userEmail = currentUser.getEmailAddress();
 
 			for(int i=0; i<parks.size(); i++){
-				final String parkName = parks.get(i).get("name");
-				final VerticalPanel vertPan = new VerticalPanel();
-				final HorizontalPanel horPan = new HorizontalPanel();
-				
+				ArrayList<HashMap<String, String>> parkEvents = new ArrayList<HashMap<String, String>>();
+				boolean markerFlag = false;
+				boolean userFlag = false;
+
+				String latLong = parks.get(i).get("google_map_dest");
+				int parseIndex = latLong.indexOf(",");
+				double lat = Double.parseDouble(latLong.substring(0, parseIndex));
+				double lon = Double.parseDouble(latLong.substring(parseIndex+1));
+
 				for(int j=0; j<events.size(); j++){
 					if(parks.get(i).get("name").equals(events.get(j).get("park_name"))){
+						parkEvents.add(events.get(j));
+						markerFlag = true;
+						if(userEmail.equals(events.get(j).get("creator_email")) || events.get(j).get("attending_emails").contains(userEmail)){
+							System.out.println(events.get(j).get("creator_email") + " == " + events.get(j).get("attending_emails"));
+							userFlag = true;	
+						}
 						
-						String latLong = parks.get(i).get("google_map_dest");
-						int index = latLong.indexOf(",");
-						double lat = Double.parseDouble(latLong.substring(0, index));
-						double lon = Double.parseDouble(latLong.substring(index+1));
-
-						//this is to pass event info into the info window creation
-						final Marker eventMarker = new Marker(LatLng.newInstance(lat, lon));
-						final Integer id = new Integer(events.get(j).get("id"));
-
-						Button eventButton = new Button(events.get(j).get("name"));
-						eventButton.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-									EventPlace eventPlace = new EventPlace("Event?id="+ id.toString(), id);
-									SharedData.getPlaceController().goTo(eventPlace);
-							}
-						});
-						
-						horPan.add(eventButton);
-						
-						eventMarker.addMarkerClickHandler(new MarkerClickHandler() {
-							public void onClick(MarkerClickEvent event) {
-
-								InfoWindow info = map.getInfoWindow();
-								vertPan.add(new HTML(parkName));
-								vertPan.add(horPan);
-								
-								InfoWindowContent content = new InfoWindowContent(
-										vertPan
-										
-								);
-								info.open(eventMarker, content);
-							}
-						});
-						map.addOverlay(eventMarker);
 					}
+				}
+				/*This part is a bit fragile due to some gwt issues. 
+				 * Please read the gwt issue link or talk to David S for more info if
+				 * a change is needed.
+				 * (http://code.google.com/p/gwt-google-apis/issues/detail?id=156)
+				 */
+				if(markerFlag){
+					Marker marker = new Marker(LatLng.newInstance(lat, lon));
+					addMarkerClickHandler(marker, parkEvents, map);
+					if(userFlag){
+						marker.getIcon().setIconSize(Size.newInstance(24, 41));
+						marker.getIcon().setShadowSize(Size.newInstance(44, 41));
+					}
+					map.addOverlay(marker);
+					marker.getIcon().setIconSize(Size.newInstance(20, 34));
+					marker.getIcon().setShadowSize(Size.newInstance(37, 34));
+				}
+			}
+		}  
+	}
+
+	/**
+	 * Creates an event info window for the parks that have scheduled events
+	 * 
+	 * @param marker A park marker with a destination set
+	 * @param parkEvents A list of events that take place at the marker location (park)
+	 */
+	private void addMarkerClickHandler(final Marker marker, final ArrayList<HashMap<String, String>> parkEvents, final MapWidget map){
+
+		marker.addMarkerClickHandler(new MarkerClickHandler(){
+			@Override
+			public void onClick(MarkerClickEvent event) {
+				InfoWindow info = map.getInfoWindow();
+				InfoWindowContent content = new InfoWindowContent(createInfoWindowContent(parkEvents));
+				info.open(marker, content);
+			}
+		});
+	}
+
+	/**
+	 * Creates a the info window content for parks receiving event markers
+	 * 
+	 * @param parkEvents the park events receiving a marker
+	 * 
+	 * @return info window content wrapped in a vertical panel
+	 */
+	public VerticalPanel createInfoWindowContent(ArrayList<HashMap<String, String>> parkEvents){
+
+		FlexTable parkEventsTable = new FlexTable();
+		VerticalPanel infoPanel = new VerticalPanel();
+
+		for(int i=0; i<parkEvents.size(); i++){
+			int row = parkEventsTable.getRowCount();
+
+			HTML eventHTML = new HTML("<a href=/?id=" + parkEvents.get(i).get("id") + "#EventPlace:Event" + ">" +
+					parkEvents.get(i).get("name") + "</a>" + " - " + parkEvents.get(i).get("category") + " - " + parkEvents.get(i).get("date"));
+
+			parkEventsTable.setWidget(row, 0, eventHTML);
+		}
+
+		infoPanel.add(new HTML("<font color=\"#4C674C\"><big><b> Events at " + parkEvents.get(0).get("park_name") + ": </b></big></font><br/>"));
+		infoPanel.add(parkEventsTable);
+
+		return infoPanel;
+	}
+
+	/**
+	 * zoom to park selected in the parkBox
+	 * 
+	 * @param map map that will zoom to the park location
+	 */
+	private void zoomToPark(final MapWidget map) {
+		if(parkBox.getItemCount()>0 && parkBox != null && allParks != null){
+			int boxIndex = parkBox.getSelectedIndex();
+			String selectedPark = parkBox.getValue(boxIndex);
+
+			for(int i=0; i<allParks.size(); i++){
+				if(allParks.get(i).get("name").equals(selectedPark)){
+					String latLong = allParks.get(i).get("google_map_dest");
+
+					int index = latLong.indexOf(",");
+					double lat = Double.parseDouble(latLong.substring(0, index));
+					double lon = Double.parseDouble(latLong.substring(index+1));
+
+					map.setCenter(LatLng.newInstance(lat, lon), 17);
 				}
 			}
 		}
@@ -294,6 +356,5 @@ public class GlobalView extends Composite implements View{
 	@Override
 	public void setName(String name) {
 		nameSpan.setInnerText("Global View, " + name);
-
 	}
 }
