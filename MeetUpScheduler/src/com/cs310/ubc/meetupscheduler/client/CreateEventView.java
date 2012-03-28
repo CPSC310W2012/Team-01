@@ -244,16 +244,8 @@ public class CreateEventView extends Composite implements View {
 	}
 
 	private void populateCategories(ListBox categoriesList) {
-		categoriesList.addItem("Sack-race");
-		categoriesList.addItem("Larping");
-		categoriesList.addItem("Ultimate");
-		categoriesList.addItem("Spelling-B");
-		categoriesList.addItem("Judo");
-		categoriesList.addItem("Arctic Char Fishing");
-		categoriesList.addItem("Treasure Hunt");
-		categoriesList.addItem("Night Soccer");
-		categoriesList.addItem("Dog Show");
-		categoriesList.addItem("Chili Cook-off");
+		for (String cat : MeetUpScheduler.getCategories())
+			categoriesList.addItem(cat);
 	}
 
 	@Override
