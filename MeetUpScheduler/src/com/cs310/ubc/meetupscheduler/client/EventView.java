@@ -2,6 +2,7 @@ package com.cs310.ubc.meetupscheduler.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.GWT;
@@ -45,10 +46,13 @@ public class EventView extends Composite implements View{
 
 
 	private TextBox loadText = new TextBox();
-	private HorizontalPanel rootPanel = new HorizontalPanel();
-	private Label eventName = new Label();
+	private VerticalPanel rootPanel = new VerticalPanel();
+	private HorizontalPanel topPanel = new HorizontalPanel();
+	private VerticalPanel bottomPanel = new VerticalPanel();
+	private HorizontalPanel queryPanel = new HorizontalPanel();
+	private VerticalPanel resultsPanel = new VerticalPanel();
+	private HTML eventName = new HTML();
 	private Button joinButton = new Button();
-	private TextBox joinName = new TextBox();
 	private Button loadButton = new Button();
 	private VerticalPanel parkPanel = new VerticalPanel();
 	private ListBox attendeesBox = new ListBox();
@@ -65,6 +69,13 @@ public class EventView extends Composite implements View{
 	private Integer attendeeCount = 0;
 	private Label attCountLabel = new Label();
 	private ArrayList<HashMap<String, String>> allEvents;
+	
+	//Search-related elements
+	private ListBox parksBox = new ListBox();
+	private ListBox categoryBox = new ListBox();
+	private Button searchButton = new Button("Search!");
+	private Label parksLabel = new Label("Choose a park: ");
+	private Label categoryLabel = new Label("Choose an event category: ");
 
 	private SimplePanel viewPanel = new SimplePanel();
 	private ArrayList<HashMap<String, String>> allParks;
@@ -171,6 +182,7 @@ public class EventView extends Composite implements View{
 		});
 
 		setUpInfoPanel();
+		setUpSearchPanel();
 
 		// Add items to panels
 		parkPanel.add(eventMap);
@@ -178,10 +190,12 @@ public class EventView extends Composite implements View{
 		attendeePanel.add(attendeesBox);
 		//	rootPanel.add(loadText);
 		//		rootPanel.add(loadButton);
-		rootPanel.add(infoPanel);
-		rootPanel.add(joinButton);
+		topPanel.add(infoPanel);
+		topPanel.add(joinButton);
 		//	rootPanel.add(shareButton);
-		rootPanel.add(parkPanel);
+		topPanel.add(parkPanel);
+		rootPanel.add(topPanel);
+		rootPanel.add(bottomPanel);
 		loadEvent(eventURLID);
 		renderPlusButton();
 
@@ -209,10 +223,6 @@ public class EventView extends Composite implements View{
 	 * This loads the specifics of the event into the info panel.
 	 * 
 	 * @param eventID: The id of the event you want to load to the page.
-	 * 
-	 * TODO: - Add event positions to map
-	 * 		 - Get the park information loaded into a parks page
-	 * 		 - Set real attendees list.
 	 */
 	private void loadEvent(int eventID) {
 
@@ -222,13 +232,18 @@ public class EventView extends Composite implements View{
 				for (int i = 0; i < allEvents.size(); i++){
 					if (Integer.parseInt(allEvents.get(i).get("id")) == eventID){
 						event = allEvents.get(i);
-						eventCreator.setText("Welcome to " + event.get("creator_name") + "'s event.");
-						eventName.setText("The name of the event is " + event.get("name")); 
-						eventTime.setText("The event is from " + event.get("start_time") + " to " + event.get("end_time") + " on " + event.get("date"));
-						eventLoc.setText("The event is at " + event.get("park_name") + ".");
+						eventCreator.setText("Creator: " + event.get("creator_name"));
+						eventName.setHTML("<h2>" + event.get("name") + "</h2>"); 
+						eventTime.setText("Time: " + event.get("date") + " from " + event.get("start_time") + " to " + event.get("end_time"));
+						eventLoc.setText("Location: " + event.get("park_name"));
+						if (event.get("notes") != null) {
+							eventNotes.setText("Notes: \n" + event.get("notes"));
+							eventNotes.setWordWrap(true);
+							eventNotes.setWidth("250px");
+						}
 
 						eventMap.checkResizeAndCenter();
-						eventCategory.setText("This event is in the category: " + event.get("category"));
+						eventCategory.setText("Category: " + event.get("category"));
 						ArrayList<String> attendees = new ArrayList<String>(Arrays.asList(event.get("attending_names").split(",")));
 						members.clear();
 						for (String attendee : attendees){
@@ -283,13 +298,13 @@ public class EventView extends Composite implements View{
 	 * This creates the panel with the relevant information of the event.
 	 */
 	private void setUpInfoPanel() {
+		infoPanel.add(eventName);
 		infoPanel.add(eventCreator);
 		infoPanel.add(eventCategory);
 		infoPanel.add(eventLoc);
 		infoPanel.add(eventTime);
 		infoPanel.add(attendeePanel);
 		infoPanel.add(eventNotes);
-		eventNotes.setText("This is the information for the event. Needs to be persistent.");
 	}
 
 	/**
@@ -303,6 +318,44 @@ public class EventView extends Composite implements View{
 		attendeeCount = members.size();
 		attCountLabel.setText(attendeeCount + " people are attending.");
 
+	}
+	
+	private void setUpSearchPanel() {
+		getParks(parksBox);
+		queryPanel.add(parksLabel);
+		queryPanel.add(parksBox);
+		populateCategories(categoryBox);
+		queryPanel.add(categoryLabel);
+		queryPanel.add(categoryBox);
+		queryPanel.add(searchButton);
+		bottomPanel.add(queryPanel);
+		bottomPanel.add(resultsPanel);
+	}
+	
+	private void getParks(final ListBox parksList) {
+		allParks = MeetUpScheduler.getParks();
+		addParksToParksListBox(allParks, parksList);		
+	}
+	
+	private void addParksToParksListBox(ArrayList<HashMap<String, String>> parks, ListBox parksList){
+		ArrayList<String> parkNames = new ArrayList<String>();
+
+		for(int i = 0; i<parks.size(); i++){
+			parkNames.add(parks.get(i).get("name"));
+		}
+
+		Collections.sort(parkNames);
+
+		parksList.addItem("All parks");
+		for(int i = 0; i<parks.size(); i++){
+			parksList.addItem(parkNames.get(i));
+		}
+	}
+	
+	private void populateCategories(ListBox categoriesList) {
+		categoriesList.addItem("All categories");
+		for (String cat : MeetUpScheduler.getCategories())
+			categoriesList.addItem(cat);
 	}
 
 	@Override

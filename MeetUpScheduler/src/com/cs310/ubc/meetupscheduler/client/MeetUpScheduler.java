@@ -1,6 +1,7 @@
 package com.cs310.ubc.meetupscheduler.client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import com.cs310.ubc.meetupscheduler.client.places.AdminPlace;
@@ -268,6 +269,23 @@ public class MeetUpScheduler implements EntryPoint {
 	public static void addEvent(HashMap<String, String> event) {
 	 	    allEvents.add(event);
 	 }
+	
+	public static ArrayList<String> getCategories() {
+		//TODO: Maybe read this from a file? Kind of ugly here.
+		ArrayList<String> catList = new ArrayList<String>();
+		catList.add("Sack-race");
+		catList.add("Larping");
+		catList.add("Ultimate");
+		catList.add("Spelling-B");
+		catList.add("Judo");
+		catList.add("Arctic Char Fishing");
+		catList.add("Treasure Hunt");
+		catList.add("Night Soccer");
+		catList.add("Dog Show");
+		catList.add("Chili Cook-off");
+		Collections.sort(catList);
+		return catList;
+	}
 	/**
 	 * 
 	 * @author Caroline
