@@ -264,6 +264,10 @@ public class MeetUpScheduler implements EntryPoint {
 		//loadEvents();
 	}
 
+
+	public static void addEvent(HashMap<String, String> event) {
+	 	    allEvents.add(event);
+	 }
 	/**
 	 * 
 	 * @author Caroline
