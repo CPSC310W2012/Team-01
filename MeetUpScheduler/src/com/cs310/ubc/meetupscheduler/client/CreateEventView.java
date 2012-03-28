@@ -251,6 +251,7 @@ public class CreateEventView extends Composite implements View {
 		categoriesList.addItem("Basketball");
 		categoriesList.addItem("Bicycling");
 		categoriesList.addItem("Bocce Ball");
+		categoriesList.addItem("Cricket");
 		categoriesList.addItem("Football");
 		categoriesList.addItem("Jogging");
 		categoriesList.addItem("Lawn Bowling");
