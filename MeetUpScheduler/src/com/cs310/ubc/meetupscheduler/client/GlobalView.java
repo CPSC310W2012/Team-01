@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;

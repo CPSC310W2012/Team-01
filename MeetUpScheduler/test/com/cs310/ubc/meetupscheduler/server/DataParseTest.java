@@ -15,6 +15,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import com.cs310.ubc.meetupscheduler.server.Park;
+import com.cs310.ubc.meetupscheduler.server.ParkDataParser;
 import com.cs310.ubc.meetupscheduler.server.Advisory.AdvisoryField;
 import com.cs310.ubc.meetupscheduler.server.Facility.FacilityField;
 import com.cs310.ubc.meetupscheduler.server.Park.ParkField;

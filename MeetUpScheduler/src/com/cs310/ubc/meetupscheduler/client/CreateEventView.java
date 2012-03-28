@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;
+import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;	
 import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -42,7 +42,7 @@ public class CreateEventView extends Composite implements View {
 	private String date;
 	private String startTime;
 	private String endTime;
-	
+
 	//Panel to hold Create Event Components
 	private VerticalPanel rightPanel = new VerticalPanel();
 	private VerticalPanel leftPanel = new VerticalPanel();
@@ -62,22 +62,22 @@ public class CreateEventView extends Composite implements View {
 	private ListBox parksListBox = new ListBox();
 	private SimplePanel viewPanel = new SimplePanel();
 	private Element nameSpan = DOM.createSpan();
-	
+
 	//TODO Have to figure this out
 	public CreateEventView() {
-	     viewPanel.getElement().appendChild(nameSpan);
-	      initWidget(viewPanel);
+		viewPanel.getElement().appendChild(nameSpan);
+		initWidget(viewPanel);
 	}
-	
+
 	public CreateEventView(String parkID) {
-	    viewPanel.getElement().appendChild(nameSpan);
-	    initWidget(viewPanel);
+		viewPanel.getElement().appendChild(nameSpan);
+		initWidget(viewPanel);
 		park_id = parkID;
 	}
-	
+
 	@Override
 	public Widget asWidget() {					
-		
+
 		//Sets the label when a date is selected		
 		eventDatePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			public void onValueChange(ValueChangeEvent<Date> event) {
@@ -88,35 +88,35 @@ public class CreateEventView extends Composite implements View {
 		}); 
 		//Default Value for date
 		eventDatePicker.setValue(new Date(), true);
-		
+
 		//populate time lists 			
 		setHoursList(startTimeList);
 		setHoursList(endTimeList);		
-		
+
 		//categories set-up
 		categoriesListBox.addItem("Default Category");
 		populateCategories(categoriesListBox);
 		categoriesListBox.setVisibleItemCount(1);
-		
+
 		//get parks for parks list
 		getParks(parksListBox);		
 		parksListBox.setVisibleItemCount(1);		
-		
+
 		Button submitButton = new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-							
+
 				//TODO: Implement verifier call, submit call, and route to event view tab
 				setEventFields();				
-				
+
 				if (verifyFields()) {
 					createEvent();					
 				}
 				else {
-				Window.alert("Please ensure all event fields are filled out");
+					Window.alert("Please ensure all event fields are filled out");
 				}
 			}
 		});
-		
+
 		//Add items to panel
 		//TODO: fix appearance through sub-panels
 		leftPanel.add(eventNameLabel);
@@ -124,40 +124,40 @@ public class CreateEventView extends Composite implements View {
 		leftPanel.add(parksListBox);
 		leftPanel.add(categoriesListBox);
 		leftPanel.add(submitButton);
-		
+
 		rightPanel.add(eventDatePickerLabel);
 		rightPanel.add(eventDatePicker);
 		rightPanel.add(startTimeList);
 		rightPanel.add(endTimeList);
-		
-		
+
+
 		createEventPanel.add(leftPanel);
 		createEventPanel.add(rightPanel);		
-		
+
 		return createEventPanel;
 	}
-	
+
 	private void getParks(final ListBox parksList) {
-		
+
 		allParks = MeetUpScheduler.getParks();
 		addParksToParksListBox(allParks, parksList);		
-		
+
 	}
-	
+
 	private void addParksToParksListBox(ArrayList<HashMap<String, String>> parks, ListBox parksList){
 		ArrayList<String> parkNames = new ArrayList<String>();
 
 		for(int i = 0; i<parks.size(); i++){
 			parkNames.add(parks.get(i).get("name"));
 		}
-		
+
 		Collections.sort(parkNames);
-		
+
 		for(int i = 0; i<parks.size(); i++){
 			parksList.addItem(parkNames.get(i));
 		}
 	}
-	
+
 	private String getParkID(String parkName) {
 		String id = "";		
 		for (int i=0;i<allParks.size(); i++) {
@@ -165,12 +165,12 @@ public class CreateEventView extends Composite implements View {
 				id = allParks.get(i).get("id");
 			}
 		}
-		
+
 		return id;
 	}
-	
+
 	private void setEventFields() {
-		
+
 		eventName = eventNameBox.getValue();
 		LoginInfo loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		userName = loginInfo.getNickname();
@@ -182,13 +182,13 @@ public class CreateEventView extends Composite implements View {
 		startTime = startTimeList.getValue(startTimeList.getSelectedIndex());
 		endTime = endTimeList.getValue(endTimeList.getSelectedIndex());		
 	}
-	
+
 	private boolean verifyFields() {
 		//TODO: specify conditions for field verification, add field specific errors
 		if (eventName == null || userName == null || park_name == null || date == null || startTime == null || endTime == null) return false;
 		return true;
 	}
-	
+
 	//TODO: Use the ENUM from event for the field names. Note: breaks compilation at this point
 	private void createEvent() {
 		HashMap<String, String> event = new HashMap<String, String>();
@@ -210,27 +210,27 @@ public class CreateEventView extends Composite implements View {
 			public void onFailure(Throwable error) {
 				System.out.println("Flip a table!  (>o.o)> _|__|_)");
 			}
-			
+
 			public void onSuccess(HashMap<String, String> newEvent) {
-				//TODO: Add call to helper to scheduler to get event view based on event id
-				System.out.println(newEvent);
-				Window.alert("Event Created with ID " + newEvent.get("id"));
 				
+				// NOTE: This only works in the deployed version.
+				Window.alert("Your event with ID " + newEvent.get("id") + " was created.");
 				MeetUpScheduler.addEvent(newEvent);
-				EventPlace eventPlace = new EventPlace("Event?id=" + newEvent.get("id"), new Integer(newEvent.get("id")));
-				SharedData.getPlaceController().goTo(eventPlace);
+				String newEventURL = "http://vancitymeetupscheduler.appspot.com?id=" + newEvent.get("id") + "#EventPlace:Event";
+				Window.Location.replace(newEventURL);
+				
 			}
 		});
-		
+
 	}
-	
+
 	private void setHoursList(ListBox list) {
 		for (int i=0; i<=23; i++ ) {
 			list.addItem(i+":00");
 		}
 		list.setVisibleItemCount(1);
 	}
-	
+
 	private void populateCategories(ListBox categoriesList) {
 		categoriesList.addItem("Sack-race");
 		categoriesList.addItem("Larping");
@@ -247,6 +247,6 @@ public class CreateEventView extends Composite implements View {
 	@Override
 	public void setName(String name) {
 		nameSpan.setInnerText("Create Event " + name);
-		
+
 	}
 }

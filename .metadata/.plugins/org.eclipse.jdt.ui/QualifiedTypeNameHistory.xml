@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="com.cs310.ubc.meetupscheduler.client.EventView"/>
+<fullyQualifiedTypeName name="com.google.gwt.maps.client.overlay.Marker"/>
+<fullyQualifiedTypeName name="com.google.gwt.user.client.ui.HTML"/>
+<fullyQualifiedTypeName name="com.google.gwt.xml.client.Document"/>
+<fullyQualifiedTypeName name="com.google.gwt.dom.client.Document"/>
+<fullyQualifiedTypeName name="com.google.gwt.dom.client.ScriptElement"/>
+<fullyQualifiedTypeName name="com.google.gwt.user.client.Window.Location"/>
+</qualifiedTypeNameHistroy>

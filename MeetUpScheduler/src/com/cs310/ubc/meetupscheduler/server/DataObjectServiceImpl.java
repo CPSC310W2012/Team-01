@@ -26,7 +26,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	private static final long serialVersionUID = 4058514716973575670L;
 	private static final Logger LOG = Logger.getLogger(DataObjectServiceImpl.class.getName());
 	private static final Map<String, Class<? extends DataObject>> tableMap = getTables();
-	
+
 	/**
 	 * A method to add a new persistent object.
 	 * @param table The table to add the new object to.
@@ -78,7 +78,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 			pm.close();
 		}
 	}
-	
+
 	/**
 	 * Method to remove all persistent objects of a type.
 	 * @param table The type of object to remove.
@@ -86,7 +86,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	public void remove(String table) {
 		remove(table, "*");
 	}
-	
+
 	/**
 	 * Updates the value a field of one or more objects.
 	 * @param table The type of object to update.
@@ -127,7 +127,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 		}
 		return changedObjs;
 	}
-	
+
 	/**
 	 * Updates the value a field of all objects.
 	 * @param table The type of object to update.
@@ -140,7 +140,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	public ArrayList<HashMap<String, String>> update(String table, HashMap<String, String> newValues) throws ServerException {
 		return update(table, "*", newValues);
 	}
-	
+
 	/**
 	 * A method to get the fields of one or more objects specified by a query.
 	 * @param table The type of object to get.
@@ -173,7 +173,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 		}
 		return retObjs;
 	}
-	
+
 	/**
 	 * A method to get the fields of one or more objects specified by a query.
 	 * @param table The type of object to get.
@@ -184,7 +184,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	public ArrayList<HashMap<String, String>> get(String table) throws ServerException {
 		return get(table, "*");
 	}
-	
+
 	/**
 	 * Helper method to get a persistence manager.
 	 * @return A persistence manager.
@@ -192,7 +192,7 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 	private PersistenceManager getPersistenceManager() {
 		return PersistenceManagerSingleton.getInstance();
 	}
-	
+
 	/**
 	 * Helper method to retrieve the appropriate class given the table specification.
 	 * @return The class corresponding to a table String.
