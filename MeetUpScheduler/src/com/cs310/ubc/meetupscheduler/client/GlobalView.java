@@ -284,7 +284,6 @@ public class GlobalView extends Composite implements View{
 						if(userEmail.equals(events.get(j).get("creator_email")) || events.get(j).get("attending_emails").contains(userEmail)){
 							userFlag = true;	
 						}
-						
 					}
 				}
 				/*This part is a bit fragile due to some gwt issues. 
