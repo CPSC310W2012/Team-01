@@ -244,32 +244,6 @@ public class CreateEventView extends Composite implements View {
 	}
 
 	private void populateCategories(ListBox categoriesList) {
-		
-		categoriesList.addItem("Badminton");
-		categoriesList.addItem("Ball Hockey");
-		categoriesList.addItem("Baseball");
-		categoriesList.addItem("Basketball");
-		categoriesList.addItem("Bicycling");
-		categoriesList.addItem("Bocce Ball");
-		categoriesList.addItem("Football");
-		categoriesList.addItem("Jogging");
-		categoriesList.addItem("Lawn Bowling");
-		categoriesList.addItem("Soccer");
-		categoriesList.addItem("Softball");
-		categoriesList.addItem("Tennis");
-		categoriesList.addItem("Rugby");
-		categoriesList.addItem("Ultimate");
-		categoriesList.addItem("Volleyball");
-		categoriesList.addItem("Arctic Char Fishing");
-		categoriesList.addItem("Chili Cook-off");
-		categoriesList.addItem("Dog Show");
-		categoriesList.addItem("Judo");
-		categoriesList.addItem("Larping");
-		categoriesList.addItem("Night Soccer");
-		categoriesList.addItem("Sack-race");
-		categoriesList.addItem("Spelling-B");
-		categoriesList.addItem("Treasure Hunt");
-		
 		for (String cat : MeetUpScheduler.getCategories())
 			categoriesList.addItem(cat);
 	}

@@ -273,16 +273,30 @@ public class MeetUpScheduler implements EntryPoint {
 	public static ArrayList<String> getCategories() {
 		//TODO: Maybe read this from a file? Kind of ugly here.
 		ArrayList<String> catList = new ArrayList<String>();
-		catList.add("Sack-race");
-		catList.add("Larping");
+		catList.add("Badminton");
+		catList.add("Ball Hockey");
+		catList.add("Baseball");
+		catList.add("Basketball");
+		catList.add("Bicycling");
+		catList.add("Bocce Ball");
+		catList.add("Football");
+		catList.add("Jogging");
+		catList.add("Lawn Bowling");
+		catList.add("Soccer");
+		catList.add("Softball");
+		catList.add("Tennis");
+		catList.add("Rugby");
 		catList.add("Ultimate");
-		catList.add("Spelling-B");
-		catList.add("Judo");
+		catList.add("Volleyball");
 		catList.add("Arctic Char Fishing");
-		catList.add("Treasure Hunt");
-		catList.add("Night Soccer");
-		catList.add("Dog Show");
 		catList.add("Chili Cook-off");
+		catList.add("Dog Show");
+		catList.add("Judo");
+		catList.add("Larping");
+		catList.add("Night Soccer");
+		catList.add("Sack-race");
+		catList.add("Spelling-B");
+		catList.add("Treasure Hunt");
 		Collections.sort(catList);
 		return catList;
 	}

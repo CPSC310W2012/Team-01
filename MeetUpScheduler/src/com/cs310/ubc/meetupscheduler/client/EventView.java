@@ -24,12 +24,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -43,9 +43,9 @@ public class EventView extends Composite implements View{
 	 */
 	private final int MAP_HEIGHT = 400;
 	private final int MAP_WIDTH = 500;	
+	private final String ALL_PARKS = "All parks";
+	private final String ALL_CATS = "All types";
 
-
-	private TextBox loadText = new TextBox();
 	private VerticalPanel rootPanel = new VerticalPanel();
 	private HorizontalPanel topPanel = new HorizontalPanel();
 	private VerticalPanel bottomPanel = new VerticalPanel();
@@ -53,7 +53,6 @@ public class EventView extends Composite implements View{
 	private VerticalPanel resultsPanel = new VerticalPanel();
 	private HTML eventName = new HTML();
 	private Button joinButton = new Button();
-	private Button loadButton = new Button();
 	private VerticalPanel parkPanel = new VerticalPanel();
 	private ListBox attendeesBox = new ListBox();
 	private VerticalPanel attendeePanel = new VerticalPanel();
@@ -63,7 +62,6 @@ public class EventView extends Composite implements View{
 	private Label eventTime = new Label();
 	private Label eventNotes = new Label();
 	private Label eventCategory = new Label();
-	private Button shareButton = new Button();
 	private MapWidget eventMap;
 	private ArrayList<String> members = new ArrayList<String>();
 	private Integer attendeeCount = 0;
@@ -71,11 +69,14 @@ public class EventView extends Composite implements View{
 	private ArrayList<HashMap<String, String>> allEvents;
 	
 	//Search-related elements
+	private HTML searchLabel = new HTML();
 	private ListBox parksBox = new ListBox();
 	private ListBox categoryBox = new ListBox();
 	private Button searchButton = new Button("Search!");
 	private Label parksLabel = new Label("Choose a park: ");
-	private Label categoryLabel = new Label("Choose an event category: ");
+	private Label categoryLabel = new Label("Choose an event type: ");
+	private FlexTable resultsTable = new FlexTable();
+	private HTML noResultsLabel = new HTML();
 
 	private SimplePanel viewPanel = new SimplePanel();
 	private ArrayList<HashMap<String, String>> allParks;
@@ -124,8 +125,10 @@ public class EventView extends Composite implements View{
 	 */
 	public void buildUI(){
 		String eventStringID = com.google.gwt.user.client.Window.Location.getParameter("id");
+		boolean eventLoaded = false;
 		if(eventStringID != null && !eventStringID.isEmpty() ){
 			eventURLID = Integer.parseInt(eventStringID);
+			eventLoaded = true;
 		}
 		loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		loadData();
@@ -173,6 +176,7 @@ public class EventView extends Composite implements View{
 		setUpSearchPanel();
 
 		// Add items to panels
+		loadEvent(eventURLID);
 		parkPanel.add(eventMap);
 		attendeePanel.add(attCountLabel);
 		attendeePanel.add(attendeesBox);
@@ -180,8 +184,9 @@ public class EventView extends Composite implements View{
 		topPanel.add(joinButton);
 		topPanel.add(parkPanel);
 		rootPanel.add(topPanel);
+		if (!eventLoaded)
+			topPanel.setVisible(false);
 		rootPanel.add(bottomPanel);
-		loadEvent(eventURLID);
 		renderPlusButton();
 
 
@@ -283,7 +288,6 @@ public class EventView extends Composite implements View{
 	 * Loads all existing Events into a list.
 	 */
 	private void loadData(){
-		System.out.println(com.google.gwt.user.client.Window.Location.getParameter("id"));
 		allEvents = MeetUpScheduler.getEvents();
 		allParks = MeetUpScheduler.getParks();
 	}
@@ -318,6 +322,43 @@ public class EventView extends Composite implements View{
 	 * Sets up all the pieces of the search panel.
 	 */
 	private void setUpSearchPanel() {
+		//Set up click handling for searchButton
+		searchButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				//Need to re-jigger this at some point to make it easier to add other search dimensions.
+				setUpResultsTable();
+				String parkFilter = parksBox.getValue(parksBox.getSelectedIndex());
+				String catFilter = categoryBox.getValue(categoryBox.getSelectedIndex());
+				ArrayList<HashMap<String, String>> results = new ArrayList<HashMap<String, String>>();
+				if (catFilter.equals(ALL_CATS) && parkFilter.equals(ALL_PARKS)) {
+					results = allEvents;
+				}
+				else if (catFilter.equals(ALL_CATS)) {
+					for (HashMap<String, String> ev : allEvents) {
+						if (ev.get("park_name").equals(parkFilter)) {
+							results.add(ev);
+						}
+					}
+				}
+				else if (parkFilter.equals(ALL_PARKS)) {
+					for (HashMap<String, String> ev : allEvents) {
+						if (ev.get("category").equals(catFilter)) {
+							results.add(ev);
+						}
+					}
+				}
+				else {
+					for (HashMap<String, String> ev : allEvents) {
+						if (ev.get("category").equals(catFilter) 
+								&& ev.get("park_name").equals(parkFilter))
+							results.add(ev);
+					}
+				}
+				populateResults(results);			
+			}
+		});
+		searchLabel.setHTML("<h2>Search for an event!</h2>");
+		noResultsLabel.setHTML("<i>No results!</i>");
 		getParks(parksBox);
 		queryPanel.add(parksLabel);
 		queryPanel.add(parksBox);
@@ -325,10 +366,46 @@ public class EventView extends Composite implements View{
 		queryPanel.add(categoryLabel);
 		queryPanel.add(categoryBox);
 		queryPanel.add(searchButton);
+		setUpResultsTable();
+		resultsPanel.add(noResultsLabel);
+		bottomPanel.add(searchLabel);
 		bottomPanel.add(queryPanel);
 		bottomPanel.add(resultsPanel);
 	}
 	
+	private void setUpResultsTable() {
+		resultsPanel.remove(resultsTable);
+		resultsPanel.remove(noResultsLabel);
+		resultsTable = new FlexTable();
+		resultsTable.setCellPadding(1);
+		resultsTable.setCellSpacing(3);
+		resultsTable.setText(1, 0, "Event Title");
+		resultsTable.setText(1, 1, "Event Type");
+		resultsTable.setText(1, 2, "Event Location");
+		resultsTable.setText(1, 3, "Event Date");
+		resultsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
+		resultsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
+		resultsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
+		resultsTable.getCellFormatter().addStyleName(1, 3, "recentEventHeaders");
+		resultsPanel.add(resultsTable);
+		resultsPanel.add(noResultsLabel);
+	}
+	
+	private void populateResults(ArrayList<HashMap<String, String>> results) {
+		if (!(results == null || results.isEmpty())){
+			noResultsLabel.setVisible(false);
+			for(HashMap<String, String> result : results){
+				int row = resultsTable.getRowCount();
+				resultsTable.setWidget(row, 0, new HTML("<a href=/?id=" + result.get("id") + "#EventPlace:Event" + ">" +
+						result.get("name") + "</a>"));
+				resultsTable.setText(row, 1, result.get("category"));
+				resultsTable.setText(row, 2, result.get("park_name"));
+				resultsTable.setText(row, 3, result.get("date"));
+			}
+		}
+		else
+			noResultsLabel.setVisible(true);
+	}
 	
 	private void getParks(final ListBox parksList) {
 		allParks = MeetUpScheduler.getParks();
@@ -344,14 +421,14 @@ public class EventView extends Composite implements View{
 
 		Collections.sort(parkNames);
 
-		parksList.addItem("All parks");
+		parksList.addItem(ALL_PARKS);
 		for(int i = 0; i<parks.size(); i++){
 			parksList.addItem(parkNames.get(i));
 		}
 	}
 	
 	private void populateCategories(ListBox categoriesList) {
-		categoriesList.addItem("All categories");
+		categoriesList.addItem(ALL_CATS);
 		for (String cat : MeetUpScheduler.getCategories())
 			categoriesList.addItem(cat);
 	}
@@ -360,11 +437,4 @@ public class EventView extends Composite implements View{
 	public void setName(String name) {
 		nameSpan.setInnerText("Event " + name);
 	}
-
-	//TODO: 
-	/**
-	 *  Add styling with CSS
-	 *  Fix up the interface to make it look nice
-	 * 
-	 */
 }
