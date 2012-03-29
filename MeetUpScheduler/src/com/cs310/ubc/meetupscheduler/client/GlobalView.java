@@ -376,6 +376,11 @@ public class GlobalView extends Composite implements View{
 		}
 	}
 	
+	/**
+	 * Renders a small google+ button to share events.
+	 * @param eventID The event for which to render the button.
+	 * @return The rendered button
+	 */
 	private HTML renderSmallPlusButton(String eventID) {
 		String targetURL = "http://vancitymeetupscheduler.appspot.com?id=" +eventID + "#EventPlace:Event";
 		String s = "<g:plusone  size=\"small\" annotation=\"none\" href=\"" + targetURL +"\"></g:plusone>";

@@ -2,8 +2,12 @@ package com.cs310.ubc.meetupscheduler.client;
 
 import java.io.Serializable;
 
+/**
+ * Class to hold login info of a user
+ */
 public class LoginInfo implements Serializable {
 
+  private static final long serialVersionUID = 3112406567481545894L;
   private boolean loggedIn = false;
   private String loginUrl;
   private String logoutUrl;

@@ -20,10 +20,8 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -33,19 +31,20 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-
-
+//TODO: Maybe move search to a separate page?
+/**
+ * EventView for looking at the details of a specific event
+ * and searching for events.
+ */
 public class EventView extends Composite implements View{
-	/**
-	 * EventView for looking at the details of a specific event
-	 * 
-	 * @author Ben
-	 */
+	//Constants
 	private final int MAP_HEIGHT = 400;
 	private final int MAP_WIDTH = 500;	
 	private final String ALL_PARKS = "All parks";
 	private final String ALL_CATS = "All types";
-
+	private final String JOIN_TEXT = "Join event!";
+	private final String UNJOIN_TEXT = "Unjoin event!";
+	
 	private VerticalPanel rootPanel = new VerticalPanel();
 	private HorizontalPanel topPanel = new HorizontalPanel();
 	private VerticalPanel bottomPanel = new VerticalPanel();
@@ -93,17 +92,6 @@ public class EventView extends Composite implements View{
 		viewPanel.getElement().appendChild(nameSpan);
 		initWidget(viewPanel);
 	}
-	
-	/**
-	 * This shouldn't really be necessary anymore.
-	 * @param eventID - The ID of the event you want to load.
-	 */
-	public EventView(int eventID){
-		viewPanel.getElement().appendChild(nameSpan);
-		initWidget(viewPanel);
-		loadEvent(eventID);
-	}
-
 
 	/**
 	 * Loads the map and initializes the page. 
@@ -142,36 +130,8 @@ public class EventView extends Composite implements View{
 		eventMap.checkResizeAndCenter();
 		eventMap.addControl(new MapTypeControl());
 
-
-		//set up the joinButton
-		joinButton.setText("Join event!");
-		joinButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent clickEvent) {
-				members.add(loginInfo.getNickname());
-				//Add username to event
-				String newNames = event.get("attending_names") + "," + loginInfo.getNickname();
-				event.put("attending_names", newNames);
-				//Add user email to event
-				String newEmails = event.get("attending_emails") + "," + loginInfo.getEmailAddress();
-				event.put("attending_emails", newEmails);
-				//Increment number attending
-				Integer numAttending = Integer.parseInt(event.get("num_attending"));
-				numAttending++;
-				event.put("num_attending", numAttending.toString());
-				objectService.update("Event", "id=="+event.get("id"), event, new AsyncCallback<ArrayList<HashMap<String, String>>>() {
-					public void onFailure(Throwable error) {
-						System.out.println("Joining the event failed!");
-					}
-					public void onSuccess(ArrayList<HashMap<String, String>> newEvent) {
-						attendeesBox.clear();
-						setUpAttendees();
-						joinButton.setEnabled(false);
-						Window.alert("You are attending this event!");
-					}
-				});
-			}
-		});
-
+		//Set up panels
+		setUpJoinButton();
 		setUpInfoPanel();
 		setUpSearchPanel();
 
@@ -184,12 +144,70 @@ public class EventView extends Composite implements View{
 		topPanel.add(joinButton);
 		topPanel.add(parkPanel);
 		rootPanel.add(topPanel);
-		if (!eventLoaded)
+		if (!eventLoaded) {
 			topPanel.setVisible(false);
+			searchLabel.setHTML("<h2>Search for an event!</h2>");
+		}
 		rootPanel.add(bottomPanel);
 		renderPlusButton();
-
-
+	}
+	
+	/**
+	 * Sets up the click handlers for the join/unjoin button
+	 */
+	private void setUpJoinButton() {
+		//set up the joinButton
+		joinButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent clickEvent) {
+				if (joinButton.getText().equals(JOIN_TEXT)) {
+					members.add(loginInfo.getNickname());
+					//Add username to event
+					String newNames = addToString(event.get("attending_names"), loginInfo.getNickname());
+					event.put("attending_names", newNames);
+					//Add user email to event
+					String newEmails = addToString(event.get("attending_emails"), loginInfo.getEmailAddress());
+					event.put("attending_emails", newEmails);
+					//Increment number attending
+					Integer numAttending = Integer.parseInt(event.get("num_attending"));
+					numAttending++;
+					event.put("num_attending", numAttending.toString());
+					updateEvent(event);
+					joinButton.setText(UNJOIN_TEXT);
+				}
+				else if (joinButton.getText().equals(UNJOIN_TEXT)) {
+					//Remove name from display window.
+					members.remove(loginInfo.getNickname());
+					//Remove name from event
+					String newAttendees = removeFromString(event.get("attending_names"), loginInfo.getNickname());
+					event.put("attending_names", newAttendees);
+					//Remove email from event
+					String newEmails = removeFromString(event.get("attending_emails"), loginInfo.getEmailAddress());
+					event.put("attending_emails", newEmails);
+					//Decrement number attending
+					Integer numAttending = Integer.parseInt(event.get("num_attending"));
+					numAttending--;
+					event.put("num_attending", numAttending.toString());
+					updateEvent(event);
+					joinButton.setText(JOIN_TEXT);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Updates an event on the server when someone has joined/unjoined it.
+	 * @param event The new values of the event to be updated.
+	 */
+	private void updateEvent(HashMap<String, String> event) {
+		objectService.update("Event", "id=="+event.get("id"), event, new AsyncCallback<ArrayList<HashMap<String, String>>>() {
+			public void onFailure(Throwable error) {
+				System.out.println("Joining the event failed!");
+			}
+			public void onSuccess(ArrayList<HashMap<String, String>> newEvent) {
+				attendeesBox.clear();
+				setUpAttendees();
+			}
+		});
 	}
 	
 	/**
@@ -221,8 +239,6 @@ public class EventView extends Composite implements View{
 	 * @param eventID: The id of the event you want to load to the page.
 	 */
 	private void loadEvent(int eventID) {
-
-
 		if (allEvents != null && allEvents.size() > 0){
 			try { 
 				for (int i = 0; i < allEvents.size(); i++){
@@ -251,9 +267,9 @@ public class EventView extends Composite implements View{
 
 						ArrayList<String> attendingEmails = new ArrayList<String>(Arrays.asList(event.get("attending_emails").split(",")));
 						if (attendingEmails.contains(loginInfo.getEmailAddress()))
-							joinButton.setEnabled(false);
+							joinButton.setText(UNJOIN_TEXT);
 						else
-							joinButton.setEnabled(true);
+							joinButton.setText(JOIN_TEXT);
 					}
 				}
 
@@ -315,13 +331,33 @@ public class EventView extends Composite implements View{
 		attendeesBox.setVisibleItemCount(members.size());
 		attendeeCount = members.size();
 		attCountLabel.setText(attendeeCount + " people are attending.");
-
 	}
 	
 	/**
 	 * Sets up all the pieces of the search panel.
 	 */
 	private void setUpSearchPanel() {
+		setUpSearchButton();
+		searchLabel.setHTML("<h2>Search for a different event!</h2>");
+		noResultsLabel.setHTML("<i>No results!</i>");
+		getParks(parksBox);
+		queryPanel.add(parksLabel);
+		queryPanel.add(parksBox);
+		populateCategories(categoryBox);
+		queryPanel.add(categoryLabel);
+		queryPanel.add(categoryBox);
+		queryPanel.add(searchButton);
+		setUpResultsTable();
+		resultsPanel.add(noResultsLabel);
+		bottomPanel.add(searchLabel);
+		bottomPanel.add(queryPanel);
+		bottomPanel.add(resultsPanel);
+	}
+	
+	/**
+	 * Sets up search button click handling
+	 */
+	private void setUpSearchButton() {
 		//Set up click handling for searchButton
 		searchButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -357,22 +393,11 @@ public class EventView extends Composite implements View{
 				populateResults(results);			
 			}
 		});
-		searchLabel.setHTML("<h2>Search for an event!</h2>");
-		noResultsLabel.setHTML("<i>No results!</i>");
-		getParks(parksBox);
-		queryPanel.add(parksLabel);
-		queryPanel.add(parksBox);
-		populateCategories(categoryBox);
-		queryPanel.add(categoryLabel);
-		queryPanel.add(categoryBox);
-		queryPanel.add(searchButton);
-		setUpResultsTable();
-		resultsPanel.add(noResultsLabel);
-		bottomPanel.add(searchLabel);
-		bottomPanel.add(queryPanel);
-		bottomPanel.add(resultsPanel);
 	}
-	
+	/**
+	 * Sets up table to hold search results. Used when page is loaded
+	 * and to clear table when new query is performed.
+	 */
 	private void setUpResultsTable() {
 		resultsPanel.remove(resultsTable);
 		resultsPanel.remove(noResultsLabel);
@@ -391,6 +416,10 @@ public class EventView extends Composite implements View{
 		resultsPanel.add(noResultsLabel);
 	}
 	
+	/**
+	 * Method to populate the results table with search results
+	 * @param results The results of a search query
+	 */
 	private void populateResults(ArrayList<HashMap<String, String>> results) {
 		if (!(results == null || results.isEmpty())){
 			noResultsLabel.setVisible(false);
@@ -407,11 +436,20 @@ public class EventView extends Composite implements View{
 			noResultsLabel.setVisible(true);
 	}
 	
+	/**
+	 * Gets all parks and populates parks list box
+	 * @param parksList The listbox to populate
+	 */
 	private void getParks(final ListBox parksList) {
 		allParks = MeetUpScheduler.getParks();
 		addParksToParksListBox(allParks, parksList);		
 	}
 	
+	/**
+	 * Helper method to populate parks list box.
+	 * @param parks The list of parks
+	 * @param parksList The box to populate
+	 */
 	private void addParksToParksListBox(ArrayList<HashMap<String, String>> parks, ListBox parksList){
 		ArrayList<String> parkNames = new ArrayList<String>();
 
@@ -427,10 +465,50 @@ public class EventView extends Composite implements View{
 		}
 	}
 	
+	/**
+	 * Helper method to populate category listbox
+	 * @param categoriesList The listbox to populate
+	 */
 	private void populateCategories(ListBox categoriesList) {
 		categoriesList.addItem(ALL_CATS);
 		for (String cat : MeetUpScheduler.getCategories())
 			categoriesList.addItem(cat);
+	}
+	
+	/**
+	 * Removes an element from a comma separated string and returns the
+	 * new string.
+	 * @param csList The string to change
+	 * @param element The element to remove
+	 * @return The CS-list minus the element
+	 */
+	private String removeFromString(String csList, String element) {
+		ArrayList<String> list = new ArrayList<String>(Arrays.asList(csList.split(",")));
+		list.remove(element);
+		StringBuilder sb = new StringBuilder();
+		for (String item : list)
+			sb.append(item + ",");
+		String output = sb.toString();
+		if (output.length() > 0)
+			output = output.substring(0, output.length() -1);
+		return output;
+	}
+	
+	/**
+	 * Adds an element to a comma separated string and returns the
+	 * new string
+	 * @param csList The string to change
+	 * @param element The element to add
+	 * @return The cs-list with the element included
+	 */
+	private String addToString(String csList, String element) {
+		String newString = csList;
+		if (newString == null)
+			newString = "";
+		if (!newString.isEmpty())
+			newString += ",";
+		newString += element;
+		return newString;
 	}
 
 	@Override
