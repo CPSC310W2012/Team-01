@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -30,7 +31,9 @@ import com.google.gwt.maps.client.geom.Size;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.control.LargeMapControl3D;
 import com.google.gwt.maps.client.control.MapTypeControl;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ScriptElement;
 
 
 /**
@@ -115,8 +118,11 @@ public class GlobalView extends Composite implements View{
 		//Recent Events
 		eventsTable.setCellPadding(1);
 		eventsTable.setCellSpacing(3);
+		
 		eventsTable.setText(1, 0, "Event Title");
 		eventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
+		//eventsTable.setText(1, 1, "Share");
+		//eventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
 		eventsTable.setText(1, 1, "Event Type");
 		eventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
 		eventsTable.setText(1, 2, "Park Name");
@@ -128,13 +134,16 @@ public class GlobalView extends Composite implements View{
 
 		myEventsTable.setText(1, 0, "My Events");
 		myEventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
-		myEventsTable.setText(1, 1, "Event Type");
+		myEventsTable.setText(1, 1, "Share");
 		myEventsTable.getCellFormatter().addStyleName(1, 1, "recentEventHeaders");
-		myEventsTable.setText(1, 2, "Park Name");
+		myEventsTable.setText(1, 2, "Event Type");
 		myEventsTable.getCellFormatter().addStyleName(1, 2, "recentEventHeaders");
+		myEventsTable.setText(1, 3, "Park Name");
+		myEventsTable.getCellFormatter().addStyleName(1, 3, "recentEventHeaders");
+
 
 		//Add Tables to tabPanel
-		eventTabPanel.getTabBar().getElement().getStyle();
+		eventTabPanel.getTabBar().getElement().getStyle();		
 		eventTabPanel.add(eventsTable, "Recent Events");
 		eventTabPanel.add(myEventsTable, "My Events");
 		eventTabPanel.add(advisoryTable, "Park Advisories");
@@ -166,11 +175,16 @@ public class GlobalView extends Composite implements View{
 
 				if(userEmail.equals(events.get(i).get("creator_email")) || events.get(i).get("attending_emails").contains(userEmail)){
 					int row = myEventsTable.getRowCount();
-
+					HTML googlePlusButton = renderSmallPlusButton(events.get(i).get("id"));
+					googlePlusButton.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+					
+					
 					myEventsTable.setWidget(row, 0, new HTML("<a href=/?id=" + events.get(i).get("id") + "#EventPlace:Event" + ">" +
 							events.get(i).get("name") + "</a>"));
-					myEventsTable.setText(row, 1, events.get(i).get("category"));
-					myEventsTable.setText(row, 2, events.get(i).get("park_name"));
+					myEventsTable.setWidget(row, 1, googlePlusButton);
+					myEventsTable.setText(row, 2, events.get(i).get("category"));
+					myEventsTable.setText(row, 3, events.get(i).get("park_name"));
+					
 				}
 			}
 		}
@@ -189,9 +203,14 @@ public class GlobalView extends Composite implements View{
 
 			for(int i=0; i<tableLength; i++){
 				int row = eventsTable.getRowCount();
-
+				
+				HTML googlePlusButton = renderSmallPlusButton(events.get(i).get("id"));
+				googlePlusButton.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+				
+				
 				eventsTable.setWidget(row, 0, new HTML("<a href=/?id=" + events.get(i).get("id") + "#EventPlace:Event" + ">" +
 						events.get(i).get("name") + "</a>"));
+				//eventsTable.setWidget(row, 1, googlePlusButton);
 				eventsTable.setText(row, 1, events.get(i).get("category"));
 				eventsTable.setText(row, 2, events.get(i).get("park_name"));
 			}
@@ -260,7 +279,6 @@ public class GlobalView extends Composite implements View{
 						parkEvents.add(events.get(j));
 						markerFlag = true;
 						if(userEmail.equals(events.get(j).get("creator_email")) || events.get(j).get("attending_emails").contains(userEmail)){
-							System.out.println(events.get(j).get("creator_email") + " == " + events.get(j).get("attending_emails"));
 							userFlag = true;	
 						}
 						
@@ -320,8 +338,12 @@ public class GlobalView extends Composite implements View{
 
 			HTML eventHTML = new HTML("<a href=/?id=" + parkEvents.get(i).get("id") + "#EventPlace:Event" + ">" +
 					parkEvents.get(i).get("name") + "</a>" + " - " + parkEvents.get(i).get("category") + " - " + parkEvents.get(i).get("date"));
+			//HTML plusButtonHTML = renderSmallPlusButton(parkEvents.get(i).get("id"));
 
-			parkEventsTable.setWidget(row, 0, eventHTML);
+			
+			parkEventsTable.setWidget(row, 1, eventHTML);
+			//parkEventsTable.setWidget(row, 2, plusButtonHTML);
+			
 		}
 
 		infoPanel.add(new HTML("<font color=\"#4C674C\"><big><b> Events at " + parkEvents.get(0).get("park_name") + ": </b></big></font><br/>"));
@@ -352,6 +374,21 @@ public class GlobalView extends Composite implements View{
 				}
 			}
 		}
+	}
+	
+	private HTML renderSmallPlusButton(String eventID) {
+		String targetURL = "http://vancitymeetupscheduler.appspot.com?id=" +eventID + "#EventPlace:Event";
+		String s = "<g:plusone  size=\"small\" annotation=\"none\" href=\"" + targetURL +"\"></g:plusone>";
+		HTML html = new HTML(s);
+	
+		Document doc = Document.get();
+		ScriptElement script = doc.createScriptElement();
+		script.setSrc("https://apis.google.com/js/plusone.js");
+		script.setType("text/javascript");
+		script.setLang("javascript");
+		doc.getBody().appendChild(script);
+		
+		return html;
 	}
 
 	@Override

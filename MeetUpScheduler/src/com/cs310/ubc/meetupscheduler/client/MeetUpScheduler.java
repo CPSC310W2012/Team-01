@@ -86,8 +86,6 @@ public class MeetUpScheduler implements EntryPoint {
 	      public void onSuccess(LoginInfo result) {
 	        loginInfo = result;
 	        if(loginInfo.isLoggedIn()) {
-	        	//TODO: Fix this daisy chain of async calls into something more elegant.
-	        	//Currently calls loadParks, which calls loadEvents, which calls loadMeetupScheduler
 	        	loadParks();
 	        } else {
 	        	loadLogin();	
@@ -252,12 +250,7 @@ public class MeetUpScheduler implements EntryPoint {
 	
 	public static ArrayList<HashMap<String, String>> getAdvisories() {
 		return allAdvisories;
-	}
-	
-	//TODO: Implement accessor for login info
-	public static void getLoginInfo() {
-		return;
-	}
+	}	
 	
 	//TODO: Implement reload of page. To be called by event creation. 
 	public void reloadViews() {
@@ -279,6 +272,7 @@ public class MeetUpScheduler implements EntryPoint {
 		catList.add("Basketball");
 		catList.add("Bicycling");
 		catList.add("Bocce Ball");
+		catList.add("Cricket");
 		catList.add("Football");
 		catList.add("Jogging");
 		catList.add("Lawn Bowling");

@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;	
-import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -68,7 +66,6 @@ public class CreateEventView extends Composite implements View {
 	//Notes field
 	private TextArea notesField = new TextArea();
 
-	//TODO Have to figure this out
 	public CreateEventView() {
 		viewPanel.getElement().appendChild(nameSpan);
 		initWidget(viewPanel);
@@ -109,7 +106,6 @@ public class CreateEventView extends Composite implements View {
 
 		Button submitButton = new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//TODO: Implement verifier call, submit call, and route to event view tab
 				setEventFields();				
 
 				if (verifyFields()) {
