@@ -41,28 +41,35 @@ public class EventView extends Composite implements View{
 	 * 
 	 * @author Ben
 	 */
+	//map constants
 	private final int MAP_HEIGHT = 400;
 	private final int MAP_WIDTH = 500;	
 
 
 	private TextBox loadText = new TextBox();
-	private VerticalPanel rootPanel = new VerticalPanel();
-	private HorizontalPanel topPanel = new HorizontalPanel();
-	private VerticalPanel bottomPanel = new VerticalPanel();
-	private HorizontalPanel queryPanel = new HorizontalPanel();
+	//Element Panels
+	private HorizontalPanel eventPanel = new HorizontalPanel();	
+	private VerticalPanel queryPanel = new VerticalPanel();
 	private VerticalPanel resultsPanel = new VerticalPanel();
-	private HTML eventName = new HTML();
+	private VerticalPanel leftPanel = new VerticalPanel();
+	private VerticalPanel rightPanel = new VerticalPanel();
+	private HorizontalPanel sharePanel = new HorizontalPanel();
+	private Label eventName = new Label();
+	//buttons
 	private Button joinButton = new Button();
+	private HorizontalPanel joinButtonPanel = new HorizontalPanel();
 	private Button loadButton = new Button();
 	private VerticalPanel parkPanel = new VerticalPanel();
 	private ListBox attendeesBox = new ListBox();
 	private VerticalPanel attendeePanel = new VerticalPanel();
 	private VerticalPanel infoPanel = new VerticalPanel();
+	//labels
 	private Label eventCreator = new Label();
 	private Label eventLoc = new Label();
 	private Label eventTime = new Label();
 	private Label eventNotes = new Label();
 	private Label eventCategory = new Label();
+	private Label searchLabel = new Label("Search for an Event");
 	private Button shareButton = new Button();
 	private MapWidget eventMap;
 	private ArrayList<String> members = new ArrayList<String>();
@@ -116,7 +123,7 @@ public class EventView extends Composite implements View{
 				buildUI();
 			}
 		});
-		return rootPanel;
+		return eventPanel;
 	}
 
 	/**
@@ -181,21 +188,34 @@ public class EventView extends Composite implements View{
 			}
 		});
 
+		//attendee panel setup
+		attCountLabel.addStyleDependentName("attCount");
+		attendeePanel.add(attCountLabel);
+		attendeesBox.addStyleDependentName("attendees");
+		attendeePanel.add(attendeesBox);
+		
 		setUpInfoPanel();
 		setUpSearchPanel();
 
 		// Add items to panels
 		parkPanel.add(eventMap);
-		attendeePanel.add(attCountLabel);
-		attendeePanel.add(attendeesBox);
-		//	rootPanel.add(loadText);
-		//		rootPanel.add(loadButton);
-		topPanel.add(infoPanel);
-		topPanel.add(joinButton);
-		//	rootPanel.add(shareButton);
-		topPanel.add(parkPanel);
-		rootPanel.add(topPanel);
-		rootPanel.add(bottomPanel);
+		parkPanel.addStyleName("parkPanel");
+				
+		leftPanel.add(parkPanel);
+		
+		infoPanel.addStyleName("infoPanel");
+		rightPanel.add(infoPanel);
+		queryPanel.addStyleName("queryPanel");
+		rightPanel.add(queryPanel);
+		resultsPanel.addStyleName("resultsPanel");
+		rightPanel.add(resultsPanel);
+		
+		eventPanel.addStyleName("eventPanel");
+		eventPanel.add(leftPanel);
+		eventPanel.add(rightPanel);
+		
+		//	rootPanel.add(shareButton);		
+		
 		loadEvent(eventURLID);
 		renderPlusButton();
 
@@ -209,7 +229,8 @@ public class EventView extends Composite implements View{
 		String testURL = "http://vancitymeetupscheduler.appspot.com?id=" + event.get("id") + "#EventPlace:Event";
 		String s = "<g:plusone href=\"" + testURL +"\"></g:plusone>";
 		HTML h = new HTML(s);
-		attendeePanel.add(h);
+	
+		sharePanel.add(h);
 
 		Document doc = Document.get();
 		ScriptElement script = doc.createScriptElement();
@@ -233,7 +254,7 @@ public class EventView extends Composite implements View{
 					if (Integer.parseInt(allEvents.get(i).get("id")) == eventID){
 						event = allEvents.get(i);
 						eventCreator.setText("Creator: " + event.get("creator_name"));
-						eventName.setHTML("<h2>" + event.get("name") + "</h2>"); 
+						eventName.setText(event.get("name")); 
 						eventTime.setText("Time: " + event.get("date") + " from " + event.get("start_time") + " to " + event.get("end_time"));
 						eventLoc.setText("Location: " + event.get("park_name"));
 						if (event.get("notes") != null) {
@@ -298,13 +319,26 @@ public class EventView extends Composite implements View{
 	 * This creates the panel with the relevant information of the event.
 	 */
 	private void setUpInfoPanel() {
+		eventName.addStyleDependentName("eventEventName");
 		infoPanel.add(eventName);
+		eventCreator.addStyleDependentName("eventCreator");
 		infoPanel.add(eventCreator);
+		eventCategory.addStyleDependentName("eventCategory");
 		infoPanel.add(eventCategory);
+		eventLoc.addStyleDependentName("eventLoc");
 		infoPanel.add(eventLoc);
+		eventTime.addStyleDependentName("eventTime");
 		infoPanel.add(eventTime);
+		attendeePanel.addStyleName("attendeePanel");
 		infoPanel.add(attendeePanel);
+		eventNotes.addStyleDependentName("eventNotes");
 		infoPanel.add(eventNotes);
+		joinButton.addStyleDependentName("join");
+		joinButtonPanel.add(joinButton);
+		joinButtonPanel.addStyleName("joinButtonPanel");
+		sharePanel.add(joinButtonPanel);
+		sharePanel.addStyleName("sharePanel");		
+		infoPanel.add(sharePanel);
 	}
 
 	/**
@@ -321,15 +355,20 @@ public class EventView extends Composite implements View{
 	}
 	
 	private void setUpSearchPanel() {
+		searchLabel.addStyleDependentName("search");
+		queryPanel.add(searchLabel);
 		getParks(parksBox);
+		parksLabel.addStyleDependentName("parks");
 		queryPanel.add(parksLabel);
+		parksBox.addStyleDependentName("parks");
 		queryPanel.add(parksBox);
 		populateCategories(categoryBox);
+		categoryLabel.addStyleDependentName("categories");
 		queryPanel.add(categoryLabel);
+		categoryBox.addStyleDependentName("categories");
 		queryPanel.add(categoryBox);
-		queryPanel.add(searchButton);
-		bottomPanel.add(queryPanel);
-		bottomPanel.add(resultsPanel);
+		searchButton.addStyleDependentName("search");
+		queryPanel.add(searchButton);		
 	}
 	
 	private void getParks(final ListBox parksList) {
@@ -363,10 +402,5 @@ public class EventView extends Composite implements View{
 		nameSpan.setInnerText("Event " + name);
 	}
 
-	//TODO: 
-	/**
-	 *  Add styling with CSS
-	 *  Fix up the interface to make it look nice
-	 * 
-	 */
+	
 }

@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -45,23 +46,31 @@ public class CreateEventView extends Composite implements View {
 	private String endTime;
 	private String notes;
 
-	//Panel to hold Create Event Components
+	//Panels to hold Create Event Components
 	private VerticalPanel rightPanel = new VerticalPanel();
-	private VerticalPanel leftPanel = new VerticalPanel();
-	private HorizontalPanel createEventPanel = new HorizontalPanel();
-	//Name boxes	
+	private VerticalPanel leftPanel = new VerticalPanel();	
+	private DockPanel createEventPanel = new DockPanel();	
+	private HorizontalPanel titlePanel = new HorizontalPanel();
+	private HorizontalPanel submitPanel = new HorizontalPanel();
+	private HorizontalPanel timePanel = new HorizontalPanel();
+	//Name boxes
+	private Label pageTitle = new Label("Create a New Event!");
 	private TextBox eventNameBox = new TextBox();
 	private Label eventNameLabel = new Label("Event Name");
-	private Label notesLabel = new Label("Notes");
+	private Label notesLabel = new Label("Event Notes");
 	//Date Selector for Event
 	private DatePicker eventDatePicker = new DatePicker();
 	private Label eventDatePickerLabel = new Label();
 	//Time selectors
+	private Label startTimeLabel = new Label("From:");
+	private Label endTimeLabel = new Label("Until:");
 	private ListBox startTimeList = new ListBox();
 	private ListBox endTimeList = new ListBox();
 	//Category selector
+	private Label categoriesLabel = new Label("Category:");
 	private ListBox categoriesListBox = new ListBox();
 	//Park Selector
+	private Label parkLabel = new Label("Park:");
 	private ListBox parksListBox = new ListBox();
 	private SimplePanel viewPanel = new SimplePanel();
 	private Element nameSpan = DOM.createSpan();
@@ -88,7 +97,7 @@ public class CreateEventView extends Composite implements View {
 			public void onValueChange(ValueChangeEvent<Date> event) {
 				Date eventDate = event.getValue();
 				String eventDateString = DateTimeFormat.getMediumDateFormat().format(eventDate);
-				eventDatePickerLabel.setText(eventDateString);
+				eventDatePickerLabel.setText("Event Date: " + eventDateString);
 			}
 		}); 
 		//Default Value for date
@@ -109,7 +118,7 @@ public class CreateEventView extends Composite implements View {
 
 		Button submitButton = new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//TODO: Implement verifier call, submit call, and route to event view tab
+				
 				setEventFields();				
 
 				if (verifyFields()) {
@@ -125,24 +134,58 @@ public class CreateEventView extends Composite implements View {
 		notesField.getElement().getStyle().setProperty("resize", "none");
 		notesField.setWidth("250px");
 		notesField.setHeight("100px");
+		notesField.addStyleName("notesField");
 		//Add items to panel
-		//TODO: fix appearance through sub-panels
+		
+		eventNameLabel.addStyleDependentName("eventName");
 		leftPanel.add(eventNameLabel);
+		eventNameBox.addStyleName("eventNameBox");
 		leftPanel.add(eventNameBox);
+		parkLabel.addStyleDependentName("park");
+		leftPanel.add(parkLabel);
+		parksListBox.addStyleDependentName("parks");
 		leftPanel.add(parksListBox);
+		categoriesLabel.addStyleDependentName("categories");
+		leftPanel.add(categoriesLabel);
+		categoriesListBox.addStyleDependentName("categories");
 		leftPanel.add(categoriesListBox);
+		notesLabel.addStyleDependentName("notes");
 		leftPanel.add(notesLabel);
+		notesField.addStyleName("notesField");
 		leftPanel.add(notesField);
-		leftPanel.add(submitButton);
+		
+		submitButton.addStyleDependentName("submit");
+		submitPanel.add(submitButton);
+		submitPanel.addStyleName("submitPanel");
+		leftPanel.add(submitPanel);
 
+		eventDatePickerLabel.addStyleDependentName("eventDate");
 		rightPanel.add(eventDatePickerLabel);
+		eventDatePicker.addStyleDependentName("event");
 		rightPanel.add(eventDatePicker);
-		rightPanel.add(startTimeList);
-		rightPanel.add(endTimeList);
+		
+		//Time selector Panel
+		startTimeLabel.addStyleDependentName("startTime");
+		timePanel.add(startTimeLabel);
+		startTimeList.addStyleDependentName("startTime");
+		timePanel.add(startTimeList);
+		endTimeLabel.addStyleDependentName("endTime");
+		timePanel.add(endTimeLabel);
+		endTimeList.addStyleDependentName("endTime");
+		timePanel.add(endTimeList);
+		
+		rightPanel.add(timePanel);
+		
+		pageTitle.addStyleDependentName("pageTitle");
+		titlePanel.add(pageTitle);
+		titlePanel.addStyleName("titlePanel");
+		
 
 
-		createEventPanel.add(leftPanel);
-		createEventPanel.add(rightPanel);		
+		createEventPanel.add(titlePanel, DockPanel.NORTH);
+		createEventPanel.add(leftPanel, DockPanel.WEST);
+		createEventPanel.add(rightPanel, DockPanel.EAST);
+		
 
 		return createEventPanel;
 	}

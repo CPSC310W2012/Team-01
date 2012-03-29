@@ -99,7 +99,10 @@ public class MeetUpScheduler implements EntryPoint {
 	private void loadLogin() {
 	    // Assemble login panel.
 	    signInLink.setHref(loginInfo.getLoginUrl());
-	    loginPanel.add(loginLabel);
+	    signInLink.addStyleName("loginLink");
+	    loginPanel.addStyleName("loginPanel");	    
+	    loginLabel.addStyleDependentName("login");
+	    loginPanel.add(loginLabel);	    
 	    loginPanel.add(signInLink);
 	    RootPanel.get().add(loginPanel);
 	}
