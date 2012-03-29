@@ -176,7 +176,7 @@ h1 {
 .gwt-Label-eventEventName {
 	width: 250px;
 	text-align: center;
-	font-size: 1em;
+	font-size: 1.5em;
 }
 
 .gwt-Label-eventCreator {
@@ -203,6 +203,18 @@ h1 {
 	width: 250px;
 }
 
+.sharePanel {
+	margin-top: 5px;	
+}
+
+.joinButtonPanel {
+	margin-right: 50px;
+}
+
+.gwt-Button-join {
+	width: 125px;
+	font-weight: bold;	
+}
 
 .queryPanel {
 	margin-left: 20px;
@@ -215,6 +227,12 @@ h1 {
 .gwt-Label-search {
 	margin-top: 5px;
 	font-weight: bold;
+}
+
+.searchButtonPanel {
+	margin-top: 5px;
+	margin-left: 60px;
+	margin-bottom: 5px;
 }
 
 .gwt-Button-search {
@@ -232,9 +250,85 @@ h1 {
 	margin-left: 10px;
 }
 
-.parksPanel {
-	margin-top: 30px;
-	background: lightGrey;	
+.parksPanel {	
+	background: lightGrey;
+	width: 260px;	
+}
+
+.gwt-Label-findPark {
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+.zoomButtonPanel {
+	margin-top: 5px;
+	margin-left: 65px;
+	margin-bottom: 5px;
+}
+
+.gwt-Button-park {
+	width: 125px;
+	font-weight: bold;	
+}
+	
+
+.eventTabPanel {
+	margin-top: 20px;
+}
+
+/* Header stuff */
+
+.headerPanel {
+	height: 60px;
+	width: 900px;
+	background: #C9DFAF;
+}
+
+.gwt-Label-appName {
+	width: 75px;
+	margin-left: 10px;
+	margin-right: 50px;
+	font-size: 2em;
+	font-weight: bold;
+	font-family: verdana;	
+}
+
+.buttonPanel {
+	margin-top: 15px;
+}
+
+.gwt-Button-home {
+	width: 125px;
+}
+
+.gwt-Button-createEvent {
+	width: 125px;
+}
+
+.gwt-Button-event {
+	width: 125px;
+}
+
+.gwt-Button-admin {
+	width: 125px;
+}
+
+
+/* Footer stuff */
+
+.footerPanel {
+	height: 60px;
+	width: 900px;
+	margin-top: 10px;
+	background: #C9DFAF;
+}
+
+.signOutPanel {
+	height: 15px;
+	width: 55px;
+	margin-top: 20px;
+	margin-left: 20px;
+	background: lightGrey;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 }

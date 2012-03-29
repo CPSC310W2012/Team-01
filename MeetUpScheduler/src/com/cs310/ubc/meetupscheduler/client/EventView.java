@@ -58,6 +58,7 @@ public class EventView extends Composite implements View{
 	//buttons
 	private Button joinButton = new Button();
 	private HorizontalPanel joinButtonPanel = new HorizontalPanel();
+	private HorizontalPanel searchButtonPanel = new HorizontalPanel();
 	private Button loadButton = new Button();
 	private VerticalPanel parkPanel = new VerticalPanel();
 	private ListBox attendeesBox = new ListBox();
@@ -368,7 +369,9 @@ public class EventView extends Composite implements View{
 		categoryBox.addStyleDependentName("categories");
 		queryPanel.add(categoryBox);
 		searchButton.addStyleDependentName("search");
-		queryPanel.add(searchButton);		
+		searchButtonPanel.add(searchButton);
+		searchButtonPanel.addStyleName("searchButtonPanel");
+		queryPanel.add(searchButtonPanel);		
 	}
 	
 	private void getParks(final ListBox parksList) {

@@ -158,10 +158,11 @@ public class GlobalView extends Composite implements View{
 		addParkAdvisories(allAdvisories);
 		addEventMarkers(allEvents, allParks, map);
 		
-		eventTabPanel.addStyleName("eventTabPanel");
-		rightPanel.add(eventTabPanel);
 		parksPanel.addStyleName("parksPanel");
 		rightPanel.add(parksPanel);
+		eventTabPanel.addStyleName("eventTabPanel");
+		rightPanel.add(eventTabPanel);
+		
 
 		//put ui elements into rootPanel field
 		globalViewPanel.addStyleName("globalViewPanel");
