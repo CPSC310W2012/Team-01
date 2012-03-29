@@ -22,7 +22,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * creates/stores/retrieves/modifies JDOs.
  */
 public class DataObjectServiceImpl extends RemoteServiceServlet implements DataObjectService {
-
 	private static final long serialVersionUID = 4058514716973575670L;
 	private static final Logger LOG = Logger.getLogger(DataObjectServiceImpl.class.getName());
 	private static final Map<String, Class<? extends DataObject>> tableMap = getTables();
@@ -110,7 +109,6 @@ public class DataObjectServiceImpl extends RemoteServiceServlet implements DataO
 				q = pm.newQuery(tableClass, query);
 			List<DataObject> objects = (List<DataObject>) q.execute();
 			for (DataObject object: objects) {
-				HashMap<String, String> objectHash = object.formatForTable();
 				for (Entry<String, String> value: valueMap.entrySet()) {
 					if (!value.getValue().equals(object.getField(value.getKey()))) {
 						object.setField(value.getKey(), value.getValue());

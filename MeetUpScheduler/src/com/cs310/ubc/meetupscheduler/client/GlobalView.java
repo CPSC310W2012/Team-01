@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,8 +23,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MarkerClickHandler;
@@ -378,6 +375,11 @@ public class GlobalView extends Composite implements View{
 		}
 	}
 	
+	/**
+	 * Renders a small google+ button to share events.
+	 * @param eventID The event for which to render the button.
+	 * @return The rendered button
+	 */
 	private HTML renderSmallPlusButton(String eventID) {
 		String targetURL = "http://vancitymeetupscheduler.appspot.com?id=" +eventID + "#EventPlace:Event";
 		String s = "<g:plusone  size=\"small\" annotation=\"none\" href=\"" + targetURL +"\"></g:plusone>";
