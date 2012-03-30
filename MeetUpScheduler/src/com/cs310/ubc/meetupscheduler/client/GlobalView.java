@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,8 +45,8 @@ import com.google.gwt.dom.client.ScriptElement;
 
 public class GlobalView extends Composite implements View{
 
-	private static final int MAP_HEIGHT = 550;
-	private static final int MAP_WIDTH = 700;
+	private static final int MAP_HEIGHT = 400;
+	private static final int MAP_WIDTH = 500;
 	private static final int EVENT_TABLE_LENGTH = 15;
 
 	private static ArrayList<HashMap<String, String>> allEvents;
@@ -53,13 +54,17 @@ public class GlobalView extends Composite implements View{
 	private static ArrayList<HashMap<String, String>> allAdvisories;
 	private final LoginInfo currentUser = SharedData.getLoginInfo();
 
-	private HorizontalPanel rootPanel = new HorizontalPanel();
-	private VerticalPanel parkTable = new VerticalPanel();
+	private HorizontalPanel globalViewPanel = new HorizontalPanel();
+	private VerticalPanel leftPanel = new VerticalPanel();
+	private VerticalPanel rightPanel = new VerticalPanel();
 	private FlexTable advisoryTable = new FlexTable();
 	private FlexTable eventsTable = new FlexTable();
 	private FlexTable myEventsTable = new FlexTable();
 	private TabPanel eventTabPanel = new TabPanel();
+	private VerticalPanel parksPanel = new VerticalPanel();
 	private ListBox parkBox = new ListBox();
+	private Label findParkLabel = new Label("Find a Park");
+	private HorizontalPanel zoomButtonPanel = new HorizontalPanel();
 	Widget viewPanel = new SimplePanel();
 	Element nameSpan = DOM.createSpan();
 
@@ -83,7 +88,7 @@ public class GlobalView extends Composite implements View{
 				buildUi();
 			}
 		});
-		return rootPanel;
+		return globalViewPanel;
 	}
 
 	/**
@@ -110,10 +115,17 @@ public class GlobalView extends Composite implements View{
 
 		//Parks
 		addParksToListBox(allParks);
-		parkTable.add(parkBox);
-		parkTable.add(parkButton);
-		parkTable.setWidth("500");
-		parkTable.add(map);
+				
+		leftPanel.add(map);
+		
+		findParkLabel.addStyleDependentName("findPark");
+		parksPanel.add(findParkLabel);
+		parkBox.addStyleDependentName("parks");
+		parksPanel.add(parkBox);
+		parkButton.addStyleDependentName("park");
+		zoomButtonPanel.add(parkButton);
+		zoomButtonPanel.addStyleName("zoomButtonPanel");
+		parksPanel.add(zoomButtonPanel);
 
 		//Recent Events
 		eventsTable.setCellPadding(1);
@@ -154,10 +166,19 @@ public class GlobalView extends Composite implements View{
 		addMyEvents(allEvents);
 		addParkAdvisories(allAdvisories);
 		addEventMarkers(allEvents, allParks, map);
+		
+		parksPanel.addStyleName("parksPanel");
+		rightPanel.add(parksPanel);
+		eventTabPanel.addStyleName("eventTabPanel");
+		rightPanel.add(eventTabPanel);
+		
 
 		//put ui elements into rootPanel field
-		rootPanel.add(parkTable);
-		rootPanel.add(eventTabPanel);
+		globalViewPanel.addStyleName("globalViewPanel");
+		leftPanel.addStyleName("leftPanel");
+		globalViewPanel.add(leftPanel);
+		rightPanel.addStyleName("rightPanel");
+		globalViewPanel.add(rightPanel);
 	}
 
 	/**

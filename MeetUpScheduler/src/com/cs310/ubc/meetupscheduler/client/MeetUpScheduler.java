@@ -23,6 +23,7 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -66,6 +67,11 @@ public class MeetUpScheduler implements EntryPoint {
 	  private Place adminPlace;
 	  private SimplePanel appWidget = new SimplePanel();
 	  //private Anchor createEvent = new Anchor("Create Event");
+	  private HorizontalPanel headerPanel = new HorizontalPanel();
+	  private HorizontalPanel buttonPanel = new HorizontalPanel();
+	  private HorizontalPanel footerPanel = new HorizontalPanel();
+	  private HorizontalPanel signOutPanel = new HorizontalPanel();
+	  private Label appName = new Label("VanCity Events");
 	  private Button createEventButton = new Button("Create Event");
 	  private Button eventButton = new Button("Event");
 	  private Button adminButton = new Button("Admin");
@@ -97,7 +103,10 @@ public class MeetUpScheduler implements EntryPoint {
 	private void loadLogin() {
 	    // Assemble login panel.
 	    signInLink.setHref(loginInfo.getLoginUrl());
-	    loginPanel.add(loginLabel);
+	    signInLink.addStyleName("loginLink");
+	    loginPanel.addStyleName("loginPanel");	    
+	    loginLabel.addStyleDependentName("login");
+	    loginPanel.add(loginLabel);	    
 	    loginPanel.add(signInLink);
 	    RootPanel.get().add(loginPanel);
 	}
@@ -161,10 +170,21 @@ public class MeetUpScheduler implements EntryPoint {
 					
 			}
 		});
-		RootPanel.get().add(homeButton);
-		RootPanel.get().add(createEventButton);
-		RootPanel.get().add(eventButton);
-		RootPanel.get().add(adminButton);
+		
+		appName.addStyleDependentName("appName");
+		homeButton.addStyleDependentName("home");
+		createEventButton.addStyleDependentName("createEvent");
+		eventButton.addStyleDependentName("event");
+		adminButton.addStyleDependentName("admin");
+		headerPanel.add(appName);
+		buttonPanel.add(homeButton);
+		buttonPanel.add(createEventButton);
+		buttonPanel.add(eventButton);
+		buttonPanel.add(adminButton);
+		buttonPanel.addStyleName("buttonPanel");		
+		headerPanel.add(buttonPanel);
+		headerPanel.addStyleName("headerPanel");
+		RootPanel.get().add(headerPanel);		
 			
 		
         // Start ActivityManager for the main widget with our ActivityMapper
@@ -183,7 +203,13 @@ public class MeetUpScheduler implements EntryPoint {
         historyHandler.handleCurrentHistory();
 	    // Set up sign out hyperlink.
 	    signOutLink.setHref(loginInfo.getLogoutUrl());
-	    RootPanel.get().add(signOutLink);
+	    
+	    signOutLink.addStyleDependentName("signOut");
+	    signOutPanel.add(signOutLink);
+	    signOutPanel.addStyleName("signOutPanel");
+	    footerPanel.add(signOutPanel);
+	    footerPanel.addStyleName("footerPanel");
+	    RootPanel.get().add(footerPanel);
 	}
 
 	public void createTab(Widget w, String name) {
@@ -195,9 +221,8 @@ public class MeetUpScheduler implements EntryPoint {
 		
 		parkService.get("Park", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>() {
 			@Override
-			public void onFailure(Throwable error) {
-				//TODO: replace with actual table flip
-				System.out.println("Table Flip!");
+			public void onFailure(Throwable error) {				
+				System.out.println("AAAARRRGHHHHH --Table Flip!--");
 			}
 			
 			public void onSuccess(ArrayList<HashMap<String, String>> parks) {
@@ -252,12 +277,6 @@ public class MeetUpScheduler implements EntryPoint {
 		return allAdvisories;
 	}	
 	
-	//TODO: Implement reload of page. To be called by event creation. 
-	public void reloadViews() {
-		//remove old elements? then redraw
-		//loadEvents();
-	}
-
 
 	public static void addEvent(HashMap<String, String> event) {
 	 	    allEvents.add(event);
