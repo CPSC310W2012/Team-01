@@ -130,7 +130,6 @@ public class GlobalView extends Composite implements View{
 		//Recent Events
 		eventsTable.setCellPadding(1);
 		eventsTable.setCellSpacing(3);
-		eventsTable.getColumnFormatter().getElement(0).setAttribute("width", "2");
 		
 		eventsTable.setText(1, 0, "Event Title");
 		eventsTable.getCellFormatter().addStyleName(1, 0, "recentEventHeaders");
