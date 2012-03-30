@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.cs310.ubc.meetupscheduler.client.MeetUpScheduler.SharedData;	
-import com.cs310.ubc.meetupscheduler.client.places.EventPlace;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,6 +17,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -29,8 +28,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
+/**
+ * This class contains the logic and appearance of the create event page.
+ *
+ */
 public class CreateEventView extends Composite implements View {
-
 	private final DataObjectServiceAsync objectService = GWT.create(DataObjectService.class);
 	private ArrayList<HashMap<String, String>> allParks;
 	//event fields
@@ -45,41 +47,58 @@ public class CreateEventView extends Composite implements View {
 	private String endTime;
 	private String notes;
 
-	//Panel to hold Create Event Components
+	//Panels to hold Create Event Components
 	private VerticalPanel rightPanel = new VerticalPanel();
-	private VerticalPanel leftPanel = new VerticalPanel();
-	private HorizontalPanel createEventPanel = new HorizontalPanel();
-	//Name boxes	
+	private VerticalPanel leftPanel = new VerticalPanel();	
+	private DockPanel createEventPanel = new DockPanel();	
+	private HorizontalPanel titlePanel = new HorizontalPanel();
+	private HorizontalPanel submitPanel = new HorizontalPanel();
+	private HorizontalPanel timePanel = new HorizontalPanel();
+	//Name boxes
+	private Label pageTitle = new Label("Create a New Event!");
 	private TextBox eventNameBox = new TextBox();
 	private Label eventNameLabel = new Label("Event Name");
-	private Label notesLabel = new Label("Notes");
+	private Label notesLabel = new Label("Event Notes");
 	//Date Selector for Event
 	private DatePicker eventDatePicker = new DatePicker();
 	private Label eventDatePickerLabel = new Label();
 	//Time selectors
+	private Label startTimeLabel = new Label("From:");
+	private Label endTimeLabel = new Label("Until:");
 	private ListBox startTimeList = new ListBox();
 	private ListBox endTimeList = new ListBox();
 	//Category selector
+	private Label categoriesLabel = new Label("Category:");
 	private ListBox categoriesListBox = new ListBox();
 	//Park Selector
+	private Label parkLabel = new Label("Park:");
 	private ListBox parksListBox = new ListBox();
 	private SimplePanel viewPanel = new SimplePanel();
 	private Element nameSpan = DOM.createSpan();
 	//Notes field
 	private TextArea notesField = new TextArea();
 
-	//TODO Have to figure this out
+	/**
+	 * Constructor that does not specify a park.
+	 */
 	public CreateEventView() {
 		viewPanel.getElement().appendChild(nameSpan);
 		initWidget(viewPanel);
 	}
 
+	/**
+	 * Constructor that takes parkID of event
+	 * @param parkID The id of the park at which to create the event.
+	 */
 	public CreateEventView(String parkID) {
 		viewPanel.getElement().appendChild(nameSpan);
 		initWidget(viewPanel);
 		park_id = parkID;
 	}
 
+	/**
+	 * Renders create event page
+	 */
 	@Override
 	public Widget asWidget() {					
 
@@ -88,7 +107,7 @@ public class CreateEventView extends Composite implements View {
 			public void onValueChange(ValueChangeEvent<Date> event) {
 				Date eventDate = event.getValue();
 				String eventDateString = DateTimeFormat.getMediumDateFormat().format(eventDate);
-				eventDatePickerLabel.setText(eventDateString);
+				eventDatePickerLabel.setText("Event Date: " + eventDateString);
 			}
 		}); 
 		//Default Value for date
@@ -109,7 +128,7 @@ public class CreateEventView extends Composite implements View {
 
 		Button submitButton = new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//TODO: Implement verifier call, submit call, and route to event view tab
+
 				setEventFields();				
 
 				if (verifyFields()) {
@@ -125,35 +144,77 @@ public class CreateEventView extends Composite implements View {
 		notesField.getElement().getStyle().setProperty("resize", "none");
 		notesField.setWidth("250px");
 		notesField.setHeight("100px");
+		notesField.addStyleName("notesField");
 		//Add items to panel
-		//TODO: fix appearance through sub-panels
+		
+		eventNameLabel.addStyleDependentName("eventName");
 		leftPanel.add(eventNameLabel);
+		eventNameBox.addStyleName("eventNameBox");
 		leftPanel.add(eventNameBox);
+		parkLabel.addStyleDependentName("park");
+		leftPanel.add(parkLabel);
+		parksListBox.addStyleDependentName("parks");
 		leftPanel.add(parksListBox);
+		categoriesLabel.addStyleDependentName("categories");
+		leftPanel.add(categoriesLabel);
+		categoriesListBox.addStyleDependentName("categories");
 		leftPanel.add(categoriesListBox);
+		notesLabel.addStyleDependentName("notes");
 		leftPanel.add(notesLabel);
+		notesField.addStyleName("notesField");
 		leftPanel.add(notesField);
-		leftPanel.add(submitButton);
+		
+		submitButton.addStyleDependentName("submit");
+		submitPanel.add(submitButton);
+		submitPanel.addStyleName("submitPanel");
+		leftPanel.add(submitPanel);
 
+		eventDatePickerLabel.addStyleDependentName("eventDate");
 		rightPanel.add(eventDatePickerLabel);
+		eventDatePicker.addStyleDependentName("event");
 		rightPanel.add(eventDatePicker);
-		rightPanel.add(startTimeList);
-		rightPanel.add(endTimeList);
+		
+		//Time selector Panel
+		startTimeLabel.addStyleDependentName("startTime");
+		timePanel.add(startTimeLabel);
+		startTimeList.addStyleDependentName("startTime");
+		timePanel.add(startTimeList);
+		endTimeLabel.addStyleDependentName("endTime");
+		timePanel.add(endTimeLabel);
+		endTimeList.addStyleDependentName("endTime");
+		timePanel.add(endTimeList);
+		
+		rightPanel.add(timePanel);
+		
+		pageTitle.addStyleDependentName("pageTitle");
+		titlePanel.add(pageTitle);
+		titlePanel.addStyleName("titlePanel");
+		
 
 
-		createEventPanel.add(leftPanel);
-		createEventPanel.add(rightPanel);		
+		createEventPanel.add(titlePanel, DockPanel.NORTH);
+		createEventPanel.add(leftPanel, DockPanel.WEST);
+		createEventPanel.add(rightPanel, DockPanel.EAST);
+		
 
 		return createEventPanel;
 	}
 
+	/**
+	 * Gets a list of all parks from the server and populates parks listbox
+	 * @param parksList The listbox to populate
+	 */
 	private void getParks(final ListBox parksList) {
-
 		allParks = MeetUpScheduler.getParks();
 		addParksToParksListBox(allParks, parksList);		
 
 	}
 
+	/**
+	 * Populates the park listbox
+	 * @param parks List of parks
+	 * @param parksList The listbox to populate
+	 */
 	private void addParksToParksListBox(ArrayList<HashMap<String, String>> parks, ListBox parksList){
 		ArrayList<String> parkNames = new ArrayList<String>();
 
@@ -168,6 +229,11 @@ public class CreateEventView extends Composite implements View {
 		}
 	}
 
+	/**
+	 * Returns the id of a park given its name
+	 * @param parkName The name of the park
+	 * @return The id of the park
+	 */
 	private String getParkID(String parkName) {
 		String id = "";		
 		for (int i=0;i<allParks.size(); i++) {
@@ -175,12 +241,13 @@ public class CreateEventView extends Composite implements View {
 				id = allParks.get(i).get("id");
 			}
 		}
-
 		return id;
 	}
 
+	/**
+	 * Get values from user inputted fields.
+	 */
 	private void setEventFields() {
-
 		eventName = eventNameBox.getValue();
 		LoginInfo loginInfo = MeetUpScheduler.SharedData.getLoginInfo();
 		userName = loginInfo.getNickname();
@@ -194,12 +261,19 @@ public class CreateEventView extends Composite implements View {
 		notes = notesField.getText();
 	}
 
+	/**
+	 * Checks if user inputted values are valid.
+	 * @return true if valid, false if not
+	 */
 	private boolean verifyFields() {
 		//TODO: specify conditions for field verification, add field specific errors
 		if (eventName == null || userName == null || park_name == null || date == null || startTime == null || endTime == null || notes.length() > 500) return false;
 		return true;
 	}
 
+	/**
+	 * Creates event and saves it to server.
+	 */
 	//TODO: Use the ENUM from event for the field names. Note: breaks compilation at this point
 	private void createEvent() {
 		HashMap<String, String> event = new HashMap<String, String>();
@@ -223,10 +297,8 @@ public class CreateEventView extends Composite implements View {
 				System.out.println("Flip a table!  (>o.o)> _|__|_)");
 			}
 
-			public void onSuccess(HashMap<String, String> newEvent) {
-				//TODO: Find a method of either refreshing the events or adding the newly created event to the event list *before* going to the new URL.
+			public void onSuccess(HashMap<String, String> newEvent) {				
 				// NOTE: This only works in the deployed version.
-				Window.alert("Your event with ID " + newEvent.get("id") + " was created.");
 				MeetUpScheduler.addEvent(newEvent);
 				String newEventURL = "http://vancitymeetupscheduler.appspot.com?id=" + newEvent.get("id") + "#EventPlace:Event";
 				Window.Location.replace(newEventURL);
@@ -236,6 +308,10 @@ public class CreateEventView extends Composite implements View {
 
 	}
 
+	/**
+	 * Method to populate values in hours box.
+	 * @param list The list to populate
+	 */
 	private void setHoursList(ListBox list) {
 		for (int i=0; i<=23; i++ ) {
 			list.addItem(i+":00");
@@ -243,34 +319,11 @@ public class CreateEventView extends Composite implements View {
 		list.setVisibleItemCount(1);
 	}
 
+	/**
+	 * Method to populate categories list
+	 * @param categoriesList The list to populate
+	 */
 	private void populateCategories(ListBox categoriesList) {
-		
-		categoriesList.addItem("Badminton");
-		categoriesList.addItem("Ball Hockey");
-		categoriesList.addItem("Baseball");
-		categoriesList.addItem("Basketball");
-		categoriesList.addItem("Bicycling");
-		categoriesList.addItem("Bocce Ball");
-		categoriesList.addItem("Cricket");
-		categoriesList.addItem("Football");
-		categoriesList.addItem("Jogging");
-		categoriesList.addItem("Lawn Bowling");
-		categoriesList.addItem("Soccer");
-		categoriesList.addItem("Softball");
-		categoriesList.addItem("Tennis");
-		categoriesList.addItem("Rugby");
-		categoriesList.addItem("Ultimate");
-		categoriesList.addItem("Volleyball");
-		categoriesList.addItem("Arctic Char Fishing");
-		categoriesList.addItem("Chili Cook-off");
-		categoriesList.addItem("Dog Show");
-		categoriesList.addItem("Judo");
-		categoriesList.addItem("Larping");
-		categoriesList.addItem("Night Soccer");
-		categoriesList.addItem("Sack-race");
-		categoriesList.addItem("Spelling-B");
-		categoriesList.addItem("Treasure Hunt");
-		
 		for (String cat : MeetUpScheduler.getCategories())
 			categoriesList.addItem(cat);
 	}

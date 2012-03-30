@@ -28,8 +28,7 @@ h1 {
 }
 
 #adminVertPan {
-	margin-left: auto;
-	margin-right: auto;
+	margin-left: 230px;
 }
 
 #adminHorPan {
@@ -64,3 +63,274 @@ h1 {
 	color: black;
 	padding: 4px
 }
+
+/* Login Panel Stuff*/
+.loginPanel {	
+	width: 40%;		
+	background: LightGrey;
+	border: 3px solid #C0C0C0;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	margin-top: 100px;
+	margin-left: 30%;			
+}
+
+.gwt-Label-login {
+	font-size: 1em;
+	font-weight: bold;	
+	text-align: left;
+	margin-left: 5%;
+	display: float;	
+}
+
+.loginLink {
+	margin-left: 5%;	
+	font-size: 1em;
+	text-align: center;		
+}
+
+/*Title Panels for Pages*/
+.gwt-Label-pageTitle {
+	font-size: 1.5em;
+	width: 500px;
+	text-align: center;			
+}
+
+.titlePanel {
+	margin-top: 10px;	
+}
+
+/*Create Event View Stuff*/
+.eventNameBox {
+	width: 250px;
+}
+
+.gwt-Label-eventName {
+	margin-top: 10px;
+}
+
+.gwt-Label-park {
+	margin-top: 5px;
+}
+
+.gwt-Label-categories {
+	margin-top: 5px;
+}
+
+.gwt-ListBox-parks {
+	width: 250px;
+}
+
+.gwt-ListBox-categories {
+	width: 250px;
+}
+
+.gwt-Label-notes {
+	margin-top: 5px;
+}
+
+.gwt-Label-eventDate {
+	margin-top: 10px;
+}
+
+.gwt-Label-startTime {
+	margin-top: 15px;
+	margin-right: 5px;
+}
+
+.gwt-Label-endTime {
+	margin-top: 15px;
+	margin-left: 10px;
+	margin-right: 5px;
+}
+
+.gwt-ListBox-startTime {
+	margin-top: 12px;
+}
+
+.gwt-ListBox-endTime {
+	margin-top: 12px;
+}
+
+.submitPanel {
+	margin-top: 10px;
+	margin-bottom: 10px;	
+}
+
+.gwt-Button-submit {	
+	width: 125px;
+	font-weight: bold;	
+}
+
+/*Event View Stuff*/
+
+.eventPanel {
+	margin-top: 10px;
+}
+
+.infoPanel {
+	margin-left: 10px;
+}
+
+.gwt-Label-eventEventName {
+	width: 250px;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+.gwt-Label-eventCreator {
+	margin-top: 5px;
+}
+
+.gwt-Label-eventCategory {
+	margin-top: 5px;
+}
+
+.gwt-Label-eventLoc {
+	margin-top: 5px;
+}
+
+.gwt-Label-eventTime {
+	margin-top: 5px;
+}
+
+.gwt-Label-attCount {
+	margin-top: 5px;
+}
+
+.gwt-ListBox-attendees {
+	width: 250px;
+}
+
+.sharePanel {
+	margin-top: 5px;	
+}
+
+.joinButtonPanel {
+	margin-right: 50px;
+}
+
+.gwt-Button-join {
+	width: 125px;
+	font-weight: bold;	
+}
+
+.queryPanel {
+	margin-left: 10px;
+	margin-top: 30px;
+	background: lightGrey;		
+}
+
+.gwt-Label-search {
+	margin-top: 5px;
+	font-weight: bold;
+}
+
+.searchButtonPanel {
+	margin-top: 5px;
+	margin-left: 60px;
+	margin-bottom: 5px;
+}
+
+.gwt-Button-search {
+	width: 125px;
+	font-weight: bold;
+}
+
+.resultsPanel {
+	margin-left: 10px;
+}
+
+/* Global View Stuff*/
+
+.globalViewPanel {
+	margin-top: 10px;
+}
+
+.rightPanel {
+	margin-left: 10px;
+}
+
+.parksPanel {	
+	background: lightGrey;
+	width: 260px;	
+}
+
+.gwt-Label-findPark {
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+.zoomButtonPanel {
+	margin-top: 5px;
+	margin-left: 65px;
+	margin-bottom: 5px;
+}
+
+.gwt-Button-park {
+	width: 125px;
+	font-weight: bold;	
+}
+	
+
+.eventTabPanel {
+	margin-top: 20px;
+}
+
+/* Header stuff */
+
+.headerPanel {
+	height: 60px;
+	width: 900px;
+	background: #C9DFAF;
+}
+
+.gwt-Label-appName {
+	width: 75px;
+	margin-left: 10px;
+	margin-right: 50px;
+	font-size: 2em;
+	font-weight: bold;
+	font-family: verdana;	
+}
+
+.buttonPanel {
+	margin-top: 15px;
+}
+
+.gwt-Button-home {
+	width: 125px;
+}
+
+.gwt-Button-createEvent {
+	width: 125px;
+}
+
+.gwt-Button-event {
+	width: 125px;
+}
+
+.gwt-Button-admin {
+	width: 125px;
+}
+
+
+/* Footer stuff */
+
+.footerPanel {
+	height: 60px;
+	width: 900px;
+	margin-top: 10px;
+	background: #C9DFAF;
+}
+
+.signOutPanel {
+	height: 15px;
+	width: 55px;
+	margin-top: 20px;
+	margin-left: 20px;
+	background: lightGrey;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+}
+	
