@@ -221,9 +221,8 @@ public class MeetUpScheduler implements EntryPoint {
 		
 		parkService.get("Park", "*", new AsyncCallback<ArrayList<HashMap<String,String>>>() {
 			@Override
-			public void onFailure(Throwable error) {
-				//TODO: replace with actual table flip
-				System.out.println("Table Flip!");
+			public void onFailure(Throwable error) {				
+				System.out.println("AAAARRRGHHHHH --Table Flip!--");
 			}
 			
 			public void onSuccess(ArrayList<HashMap<String, String>> parks) {
@@ -278,12 +277,6 @@ public class MeetUpScheduler implements EntryPoint {
 		return allAdvisories;
 	}	
 	
-	//TODO: Implement reload of page. To be called by event creation. 
-	public void reloadViews() {
-		//remove old elements? then redraw
-		//loadEvents();
-	}
-
 
 	public static void addEvent(HashMap<String, String> event) {
 	 	    allEvents.add(event);

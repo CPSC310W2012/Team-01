@@ -54,8 +54,7 @@ public class EventView extends Composite implements View{
 	private final String ALL_CATS = "All types";
 	private final String JOIN_TEXT = "Join event!";
 	private final String UNJOIN_TEXT = "Unjoin event!";
-	//panels	
-	private HorizontalPanel topPanel = new HorizontalPanel();
+	//panels		
 	private HorizontalPanel eventPanel = new HorizontalPanel();	
 	private VerticalPanel queryPanel = new VerticalPanel();
 	private VerticalPanel resultsPanel = new VerticalPanel();
@@ -183,7 +182,7 @@ public class EventView extends Composite implements View{
 		//	rootPanel.add(shareButton);			
 		
 		if (!eventLoaded) {
-			topPanel.setVisible(false);			
+			infoPanel.setVisible(false);			
 		}
 		
 

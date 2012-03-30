@@ -297,8 +297,7 @@ public class CreateEventView extends Composite implements View {
 				System.out.println("Flip a table!  (>o.o)> _|__|_)");
 			}
 
-			public void onSuccess(HashMap<String, String> newEvent) {
-				//TODO: Find a method of either refreshing the events or adding the newly created event to the event list *before* going to the new URL.
+			public void onSuccess(HashMap<String, String> newEvent) {				
 				// NOTE: This only works in the deployed version.
 				MeetUpScheduler.addEvent(newEvent);
 				String newEventURL = "http://vancitymeetupscheduler.appspot.com?id=" + newEvent.get("id") + "#EventPlace:Event";

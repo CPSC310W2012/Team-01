@@ -28,8 +28,7 @@ h1 {
 }
 
 #adminVertPan {
-	margin-left: auto;
-	margin-right: auto;
+	margin-left: 230px;
 }
 
 #adminHorPan {
@@ -170,7 +169,7 @@ h1 {
 }
 
 .infoPanel {
-	margin-left: 20px;
+	margin-left: 10px;
 }
 
 .gwt-Label-eventEventName {
@@ -217,11 +216,9 @@ h1 {
 }
 
 .queryPanel {
-	margin-left: 20px;
+	margin-left: 10px;
 	margin-top: 30px;
-	background: lightGrey;	
-	border-radius: 10px;
-	-moz-border-radius: 10px;
+	background: lightGrey;		
 }
 
 .gwt-Label-search {
@@ -238,6 +235,10 @@ h1 {
 .gwt-Button-search {
 	width: 125px;
 	font-weight: bold;
+}
+
+.resultsPanel {
+	margin-left: 10px;
 }
 
 /* Global View Stuff*/
