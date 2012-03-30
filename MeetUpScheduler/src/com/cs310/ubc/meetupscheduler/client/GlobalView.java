@@ -311,14 +311,15 @@ public class GlobalView extends Composite implements View{
 				 */
 				if(markerFlag){
 					Marker marker = new Marker(LatLng.newInstance(lat, lon));
+					marker.getIcon().setIconSize(Size.newInstance(16, 28));
+					marker.getIcon().setShadowSize(Size.newInstance(31, 28));
+					
 					addMarkerClickHandler(marker, parkEvents, map);
 					if(userFlag){
 						marker.getIcon().setIconSize(Size.newInstance(24, 41));
 						marker.getIcon().setShadowSize(Size.newInstance(44, 41));
 					}
 					map.addOverlay(marker);
-					marker.getIcon().setIconSize(Size.newInstance(20, 34));
-					marker.getIcon().setShadowSize(Size.newInstance(37, 34));
 				}
 			}
 		}  
