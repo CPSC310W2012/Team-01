@@ -23,7 +23,10 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -72,6 +75,7 @@ public class MeetUpScheduler implements EntryPoint {
 	  private HorizontalPanel footerPanel = new HorizontalPanel();
 	  private HorizontalPanel signOutPanel = new HorizontalPanel();
 	  private Label appName = new Label("VanCity Events");
+	  private Image appImage = new Image();
 	  private Button createEventButton = new Button("Create Event");
 	  private Button eventButton = new Button("Event");
 	  private Button adminButton = new Button("Admin");
@@ -170,13 +174,15 @@ public class MeetUpScheduler implements EntryPoint {
 					
 			}
 		});
-		
-		appName.addStyleDependentName("appName");
+		HTML appImage = new HTML("<img src=\"images/no_shadow_my_Logo.png\" />");
+		appImage.addStyleDependentName("app");
+		//appName.addStyleDependentName("appName");
 		homeButton.addStyleDependentName("home");
 		createEventButton.addStyleDependentName("createEvent");
 		eventButton.addStyleDependentName("event");
 		adminButton.addStyleDependentName("admin");
-		headerPanel.add(appName);
+		headerPanel.add(appImage);
+		//headerPanel.add(appName);
 		buttonPanel.add(homeButton);
 		buttonPanel.add(createEventButton);
 		buttonPanel.add(eventButton);

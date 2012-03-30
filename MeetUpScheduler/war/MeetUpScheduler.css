@@ -217,7 +217,7 @@ h1 {
 
 .queryPanel {
 	margin-left: 10px;
-	margin-top: 30px;
+	margin-top: 10px;
 	background: lightGrey;		
 }
 
@@ -252,6 +252,7 @@ h1 {
 }
 
 .parksPanel {	
+	margin-top: 10px;
 	background: lightGrey;
 	width: 260px;	
 }
@@ -274,7 +275,7 @@ h1 {
 	
 
 .eventTabPanel {
-	margin-top: 20px;
+	margin-top: 0px;
 }
 
 /* Header stuff */
@@ -296,6 +297,10 @@ h1 {
 
 .buttonPanel {
 	margin-top: 15px;
+}
+
+.gwt-Image-app {
+	margin-top: 20px;
 }
 
 .gwt-Button-home {

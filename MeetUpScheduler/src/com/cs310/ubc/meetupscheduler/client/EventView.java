@@ -171,9 +171,9 @@ public class EventView extends Composite implements View{
 		infoPanel.addStyleName("infoPanel");
 		rightPanel.add(infoPanel);
 		queryPanel.addStyleName("queryPanel");
-		rightPanel.add(queryPanel);
+		leftPanel.add(queryPanel);
 		resultsPanel.addStyleName("resultsPanel");
-		rightPanel.add(resultsPanel);
+		leftPanel.add(resultsPanel);
 		
 		eventPanel.addStyleName("eventPanel");
 		eventPanel.add(leftPanel);
